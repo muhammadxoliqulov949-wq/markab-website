@@ -12,7 +12,7 @@ import type { FaqItem } from '@/lib/data/types';
  */
 export function FaqSection({ items }: { items: FaqItem[] }) {
   return (
-    <section aria-labelledby="faq-heading" className="bg-surface py-14 sm:py-16 lg:py-20">
+    <section aria-labelledby="faq-heading" className="bg-surface py-10 sm:py-12 lg:py-14">
       <Container>
         <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-14">
           <div>

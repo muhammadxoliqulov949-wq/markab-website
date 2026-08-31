@@ -43,7 +43,7 @@ function StoreBadge({ store, href }: { store: 'App Store' | 'Google Play'; href:
  */
 export function AppSection() {
   return (
-    <section aria-labelledby="app-heading" className="bg-surface-muted py-14 sm:py-16 lg:py-20">
+    <section aria-labelledby="app-heading" className="bg-surface-muted py-12 sm:py-14 lg:py-16">
       <Container>
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-14">
           <div>

@@ -57,7 +57,7 @@ export function GoalChooser({
   ];
 
   return (
-    <section aria-labelledby="goals-heading" className="bg-surface-muted py-14 sm:py-16 lg:py-20">
+    <section aria-labelledby="goals-heading" className="bg-surface-muted py-12 sm:py-14 lg:py-16">
       <Container>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
@@ -84,24 +84,27 @@ export function GoalChooser({
             return (
               <li
                 key={card.id}
-                className="w-[78%] shrink-0 snap-start sm:w-auto"
+                className="w-[80%] shrink-0 snap-start sm:w-auto"
               >
                 <Reveal delay={index * 70}>
                   <Link
                     href={card.href}
                     className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-card transition-all duration-500 ease-smooth hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover"
                   >
-                    <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken">
+                    <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
                       {card.image ? (
                         <>
                           <Image
                             src={card.image}
                             alt={card.alt}
                             fill
-                            sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
-                            className="object-cover transition-transform duration-[900ms] ease-smooth group-hover:scale-[1.05]"
+                            sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 24vw"
+                            className="object-cover object-center transition-transform duration-[900ms] ease-smooth group-hover:scale-[1.04]"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-ink-900/25 to-transparent" aria-hidden="true" />
+                          <div
+                            className="absolute inset-0 bg-gradient-to-t from-ink-900/20 to-transparent"
+                            aria-hidden="true"
+                          />
                         </>
                       ) : (
                         <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-brand-50 via-brand-50 to-brand-100/70 px-4">
@@ -125,11 +128,13 @@ export function GoalChooser({
                     </div>
 
                     <div className="flex flex-1 flex-col p-5">
-                      <h3 className="text-[1.0625rem] font-semibold text-ink-900">{card.title}</h3>
-                      <p className="mt-1.5 flex-1 text-sm leading-relaxed text-ink-500">
+                      <h3 className="text-[1.0625rem] font-semibold leading-snug text-ink-900">
+                        {card.title}
+                      </h3>
+                      <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-500">
                         {card.description}
                       </p>
-                      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700">
+                      <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors duration-200 group-hover:text-brand-800">
                         {card.cta}
                         <ArrowIcon />
                       </span>

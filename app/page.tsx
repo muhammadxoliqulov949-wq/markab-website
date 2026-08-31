@@ -67,6 +67,7 @@ export default async function HomePage() {
         href="/cars"
         cta="Barchasini ko‘rish"
         headingId="cars-heading"
+        weight="high"
         state={featured}
         kind="vehicles"
         publicTotal={20}

@@ -12,7 +12,7 @@ import { valueProps } from '@/lib/data/fixtures/content';
  */
 export function WhyMarkab() {
   return (
-    <section aria-labelledby="why-heading" className="bg-surface-muted py-14 sm:py-16 lg:py-20">
+    <section aria-labelledby="why-heading" className="bg-surface-muted py-10 sm:py-12 lg:py-14">
       <Container>
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           <SectionHeading

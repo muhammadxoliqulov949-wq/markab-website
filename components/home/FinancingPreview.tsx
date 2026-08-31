@@ -30,7 +30,7 @@ export function FinancingPreview() {
   return (
     <section
       aria-labelledby="financing-preview-heading"
-      className="bg-surface py-14 sm:py-16 lg:py-20"
+      className="bg-surface py-16 sm:py-20 lg:py-24"
     >
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
@@ -123,7 +123,7 @@ export function FinancingPreview() {
                     <span
                       key={option}
                       className={[
-                        'rounded-lg border px-2.5 py-1 text-xs',
+                        'rounded-lg border px-3 py-1.5 text-xs',
                         option === SAMPLE.downPercent
                           ? 'border-brand-300/60 bg-brand-500/15 text-brand-100'
                           : 'border-white/10 text-white/50',

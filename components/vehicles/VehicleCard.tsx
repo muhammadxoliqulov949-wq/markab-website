@@ -21,91 +21,24 @@ function NoImage({ label }: { label: string }) {
 export function VehicleCard({
   vehicle,
   priority = false,
-  featured = false,
+  highlight = false,
 }: {
   vehicle: Vehicle;
   priority?: boolean;
-  /** Homepage hero slot: wider frame, larger type, overlay layout. */
-  featured?: boolean;
+  /**
+   * Marks the first card of a curated set. Deliberately NOT a different card
+   * size: a shorter card inside a grid row left a large empty gap beneath it.
+   */
+  highlight?: boolean;
 }) {
   const image = vehicle.images[0];
   const href = `/cars/${vehicle.slug}`;
 
-  if (featured) {
-    return (
-      <article className="group relative overflow-hidden rounded-2xl bg-ink-900 shadow-card transition-all duration-500 ease-smooth hover:shadow-card-hover">
-        <Link href={href} className="block">
-          {/*
-            Same 4:3 frame as every other catalogue card. The "featured"
-            treatment is the dark scrim and the overlay type — not a bigger
-            picture, which is what made the section read as a photo wall.
-          */}
-          <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken">
-            {image ? (
-              <Image
-                src={image}
-                alt={vehicle.title}
-                fill
-                priority={priority}
-                sizes="(max-width: 1024px) 100vw, 66vw"
-                className="object-cover transition-transform duration-[900ms] ease-smooth group-hover:scale-[1.04]"
-              />
-            ) : (
-              <NoImage label="Rasm mavjud emas" />
-            )}
-            <div className="card-scrim absolute inset-0" aria-hidden="true" />
-            <div className="absolute left-3 top-3 flex gap-2 sm:left-4 sm:top-4">
-              {vehicle.isNew ? (
-                <Badge tone="brand" className="bg-white/95 backdrop-blur">
-                  Yangi
-                </Badge>
-              ) : null}
-            </div>
-            <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-              <p className="truncate text-[10px] uppercase tracking-[0.14em] text-white/65 sm:text-[11px]">
-                {vehicle.year} · {formatKm(vehicle.mileageKm)} · {fuelLabel(vehicle.fuelType)}
-              </p>
-              <h3 className="mt-1.5 truncate text-base font-semibold text-white sm:text-lg">
-                {vehicle.title}
-              </h3>
-              <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-                <span className="text-[0.9375rem] font-semibold text-white sm:text-base">
-                  {formatUzs(vehicle.priceUzs)}
-                </span>
-                {vehicle.financing.monthlyPaymentUzs ? (
-                  <span className="text-xs text-brand-200">
-                    {formatUzs(vehicle.financing.monthlyPaymentUzs)} / oy
-                  </span>
-                ) : (
-                  <span className="text-xs text-white/65">
-                    Oylik to‘lov: hisob-kitob tayyorlanmoqda
-                  </span>
-                )}
-              </div>
-              <span className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-white transition-colors group-hover:text-brand-100 sm:text-sm">
-                E’lonni ochish
-                <svg
-                  className="h-3.5 w-3.5 transition-transform duration-300 ease-smooth group-hover:translate-x-1 sm:h-4 sm:w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.9"
-                  aria-hidden="true"
-                >
-                  <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </div>
-          </div>
-        </Link>
-      </article>
-    );
-  }
-
   return (
-    <article className="group overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
-      <Link href={href} className="block">
-        <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken">
+    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
+      <Link href={href} className="flex flex-1 flex-col">
+        {/* Fixed 4:3 frame — the same geometry the electronics cards use. */}
+        <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
           {image ? (
             <Image
               src={image}
@@ -121,6 +54,11 @@ export function VehicleCard({
           )}
 
           <div className="absolute left-3 top-3 flex gap-2">
+            {highlight ? (
+              <Badge tone="brand" className="bg-white/95 backdrop-blur">
+                Tanlangan
+              </Badge>
+            ) : null}
             {vehicle.isNew ? (
               <Badge tone="brand" className="bg-white/95 backdrop-blur">
                 Yangi
@@ -129,27 +67,25 @@ export function VehicleCard({
           </div>
         </div>
 
-        <div className="p-5">
+        <div className="flex flex-1 flex-col p-5">
           <h3 className="truncate text-[0.9375rem] font-semibold text-ink-900">{vehicle.title}</h3>
-          <p className="mt-1 text-sm text-ink-500">
+          <p className="mt-1 truncate text-sm text-ink-500">
             {vehicle.year} · {formatKm(vehicle.mileageKm)} · {fuelLabel(vehicle.fuelType)} ·{' '}
             {transmissionLabel(vehicle.transmission)}
           </p>
 
           <div className="mt-4 flex flex-wrap items-end justify-between gap-2">
             <div>
-              <p className="text-lg font-semibold tracking-[-0.01em] text-ink-900">
+              <p className="text-lg font-semibold leading-tight tracking-[-0.01em] text-ink-900">
                 {formatUzs(vehicle.priceUzs)}
               </p>
-              {vehicle.financing.monthlyPaymentUzs ? (
-                <p className="mt-0.5 text-sm text-brand-700">
-                  {formatUzs(vehicle.financing.monthlyPaymentUzs)} / oy
-                </p>
-              ) : (
-                <p className="mt-0.5">
+              <p className="mt-1 flex min-h-[1.375rem] items-center text-sm text-brand-700">
+                {vehicle.financing.monthlyPaymentUzs ? (
+                  `${formatUzs(vehicle.financing.monthlyPaymentUzs)} / oy`
+                ) : (
                   <PendingValue label="Oylik to‘lov: hisob-kitob tayyorlanmoqda" />
-                </p>
-              )}
+                )}
+              </p>
             </div>
             <span className="text-xs text-ink-400">{formatViews(vehicle.views)}</span>
           </div>

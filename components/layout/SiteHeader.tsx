@@ -94,7 +94,7 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop primary navigation — the five goals of the product. */}
-        <nav aria-label="Asosiy navigatsiya" className="hidden lg:block">
+        <nav aria-label="Asosiy navigatsiya" className="hidden nav:block">
           <ul className="flex items-center gap-0.5">
             {primaryNav.map((item) => {
               const active = isActive(item.href);
@@ -104,7 +104,7 @@ export function SiteHeader() {
                     href={item.href}
                     aria-current={active ? 'page' : undefined}
                     className={[
-                      'relative flex h-11 items-center rounded-lg px-4 text-[0.9375rem] font-medium transition-colors duration-200',
+                      'relative flex h-11 items-center rounded-lg px-3 text-[0.9375rem] font-medium transition-colors duration-200 lg:px-4',
                       active
                         ? 'text-brand-700'
                         : 'text-ink-600 hover:bg-surface-muted hover:text-ink-900',
@@ -169,7 +169,7 @@ export function SiteHeader() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? 'Menyuni yopish' : 'Menyuni ochish'}
-            className="rounded-lg p-2 text-ink-700 transition-colors hover:bg-surface-muted lg:hidden"
+            className="rounded-lg p-2 text-ink-700 transition-colors hover:bg-surface-muted nav:hidden"
           >
             <svg
               className="h-5 w-5"
@@ -191,7 +191,7 @@ export function SiteHeader() {
 
       {/* Mobile / tablet: intentionally designed drawer — large targets, grouped. */}
       {open ? (
-        <div id="mobile-menu" className="border-t border-line bg-white lg:hidden">
+        <div id="mobile-menu" className="border-t border-line bg-white nav:hidden">
           <nav aria-label="Mobil navigatsiya" className="container-page max-h-[70vh] overflow-y-auto py-5">
             <ul className="flex flex-col gap-1">
               {primaryNav.map((item) => (

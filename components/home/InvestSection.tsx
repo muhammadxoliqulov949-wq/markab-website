@@ -40,7 +40,7 @@ export function InvestSection() {
   return (
     <section
       aria-labelledby="invest-heading"
-      className="bg-surface-muted py-14 sm:py-16 lg:py-20"
+      className="bg-surface-muted py-12 sm:py-14 lg:py-16"
     >
       <Container>
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">

@@ -11,6 +11,23 @@ import type { Config } from 'tailwindcss';
 const config: Config = {
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './lib/**/*.{ts,tsx}'],
   theme: {
+    /**
+     * Defined in full (not via `extend`) so `nav` can be placed between `md`
+     * and `lg`. Appending it in `extend` would emit its utilities after `2xl`,
+     * which would let `nav:` override `lg:` — the opposite of what we want.
+     *
+     * `nav: 900px` is the measured threshold for the desktop header bar:
+     * logo (120) + primary nav (599) + cart/Kirish (144) = 863px of content,
+     * which needs ~912px of inner width to sit without compression.
+     */
+    screens: {
+      sm: '640px',
+      md: '768px',
+      nav: '900px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       colors: {
         ink: {

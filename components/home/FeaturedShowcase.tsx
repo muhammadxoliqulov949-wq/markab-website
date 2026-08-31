@@ -9,6 +9,11 @@ import type { Product, Vehicle, Result } from '@/lib/data/types';
 
 type Props = {
   tone?: 'default' | 'muted';
+  /**
+   * Editorial weight. Cars carry more air than electronics so the two
+   * catalogue blocks do not read as equals.
+   */
+  weight?: 'high' | 'medium';
   eyebrow: string;
   title: string;
   description: string;
@@ -34,6 +39,7 @@ type Props = {
  */
 export function FeaturedShowcase({
   tone = 'default',
+  weight = 'medium',
   eyebrow,
   title,
   description,
@@ -49,7 +55,9 @@ export function FeaturedShowcase({
   return (
     <section
       aria-labelledby={headingId}
-      className={`${tone === 'muted' ? 'bg-surface-muted' : 'bg-surface'} py-14 sm:py-16 lg:py-20`}
+      className={`${tone === 'muted' ? 'bg-surface-muted' : 'bg-surface'} ${
+        weight === 'high' ? 'py-16 sm:py-20 lg:py-24' : 'py-12 sm:py-14 lg:py-16'
+      }`}
     >
       <Container>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
@@ -68,10 +76,9 @@ export function FeaturedShowcase({
           {state.status === 'success' ? (
             <>
               {/*
-                Both catalogues use the same 3-up grid and the same 4:3 frame.
-                A wider "feature" card made each image ~440px tall, which turned
-                the section into a photo wall; hierarchy now comes from the dark
-                treatment on the first car, not from a bigger picture.
+                One 3-up grid and one 4:3 frame for both catalogues. The first
+                car is marked "Tanlangan" rather than rendered at a different
+                size: an unequal card inside a grid row left a visible hole.
               */}
               {isVehicles ? (
                 <ul className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 md:grid-cols-3">
@@ -81,7 +88,7 @@ export function FeaturedShowcase({
                         <VehicleCard
                           vehicle={vehicle}
                           priority={index === 0}
-                          featured={index === 0}
+                          highlight={index === 0}
                         />
                       </Reveal>
                     </li>
@@ -92,7 +99,7 @@ export function FeaturedShowcase({
                   {state.data.products.map((product, index) => (
                     <li
                       key={product.id}
-                      className="w-[68%] shrink-0 snap-start sm:w-auto"
+                      className="w-[80%] shrink-0 snap-start sm:w-auto"
                     >
                       <Reveal delay={index * 60}>
                         <ProductCard product={product} priority={index === 0} />
