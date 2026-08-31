@@ -22,6 +22,7 @@ export const repository = {
   getVehicleFacets: () => getAdapter().getVehicleFacets(),
   listProducts: (query?: ProductQuery) => getAdapter().listProducts(query),
   getProductById: (id: string) => getAdapter().getProductById(id),
+  getProductFacets: () => getAdapter().getProductFacets(),
   getFeatured: () => getAdapter().getFeatured(),
   listLessons: (category?: string) => getAdapter().listLessons(category),
   getLessonBySlug: (slug: string) => getAdapter().getLessonBySlug(slug),

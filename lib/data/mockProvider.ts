@@ -1,4 +1,4 @@
-import { products } from './fixtures/products';
+import { productCategories, products } from './fixtures/products';
 import { vehicles } from './fixtures/vehicles';
 import { faqItems, lessons } from './fixtures/academy';
 import { empty, notFound, success } from './types';
@@ -7,6 +7,7 @@ import type {
   Lesson,
   Paginated,
   Product,
+  ProductFacets,
   ProductQuery,
   Result,
   Vehicle,
@@ -83,19 +84,56 @@ function applyProductFilters(source: Product[], query: ProductQuery): Product[] 
   if (query.brand) items = items.filter((p) => p.brand === query.brand);
   if (query.priceMin !== undefined) items = items.filter((p) => p.priceUzs >= query.priceMin!);
   if (query.priceMax !== undefined) items = items.filter((p) => p.priceUzs <= query.priceMax!);
+  if (query.storageGb !== undefined) {
+    items = items.filter((p) => p.storageGb === query.storageGb);
+  }
+  if (query.batteryMin !== undefined) {
+    items = items.filter(
+      (p) => p.batteryHealthPercent !== null && p.batteryHealthPercent >= query.batteryMin!,
+    );
+  }
+  if (query.batteryMax !== undefined) {
+    items = items.filter(
+      (p) => p.batteryHealthPercent !== null && p.batteryHealthPercent <= query.batteryMax!,
+    );
+  }
+  // Only records the source explicitly marks sold out are removed. "unknown"
+  // is not availability — it is the absence of published availability — so it
+  // is never silently promoted to in-stock nor dropped here.
+  if (query.hideOutOfStock) items = items.filter((p) => p.stockStatus !== 'out_of_stock');
+  if (query.hasFinancing) {
+    items = items.filter((p) => p.financing.monthlyPaymentUzs !== null);
+  }
 
   switch (query.sort) {
     case 'price-asc':
-      items.sort((a, b) => a.priceUzs - b.priceUzs);
+      items.sort((a, b) => a.priceUzs - b.priceUzs || a.id.localeCompare(b.id));
       break;
     case 'price-desc':
-      items.sort((a, b) => b.priceUzs - a.priceUzs);
+      items.sort((a, b) => b.priceUzs - a.priceUzs || a.id.localeCompare(b.id));
       break;
+    case 'popular':
+      items.sort((a, b) => b.views - a.views || a.id.localeCompare(b.id));
+      break;
+    // Deterministic: identical output on every request, so pagination can
+    // never shuffle records between pages.
     default:
-      items.sort((a, b) => b.views - a.views);
+      items.sort((a, b) => a.id.localeCompare(b.id));
   }
 
   return items;
+}
+
+function countBy<T, K>(source: T[], key: (item: T) => K | null): { value: K; count: number }[] {
+  const map = new Map<K, number>();
+  source.forEach((item) => {
+    const value = key(item);
+    if (value === null || value === undefined) return;
+    map.set(value, (map.get(value) ?? 0) + 1);
+  });
+  return [...map.entries()]
+    .map(([value, count]) => ({ value, count }))
+    .sort((a, b) => String(a.value).localeCompare(String(b.value)));
 }
 
 /**
@@ -180,6 +218,35 @@ export const mockProvider: DataAdapter = {
   async getProductById(id: string): Promise<Result<Product>> {
     const product = products.find((p) => p.id === id);
     return product ? success(product) : notFound<Product>();
+  },
+
+  async getProductFacets(): Promise<Result<ProductFacets>> {
+    if (products.length === 0) return empty<ProductFacets>();
+
+    // Category labels come from the fixture's own catalogue definition, so the
+    // UI never has to hard-code a translation.
+    const labelFor = (id: string) =>
+      productCategories.find((entry) => entry.id === id)?.name ?? id;
+
+    return success<ProductFacets>({
+      total: products.length,
+      categories: countBy(products, (p) => p.category).map((entry) => ({
+        value: entry.value,
+        label: labelFor(entry.value),
+        count: entry.count,
+      })),
+      brands: countBy(products, (p) => p.brand),
+      storages: countBy(products, (p) => p.storageGb).sort((a, b) => a.value - b.value),
+      batteryHealth: countBy(products, (p) => p.batteryHealthPercent).sort(
+        (a, b) => b.value - a.value,
+      ),
+      priceMin: Math.min(...products.map((p) => p.priceUzs)),
+      priceMax: Math.max(...products.map((p) => p.priceUzs)),
+      inStock: products.filter((p) => p.stockStatus === 'in_stock').length,
+      outOfStock: products.filter((p) => p.stockStatus === 'out_of_stock').length,
+      unknownStock: products.filter((p) => p.stockStatus === 'unknown').length,
+      withFinancing: products.filter((p) => p.financing.monthlyPaymentUzs !== null).length,
+    });
   },
 
   async getFeatured() {

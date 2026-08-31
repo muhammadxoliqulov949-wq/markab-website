@@ -3,6 +3,7 @@ import type {
   Lesson,
   Paginated,
   Product,
+  ProductFacets,
   ProductQuery,
   Result,
   Vehicle,
@@ -31,6 +32,8 @@ export interface DataAdapter {
 
   listProducts(query?: ProductQuery): Promise<Result<Paginated<Product>>>;
   getProductById(id: string): Promise<Result<Product>>;
+  /** Real filter options for the electronics catalogue. */
+  getProductFacets(): Promise<Result<ProductFacets>>;
 
   getFeatured(): Promise<Result<{ vehicles: Vehicle[]; products: Product[] }>>;
 

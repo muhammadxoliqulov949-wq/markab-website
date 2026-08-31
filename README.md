@@ -8,6 +8,7 @@
 | **0.5** | Critical foundation (adapter, real 404s, routes, states) | ✅ Complete — built from scratch in this repo as the Markab 2.0 prototype |
 | **1** | Homepage redesign | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **2** | Automobile marketplace experience (`/cars`, `/cars/[slug]`) | ✅ Implemented — awaiting stakeholder visual sign-off |
+| **3** | Electronics marketplace + cart foundation (`/electronics`, `/electronics/[id]`, `/cart`) | ✅ Implemented — awaiting stakeholder visual sign-off |
 
 ### Why 0.5 is blocked
 
@@ -162,4 +163,52 @@ fixed-rule selection, never as AI or a personalised recommendation.
 
 Mobile is first-class: a filter sheet with a live result count replaces the sidebar below
 `lg`, search is debounced, and the whole marketplace was measured at 320 / 375 / 390 /
+430 / 768 / 1024 / 1280 / 1440 with zero horizontal overflow.
+
+### Phase 3 — electronics marketplace
+
+`/electronics`, `/electronics/[id]` and the cart sit on the same
+`UI → repository → adapter → provider` chain as everything else. No page
+imports fixtures.
+
+**Filters are counted, never assumed.** `repository.getProductFacets()` asks the
+source which categories, brands, storage sizes, battery percentages and stock
+states actually exist. A group is only rendered when it can change the result
+set: with one brand and one populated category in the current catalogue, the
+brand and category chips are not shown, because a filter with a single option is
+a label, not a choice. When the production API supplies more, they appear with
+no code change.
+
+**Sorting is deterministic.** Options are standard order, price ascending and
+price descending. `'popular'` still exists in the adapter contract for the real
+API but is deliberately not offered: the prototype will not present a
+popularity ranking it cannot substantiate.
+
+**Availability is a rule, not a guess.** `lib/products/stock.ts` is the single
+source of truth the card, the detail page and the cart all read. Only
+`out_of_stock` is unavailable — a sold-out product's add-to-cart button is
+disabled and stays disabled in the sticky bar. `unknown` means the source
+published nothing; it is never rendered as "Mavjud", and the pending marker says
+the availability is confirmed after the application.
+
+**Specifications are only shown when real.** Detailed spec rows with a null
+value are dropped rather than printed as "N/A". The current catalogue therefore
+shows storage and battery health and nothing else.
+
+**Financing is never calculated.** Only the published monthly payment is
+printed; initial payment, term and contract type render as pending markers
+linking to `/financing/calculator`.
+
+**The gallery is honest.** One photo means one photo — no duplicated thumbnails,
+no fake counter. A listing with no photo gets a real empty state
+(`e0783-26` in the current catalogue).
+
+**The cart is a prototype and says so.** It is browser-local state under an
+explicitly namespaced demo key, with one line per product: adding the same item
+twice is a no-op, not a silent second copy. Delivery, instalment totals and
+order submission all render as pending — nothing pretends to check out.
+
+Mobile commerce specifics: a compact sticky action bar on the detail page sits
+directly above the mobile tab bar (offset via the shared `--tabbar-h` variable,
+so the two never overlap), and the whole flow was measured at 320 / 375 / 390 /
 430 / 768 / 1024 / 1280 / 1440 with zero horizontal overflow.

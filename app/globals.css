@@ -14,6 +14,15 @@
 }
 
 @layer base {
+  :root {
+    /*
+     * Height of the mobile tab bar. Declared once here so anything that has to
+     * sit above it (e.g. the product action bar on a detail page) uses the
+     * same number instead of hard-coding an offset that drifts.
+     */
+    --tabbar-h: 62px;
+  }
+
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
@@ -49,6 +58,23 @@
 @layer components {
   .container-page {
     @apply mx-auto w-full max-w-container px-5 sm:px-6 lg:px-10;
+  }
+
+  /*
+   * Compact product action bar on a detail page.
+   *
+   * Sits directly ABOVE the mobile tab bar below md, where both are visible,
+   * and flush to the bottom from md up, where the tab bar is hidden. Hidden
+   * entirely from lg, where the actions live in the sticky purchase column.
+   */
+  .sticky-action-bar {
+    bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 768px) {
+    .sticky-action-bar {
+      bottom: 0;
+    }
   }
 
   /* Subtle grid backdrop used once, in the hero — not a repeated decorative motif. */

@@ -166,7 +166,46 @@ export interface ProductQuery {
   brand?: string;
   priceMin?: number;
   priceMax?: number;
-  sort?: 'popular' | 'price-asc' | 'price-desc';
+  /** Exact published capacity in GB. */
+  storageGb?: number;
+  /** Battery-health window, inclusive. */
+  batteryMin?: number;
+  batteryMax?: number;
+  /** Drops records the source explicitly marks sold out. Unknown stays. */
+  hideOutOfStock?: boolean;
+  /** Only records with a published monthly payment. */
+  hasFinancing?: boolean;
+  /**
+   * 'default' is a deterministic, reproducible order (stable across requests
+   * and pages). 'popular' is left in the contract for the production API but
+   * is deliberately not offered in the catalogue UI — the prototype will not
+   * present an invented popularity ranking.
+   */
+  sort?: 'default' | 'popular' | 'price-asc' | 'price-desc';
   page?: number;
   pageSize?: number;
+}
+
+/**
+ * What the electronics catalogue can actually be filtered by.
+ *
+ * Every entry is counted against the real records, so a filter is never
+ * offered for a value the source cannot return. `batteryHealth` lists the
+ * distinct published percentages rather than pre-bucketed ranges — the
+ * presentation layer decides how to group them, the data layer does not
+ * invent the groups.
+ */
+export interface ProductFacets {
+  total: number;
+  categories: { value: string; label: string; count: number }[];
+  brands: { value: string; count: number }[];
+  storages: { value: number; count: number }[];
+  batteryHealth: { value: number; count: number }[];
+  priceMin: number;
+  priceMax: number;
+  /** Counts per stock status, so the UI never has to guess availability. */
+  inStock: number;
+  outOfStock: number;
+  unknownStock: number;
+  withFinancing: number;
 }

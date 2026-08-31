@@ -43,6 +43,12 @@ export const httpProvider: DataAdapter = {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/products/{id}/
     return unavailable();
   },
+  async getProductFacets() {
+    // TODO(api): GET  {MARKAB_API_BASE_URL}/products/facets/  → category/brand/…
+    // Same rule as the vehicle facets: with no counted options the catalogue
+    // hides the filters it cannot back with real values.
+    return unavailable();
+  },
   async getFeatured() {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/featured/
     return unavailable();

@@ -63,7 +63,8 @@ export function MobileTabBar() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 backdrop-blur-md md:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
-      <ul className="grid grid-cols-5">
+      {/* Height pinned to --tabbar-h so the value in globals.css stays true. */}
+      <ul className="grid h-[var(--tabbar-h)] grid-cols-5 items-center">
         {tabs.map((tab) => {
           const active = pathname === tab.href || pathname.startsWith(`${tab.href}/`);
           return (
