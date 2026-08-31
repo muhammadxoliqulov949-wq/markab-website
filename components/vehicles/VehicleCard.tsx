@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Vehicle } from '@/lib/data/types';
-import { formatKm, formatUzs, formatViews } from '@/lib/format';
+import { formatKm, formatUzs } from '@/lib/format';
 import { fuelLabel, transmissionLabel } from '@/lib/labels';
 import { Badge } from '@/components/ui/Badge';
 import { PendingValue } from '@/components/ui/StateBlock';
@@ -9,7 +9,14 @@ import { PendingValue } from '@/components/ui/StateBlock';
 function NoImage({ label }: { label: string }) {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-surface-sunken text-ink-400">
-      <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <svg
+        className="h-8 w-8"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        aria-hidden="true"
+      >
         <rect x="3" y="5" width="18" height="14" rx="2.5" />
         <path d="m4 16 4.5-4.5 3 3L16 10l4 4" strokeLinecap="round" />
       </svg>
@@ -18,6 +25,14 @@ function NoImage({ label }: { label: string }) {
   );
 }
 
+/**
+ * Marketplace vehicle card.
+ *
+ * Built only from fields the data source actually publishes. The name is
+ * composed from `brand` + `model` + `year` rather than the raw `title`, because
+ * fixture titles are inconsistent about including the year. The monthly payment
+ * is printed only when the source publishes one — it is never derived here.
+ */
 export function VehicleCard({
   vehicle,
   priority = false,
@@ -33,34 +48,35 @@ export function VehicleCard({
 }) {
   const image = vehicle.images[0];
   const href = `/cars/${vehicle.slug}`;
+  const monthly = vehicle.financing.monthlyPaymentUzs;
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
+    <article className="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
       <Link href={href} className="flex flex-1 flex-col">
         {/* Fixed 4:3 frame — the same geometry the electronics cards use. */}
         <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
           {image ? (
             <Image
               src={image}
-              alt={vehicle.title}
+              alt={`${vehicle.brand} ${vehicle.model}`}
               fill
               priority={priority}
               loading={priority ? undefined : 'lazy'}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 30vw"
               className="object-cover transition-transform duration-700 ease-smooth group-hover:scale-[1.04]"
             />
           ) : (
             <NoImage label="Rasm mavjud emas" />
           )}
 
-          <div className="absolute left-3 top-3 flex gap-2">
+          <div className="absolute left-3 top-3 flex flex-wrap gap-2">
             {highlight ? (
-              <Badge tone="brand" className="bg-white/95 backdrop-blur">
+              <Badge tone="brand" className="bg-white/95">
                 Tanlangan
               </Badge>
             ) : null}
             {vehicle.isNew ? (
-              <Badge tone="brand" className="bg-white/95 backdrop-blur">
+              <Badge tone="brand" className="bg-white/95">
                 Yangi
               </Badge>
             ) : null}
@@ -68,26 +84,35 @@ export function VehicleCard({
         </div>
 
         <div className="flex flex-1 flex-col p-5">
-          <h3 className="truncate text-[0.9375rem] font-semibold text-ink-900">{vehicle.title}</h3>
+          <h3 className="truncate text-[0.9375rem] font-semibold leading-snug text-ink-900">
+            {vehicle.brand} {vehicle.model}
+          </h3>
           <p className="mt-1 truncate text-sm text-ink-500">
             {vehicle.year} · {formatKm(vehicle.mileageKm)} · {fuelLabel(vehicle.fuelType)} ·{' '}
             {transmissionLabel(vehicle.transmission)}
           </p>
 
-          <div className="mt-4 flex flex-wrap items-end justify-between gap-2">
-            <div>
-              <p className="text-lg font-semibold leading-tight tracking-[-0.01em] text-ink-900">
-                {formatUzs(vehicle.priceUzs)}
-              </p>
-              <p className="mt-1 flex min-h-[1.375rem] items-center text-sm text-brand-700">
-                {vehicle.financing.monthlyPaymentUzs ? (
-                  `${formatUzs(vehicle.financing.monthlyPaymentUzs)} / oy`
+          {/*
+            Price block. The monthly payment is always two lines — a fixed label
+            plus either the published value or a pending marker — so every card
+            in the grid is the same height whichever state it lands in.
+          */}
+          <div className="mt-4 flex flex-1 flex-col justify-end">
+            <p className="text-xl font-semibold leading-tight tracking-[-0.01em] text-ink-900">
+              {formatUzs(vehicle.priceUzs)}
+            </p>
+            <div className="mt-2">
+              <p className="text-xs text-ink-500">Oylik to‘lov</p>
+              {/* Fixed height: the pending marker carries an icon and would
+                  otherwise make those cards 2px taller than the rest. */}
+              <p className="mt-0.5 flex h-5 items-center text-sm">
+                {monthly ? (
+                  <span className="font-medium text-brand-700">{formatUzs(monthly)}</span>
                 ) : (
-                  <PendingValue label="Oylik to‘lov: hisob-kitob tayyorlanmoqda" />
+                  <PendingValue label="Tayyorlanmoqda" />
                 )}
               </p>
             </div>
-            <span className="text-xs text-ink-400">{formatViews(vehicle.views)}</span>
           </div>
         </div>
 

@@ -119,13 +119,45 @@ export interface VehicleQuery {
   brand?: string;
   fuelType?: string;
   transmission?: string;
+  /** Exact model year. */
+  year?: number;
   yearFrom?: number;
   yearTo?: number;
   priceMin?: number;
   priceMax?: number;
+  /**
+   * 'new'  → the source marks the vehicle as new
+   * 'used' → otherwise
+   * Only these two exist in the data; nothing else is offered in the UI.
+   */
+  condition?: 'new' | 'used';
+  /**
+   * true → keep only vehicles whose monthly payment is actually published.
+   * This reflects data availability, not a promise that finance is approved.
+   */
+  hasFinancing?: boolean;
   sort?: 'newest' | 'price-asc' | 'price-desc' | 'mileage-asc';
   page?: number;
   pageSize?: number;
+}
+
+/**
+ * Filter options derived from the data source, never from UI assumptions.
+ *
+ * The marketplace only offers a filter value that can actually return results,
+ * so `VehicleFacets` carries the real brands / years / fuel types /
+ * transmissions present plus their counts.
+ */
+export interface VehicleFacets {
+  total: number;
+  brands: { value: string; count: number }[];
+  years: { value: number; count: number }[];
+  priceMin: number;
+  priceMax: number;
+  fuelTypes: { value: FuelType; count: number }[];
+  transmissions: { value: Transmission; count: number }[];
+  condition: { value: 'new' | 'used'; count: number }[];
+  withFinancing: number;
 }
 
 export interface ProductQuery {

@@ -29,6 +29,12 @@ export const httpProvider: DataAdapter = {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/vehicles/{slug}/
     return unavailable();
   },
+  async getVehicleFacets() {
+    // TODO(api): GET  {MARKAB_API_BASE_URL}/vehicles/facets/  → brand/year/…
+    // Until a facets endpoint exists the marketplace hides the values it
+    // cannot count, rather than offering filters that return nothing.
+    return unavailable();
+  },
   async listProducts() {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/products/
     return unavailable();

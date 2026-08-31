@@ -7,7 +7,7 @@
 | **0** | Deep website audit | ✅ Complete — [`docs/MARKAB-2.0-PHASE-0-AUDIT.md`](docs/MARKAB-2.0-PHASE-0-AUDIT.md) |
 | **0.5** | Critical foundation (adapter, real 404s, routes, states) | ✅ Complete — built from scratch in this repo as the Markab 2.0 prototype |
 | **1** | Homepage redesign | ✅ Implemented — awaiting stakeholder visual sign-off |
-| **2** | Automobile marketplace experience (`/cars`) | ⏳ **Not started — awaiting approval** |
+| **2** | Automobile marketplace experience (`/cars`, `/cars/[slug]`) | ✅ Implemented — awaiting stakeholder visual sign-off |
 
 ### Why 0.5 is blocked
 
@@ -126,3 +126,40 @@ Homepage-specific components live in `components/home/`. Notable behaviours:
 * **Motion** is scroll-reveal, hover and focus transitions only. `Reveal` honours
   `prefers-reduced-motion`, and a `<noscript>` rule in the root layout forces
   revealed content visible when JavaScript never runs.
+
+### Phase 2 — automobile marketplace
+
+`/cars` and `/cars/[slug]` are built on the same `UI → repository → adapter → provider`
+chain as the homepage. Neither page imports fixtures; every option, count and price
+comes from the repository.
+
+**Filter state lives in the URL.** `/cars?brand=chevrolet&year=2023&sort=price-asc` is a
+real, shareable, reload-safe address. The keys are `q, brand, year, fuel, trans, cond,
+fin, minp, maxp, sort, page`; `lib/vehicles/filters.ts` is the single pure translator
+between those parameters and the adapter's `VehicleQuery`. Because every filter change is
+a navigation, the result grid stays a server component — no client-side data fetching.
+
+**Only filters the data can answer are offered.** `repository.getVehicleFacets()` asks the
+provider which brands, years, fuel types, transmissions and conditions actually exist, so
+the UI never shows a filter that would return nothing. If the source cannot describe its
+own options, the sidebar is dropped and only search + sort remain.
+
+**Sorting** is newest year, price ascending, price descending — nothing else. There is no
+popularity ranking, because no popularity data exists.
+
+**Financing is never computed.** A card or detail page prints the monthly payment only
+when the source publishes one. `initialPaymentUzs`, `termMonths`, `totalAmountUzs` and
+`contractType` are null for every current record, so they render as explicit pending
+markers that link to `/financing/calculator`.
+
+**The gallery is honest.** Listings with one photo show one photo — no duplicated
+thumbnails, no fake "1 / 1" counter.
+
+**Related vehicles are deterministic.** `lib/vehicles/related.ts` scores candidates on
+brand, year gap, relative price distance, fuel type and transmission, with `id` as the
+final tie-breaker so a page always renders the same three cars. It is labelled as a
+fixed-rule selection, never as AI or a personalised recommendation.
+
+Mobile is first-class: a filter sheet with a live result count replaces the sidebar below
+`lg`, search is debounced, and the whole marketplace was measured at 320 / 375 / 390 /
+430 / 768 / 1024 / 1280 / 1440 with zero horizontal overflow.

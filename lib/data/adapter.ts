@@ -1,4 +1,14 @@
-import type { FaqItem, Lesson, Paginated, Product, ProductQuery, Result, Vehicle, VehicleQuery } from './types';
+import type {
+  FaqItem,
+  Lesson,
+  Paginated,
+  Product,
+  ProductQuery,
+  Result,
+  Vehicle,
+  VehicleFacets,
+  VehicleQuery,
+} from './types';
 
 /**
  * Data-source contract.
@@ -16,6 +26,8 @@ export interface DataAdapter {
 
   listVehicles(query?: VehicleQuery): Promise<Result<Paginated<Vehicle>>>;
   getVehicleBySlug(slug: string): Promise<Result<Vehicle>>;
+  /** Real filter options for the marketplace (never guessed by the UI). */
+  getVehicleFacets(): Promise<Result<VehicleFacets>>;
 
   listProducts(query?: ProductQuery): Promise<Result<Paginated<Product>>>;
   getProductById(id: string): Promise<Result<Product>>;

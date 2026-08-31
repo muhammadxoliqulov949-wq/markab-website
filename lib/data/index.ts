@@ -19,6 +19,7 @@ function getAdapter(): DataAdapter {
 export const repository = {
   listVehicles: (query?: VehicleQuery) => getAdapter().listVehicles(query),
   getVehicleBySlug: (slug: string) => getAdapter().getVehicleBySlug(slug),
+  getVehicleFacets: () => getAdapter().getVehicleFacets(),
   listProducts: (query?: ProductQuery) => getAdapter().listProducts(query),
   getProductById: (id: string) => getAdapter().getProductById(id),
   getFeatured: () => getAdapter().getFeatured(),
