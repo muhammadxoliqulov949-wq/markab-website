@@ -132,9 +132,18 @@ export function StateBlock({
  * Inline "value not available" marker used inside tables and spec lists,
  * so a missing value is explicit rather than silently blank.
  */
-export function PendingValue({ label = 'Ma’lumot tayyorlanmoqda' }: { label?: string }) {
+export function PendingValue({
+  label = 'Ma’lumot tayyorlanmoqda',
+  className = '',
+}: {
+  label?: string;
+  /** Colour override — the default ink-400 is unreadable on a dark panel. */
+  className?: string;
+}) {
   return (
-    <span className="inline-flex items-center gap-1.5 text-sm text-ink-400">
+    <span
+      className={`inline-flex items-center gap-1.5 text-sm ${className || 'text-ink-400'}`}
+    >
       <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
         <circle cx="12" cy="12" r="9" />
         <path d="M12 8v4l3 2" strokeLinecap="round" />

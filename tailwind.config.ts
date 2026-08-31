@@ -56,13 +56,18 @@ const config: Config = {
         sans: ['var(--font-sans)'],
       },
       fontSize: {
-        'display-sm': ['2rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        'display-sm': ['1.75rem', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+        /**
+         * Hero headline — large but controlled. 34px on a 320px phone,
+         * 52–56px on desktop. Deliberately smaller than a "landing-page
+         * shout": the page should read calm, not loud.
+         */
         'display-xl': [
-          'clamp(2.35rem, 5.4vw, 4.25rem)',
-          { lineHeight: '1.03', letterSpacing: '-0.035em' },
+          'clamp(2.125rem, 1.05rem + 2.6vw, 3.5rem)',
+          { lineHeight: '1.06', letterSpacing: '-0.03em' },
         ],
-        'display-md': ['2.75rem', { lineHeight: '1.08', letterSpacing: '-0.025em' }],
-        'display-lg': ['3.5rem', { lineHeight: '1.04', letterSpacing: '-0.03em' }],
+        'display-md': ['2.25rem', { lineHeight: '1.1', letterSpacing: '-0.025em' }],
+        'display-lg': ['2.875rem', { lineHeight: '1.07', letterSpacing: '-0.028em' }],
       },
       borderRadius: {
         DEFAULT: '10px',
@@ -77,7 +82,12 @@ const config: Config = {
         lift: '0 18px 40px -20px rgba(12, 17, 22, 0.28)',
       },
       maxWidth: {
-        container: '1200px',
+        /**
+         * Single source of truth for the content grid. Core content aligns to
+         * this width on every page; only intentionally full-bleed visuals
+         * (hero photography edge, section washes) go past it.
+         */
+        container: '1280px',
       },
       transitionTimingFunction: {
         smooth: 'cubic-bezier(0.22, 1, 0.36, 1)',

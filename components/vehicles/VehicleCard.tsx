@@ -33,9 +33,14 @@ export function VehicleCard({
 
   if (featured) {
     return (
-      <article className="group relative overflow-hidden rounded-2xl bg-ink-900 shadow-card transition-all duration-500 ease-smooth hover:-translate-y-1 hover:shadow-card-hover">
+      <article className="group relative overflow-hidden rounded-2xl bg-ink-900 shadow-card transition-all duration-500 ease-smooth hover:shadow-card-hover">
         <Link href={href} className="block">
-          <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken lg:aspect-[16/10]">
+          {/*
+            Same 4:3 frame as every other catalogue card. The "featured"
+            treatment is the dark scrim and the overlay type — not a bigger
+            picture, which is what made the section read as a photo wall.
+          */}
+          <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken">
             {image ? (
               <Image
                 src={image}
@@ -48,36 +53,48 @@ export function VehicleCard({
             ) : (
               <NoImage label="Rasm mavjud emas" />
             )}
-            <div
-              className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/60 to-ink-900/5"
-              aria-hidden="true"
-            />
-            <div className="absolute left-4 top-4 flex gap-2">
+            <div className="card-scrim absolute inset-0" aria-hidden="true" />
+            <div className="absolute left-3 top-3 flex gap-2 sm:left-4 sm:top-4">
               {vehicle.isNew ? (
                 <Badge tone="brand" className="bg-white/95 backdrop-blur">
                   Yangi
                 </Badge>
               ) : null}
             </div>
-            <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-              <p className="text-xs uppercase tracking-[0.12em] text-white/60">
+            <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+              <p className="truncate text-[10px] uppercase tracking-[0.14em] text-white/65 sm:text-[11px]">
                 {vehicle.year} · {formatKm(vehicle.mileageKm)} · {fuelLabel(vehicle.fuelType)}
               </p>
-              <h3 className="mt-1.5 text-xl font-semibold text-white sm:text-2xl">{vehicle.title}</h3>
-              <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="text-lg font-semibold text-white">
+              <h3 className="mt-1.5 truncate text-base font-semibold text-white sm:text-lg">
+                {vehicle.title}
+              </h3>
+              <div className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+                <span className="text-[0.9375rem] font-semibold text-white sm:text-base">
                   {formatUzs(vehicle.priceUzs)}
                 </span>
                 {vehicle.financing.monthlyPaymentUzs ? (
-                  <span className="text-sm text-brand-200">
+                  <span className="text-xs text-brand-200">
                     {formatUzs(vehicle.financing.monthlyPaymentUzs)} / oy
                   </span>
                 ) : (
-                  <span className="text-sm text-white/60">
+                  <span className="text-xs text-white/65">
                     Oylik to‘lov: hisob-kitob tayyorlanmoqda
                   </span>
                 )}
               </div>
+              <span className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-white transition-colors group-hover:text-brand-100 sm:text-sm">
+                E’lonni ochish
+                <svg
+                  className="h-3.5 w-3.5 transition-transform duration-300 ease-smooth group-hover:translate-x-1 sm:h-4 sm:w-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.9"
+                  aria-hidden="true"
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
             </div>
           </div>
         </Link>

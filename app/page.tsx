@@ -69,7 +69,6 @@ export default async function HomePage() {
         headingId="cars-heading"
         state={featured}
         kind="vehicles"
-        itemWidth="w-[82%]"
         publicTotal={20}
       />
 
@@ -83,7 +82,6 @@ export default async function HomePage() {
         headingId="electronics-heading"
         state={featured}
         kind="products"
-        itemWidth="w-[62%]"
         publicTotal={42}
       />
 

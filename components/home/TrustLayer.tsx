@@ -41,7 +41,7 @@ const facts = [
 export function TrustLayer() {
   return (
     <section aria-labelledby="trust-heading" className="border-b border-line bg-surface">
-      <Container className="py-10 sm:py-12">
+      <Container className="py-8 sm:py-10">
         <h2 id="trust-heading" className="sr-only">
           Nega Markabga ishonish mumkin
         </h2>
@@ -82,7 +82,7 @@ export function TrustLayer() {
         <p className="mt-8 text-xs leading-relaxed text-ink-400">
           Huquqiy va moliyaviy ma’lumotlarning ayrim qismlari turli manbalarda farqli
           ko‘rsatilgan, shuning uchun ular tasdiqlangunga qadar ko‘rsatilmaydi.{' '}
-          <Link href="/about#trust" className="text-brand-700 underline underline-offset-2">
+          <Link href="/about#trust" className="inline-flex min-h-[24px] items-center text-brand-700 underline underline-offset-2">
             Tekshiruv kutilayotgan maydonlar
           </Link>
         </p>

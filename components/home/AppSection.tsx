@@ -33,52 +33,50 @@ function StoreBadge({ store, href }: { store: 'App Store' | 'Google Play'; href:
 /**
  * Digital experience — the Markab 2.0 ecosystem concept.
  *
+ * Light section on purpose: the dashboard mock carries its own dark frame, and
+ * that contrast is what gives the block its weight. Darkening the whole band
+ * would turn the page into alternating slabs.
+ *
  * The dashboard is explicitly labelled as a concept, so prototype UI is never
  * presented as production capability. Store links are the verified public
  * listings.
  */
 export function AppSection() {
   return (
-    <section
-      aria-labelledby="app-heading"
-      className="relative overflow-hidden bg-ink-900 py-20 text-white sm:py-24 lg:py-28"
-    >
-      <div className="vignette pointer-events-none absolute inset-0" aria-hidden="true" />
-
-      <Container className="relative">
-        <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-16">
+    <section aria-labelledby="app-heading" className="bg-surface-muted py-14 sm:py-16 lg:py-20">
+      <Container>
+        <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-14">
           <div>
             <SectionHeading
               id="app-heading"
               eyebrow="Raqamli tajriba"
-              title="Hammasi bitta kabinetda"
+              title="Markab ilovasida — hammasi bir joyda"
               description="Buyurtmalar, to‘lovlar, shartnomalar, sarmoya va bildirishnomalar — bitta ilovada."
-              tone="dark"
             />
 
-            <ul className="mt-9 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            <ul className="mt-8 grid gap-x-8 gap-y-5 sm:grid-cols-2">
               {appFeatures.map((feature) => (
-                <li key={feature.title} className="border-t border-white/10 pt-4">
-                  <h3 className="text-sm font-semibold text-white">{feature.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-white/60">
+                <li key={feature.title} className="border-t border-line pt-4">
+                  <h3 className="text-sm font-semibold text-ink-900">{feature.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-ink-500">
                     {feature.description}
                   </p>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               <StoreBadge store="App Store" href={site.apps.appStore} />
               <StoreBadge store="Google Play" href={site.apps.googlePlay} />
             </div>
 
-            <p className="mt-5 text-xs leading-relaxed text-white/45">
+            <p className="mt-5 text-xs leading-relaxed text-ink-400">
               Ilova ma’lumotlari rasmiy do‘kon sahifalaridan olingan. Kabinet ko‘rinishi — Markab
               2.0 kontsepti: real ma’lumotlar ulanishi kutilmoqda.
             </p>
           </div>
 
-          <div className="pb-8 sm:pb-0">
+          <div>
             <DashboardMock />
           </div>
         </div>

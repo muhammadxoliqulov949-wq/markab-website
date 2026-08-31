@@ -1,7 +1,6 @@
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { StateBlock } from '@/components/ui/StateBlock';
 import { Reveal } from '@/components/ui/Reveal';
-import { Showcase, ShowcaseItem } from '@/components/home/Showcase';
 import { VehicleCard } from '@/components/vehicles/VehicleCard';
 import { ProductCard } from '@/components/products/ProductCard';
 import { ArrowLink } from '@/components/ui/ArrowLink';
@@ -18,8 +17,6 @@ type Props = {
   headingId: string;
   state: Result<{ vehicles: Vehicle[]; products: Product[] }>;
   kind: 'vehicles' | 'products';
-  /** Mobile rail card width — electronics cards are narrower than car cards. */
-  itemWidth?: string;
   /** Publicly published total (verified from the live listing pages). */
   publicTotal?: number;
 };
@@ -27,12 +24,13 @@ type Props = {
 /**
  * Homepage marketplace showcase.
  *
+ * Two deliberate layouts, both with a controlled 4:3 image frame:
+ *  • vehicles   — one wide editorial feature card, then a two-up row.
+ *  • products   — a dense commerce grid (rail on phones).
+ *
  * Data always arrives through the repository — never hardcoded — and every
  * state is handled: success → real cards, empty → Empty state with a route to
  * the catalogue, error → Error state, unavailable → Pending integration.
- *
- * Vehicles use an asymmetric grid (one wide feature card + supporting cards)
- * so imagery stays dominant; electronics use a denser commerce grid.
  */
 export function FeaturedShowcase({
   tone = 'default',
@@ -44,7 +42,6 @@ export function FeaturedShowcase({
   headingId,
   state,
   kind,
-  itemWidth,
   publicTotal,
 }: Props) {
   const isVehicles = kind === 'vehicles';
@@ -52,45 +49,60 @@ export function FeaturedShowcase({
   return (
     <section
       aria-labelledby={headingId}
-      className={`${tone === 'muted' ? 'bg-surface-muted' : 'bg-surface'} py-20 sm:py-24 lg:py-28`}
+      className={`${tone === 'muted' ? 'bg-surface-muted' : 'bg-surface'} py-14 sm:py-16 lg:py-20`}
     >
       <Container>
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <SectionHeading id={headingId} eyebrow={eyebrow} title={title} description={description} />
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <SectionHeading
+            id={headingId}
+            eyebrow={eyebrow}
+            title={title}
+            description={description}
+          />
           <ArrowLink href={href} className="shrink-0">
             {cta}
           </ArrowLink>
         </div>
 
-        <div className="mt-12">
+        <div className="mt-9 lg:mt-11">
           {state.status === 'success' ? (
             <>
+              {/*
+                Both catalogues use the same 3-up grid and the same 4:3 frame.
+                A wider "feature" card made each image ~440px tall, which turned
+                the section into a photo wall; hierarchy now comes from the dark
+                treatment on the first car, not from a bigger picture.
+              */}
               {isVehicles ? (
-                <Showcase columns={3}>
+                <ul className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 md:grid-cols-3">
                   {state.data.vehicles.map((vehicle, index) => (
-                    <ShowcaseItem
-                      key={vehicle.id}
-                      className={index === 0 ? 'w-[86%] lg:col-span-2' : itemWidth ?? 'w-[80%]'}
-                    >
+                    <li key={vehicle.id} className="w-[80%] shrink-0 snap-start sm:w-auto">
                       <Reveal delay={index * 70}>
-                        <VehicleCard vehicle={vehicle} priority={index === 0} featured={index === 0} />
+                        <VehicleCard
+                          vehicle={vehicle}
+                          priority={index === 0}
+                          featured={index === 0}
+                        />
                       </Reveal>
-                    </ShowcaseItem>
+                    </li>
                   ))}
-                </Showcase>
+                </ul>
               ) : (
-                <Showcase columns={4}>
+                <ul className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 md:grid-cols-3">
                   {state.data.products.map((product, index) => (
-                    <ShowcaseItem key={product.id} className={itemWidth ?? 'w-[62%]'}>
+                    <li
+                      key={product.id}
+                      className="w-[68%] shrink-0 snap-start sm:w-auto"
+                    >
                       <Reveal delay={index * 60}>
                         <ProductCard product={product} priority={index === 0} />
                       </Reveal>
-                    </ShowcaseItem>
+                    </li>
                   ))}
-                </Showcase>
+                </ul>
               )}
 
-              <p className="mt-8 text-xs text-ink-400">
+              <p className="mt-7 text-xs leading-relaxed text-ink-400">
                 {dataSourceNote ? `${dataSourceNote} ` : ''}
                 {publicTotal
                   ? `Ochiq e’lonlar soni: ${publicTotal} ta (markab.uz bo‘yicha).`

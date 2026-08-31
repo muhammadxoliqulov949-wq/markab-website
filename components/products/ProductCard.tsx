@@ -31,7 +31,8 @@ export function ProductCard({ product, priority = false }: { product: Product; p
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
       <Link href={`/electronics/${product.id}`} className="block">
-        <div className="relative aspect-square overflow-hidden bg-surface-sunken">
+        {/* 4:3 — the same frame every catalogue card uses, so grids stay even. */}
+        <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken">
           {image ? (
             <Image
               src={image}

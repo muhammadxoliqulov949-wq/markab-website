@@ -5,8 +5,9 @@
 | Phase | Deliverable | Status |
 |---|---|---|
 | **0** | Deep website audit | ✅ Complete — [`docs/MARKAB-2.0-PHASE-0-AUDIT.md`](docs/MARKAB-2.0-PHASE-0-AUDIT.md) |
-| **0.5** | Critical foundation & functionality fix | 🟡 **Blocked — awaiting the frontend source in this repo** |
-| **1** | Homepage redesign | ⏳ Not started (must follow 0.5) |
+| **0.5** | Critical foundation (adapter, real 404s, routes, states) | ✅ Complete — built from scratch in this repo as the Markab 2.0 prototype |
+| **1** | Homepage redesign | ✅ Implemented — awaiting stakeholder visual sign-off |
+| **2** | Automobile marketplace experience (`/cars`) | ⏳ **Not started — awaiting approval** |
 
 ### Why 0.5 is blocked
 

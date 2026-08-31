@@ -48,7 +48,7 @@
 
 @layer components {
   .container-page {
-    @apply mx-auto w-full max-w-container px-5 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-container px-5 sm:px-6 lg:px-10;
   }
 
   /* Subtle grid backdrop used once, in the hero — not a repeated decorative motif. */
@@ -74,6 +74,20 @@
 
   .hero-scrim-y {
     background: linear-gradient(to top, #0c1116 2%, rgba(12, 17, 22, 0) 60%);
+  }
+
+  /**
+   * Scrim for text sitting on top of photography (featured product card).
+   * Bottom-weighted only — a full-field wash would flatten the image.
+   */
+  .card-scrim {
+    background: linear-gradient(
+      to top,
+      rgba(12, 17, 22, 0.92) 0%,
+      rgba(12, 17, 22, 0.72) 34%,
+      rgba(12, 17, 22, 0.24) 68%,
+      rgba(12, 17, 22, 0) 100%
+    );
   }
 
   /* Very low-opacity vignette for dark sections — no glow, no colour cast. */

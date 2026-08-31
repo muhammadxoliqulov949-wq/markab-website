@@ -12,15 +12,16 @@ import type { FaqItem } from '@/lib/data/types';
  */
 export function FaqSection({ items }: { items: FaqItem[] }) {
   return (
-    <section aria-labelledby="faq-heading" className="bg-surface py-20 sm:py-24 lg:py-28">
+    <section aria-labelledby="faq-heading" className="bg-surface py-14 sm:py-16 lg:py-20">
       <Container>
-        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-14">
           <div>
             <SectionHeading
               id="faq-heading"
               eyebrow="Savol-javoblar"
               title="Tez-tez so‘raladigan savollar"
               description="Rasmiy javoblar tasdiqlangach shu yerda paydo bo‘ladi."
+              size="sm"
             />
             <div className="mt-7">
               <ArrowLink href="/faq">Barcha savollar</ArrowLink>

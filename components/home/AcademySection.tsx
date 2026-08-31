@@ -19,7 +19,7 @@ export async function AcademySection() {
   const items = result.status === 'success' ? result.data : [];
 
   return (
-    <section aria-labelledby="academy-heading" className="bg-surface py-20 sm:py-24 lg:py-28">
+    <section aria-labelledby="academy-heading" className="bg-surface py-14 sm:py-16 lg:py-20">
       <Container>
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
@@ -27,6 +27,7 @@ export async function AcademySection() {
             eyebrow="Markab Academy"
             title="Moliyaviy savodxonlik"
             description="Muddatli to‘lov, murabaha va sarmoya asoslari bo‘yicha qisqa darslar."
+            size="sm"
           />
           <ArrowLink href="/academy" className="shrink-0">
             Barcha darslar

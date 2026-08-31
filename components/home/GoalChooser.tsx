@@ -5,12 +5,43 @@ import { Reveal } from '@/components/ui/Reveal';
 import { homepageGoals } from '@/lib/site';
 
 /**
- * "Sizga nima kerak?" — four major navigation choices, not four feature cards.
+ * "Sizga nima kerak?" — four balanced destination cards.
  *
- * The two catalogue goals are backed by real catalogue photography from the
- * adapter; the two service goals use typographic cards with line art, so the
- * grid reads as a designed composition rather than a repeated card pattern.
+ * Every card has the same anatomy (visual → title → one line → CTA), so the
+ * four goals read as equal choices rather than a feature grid. The two
+ * catalogue goals are backed by real catalogue photography from the adapter;
+ * the two service goals use a brand-tinted line-art panel. Nothing decorative
+ * is invented for the sake of symmetry.
+ *
+ * Desktop: four columns. Tablet: two. Phone: a snap-scrolling rail.
  */
+
+const GOAL_ART: Record<string, { path: string; caption: string }> = {
+  financing: {
+    path: 'M8 4h34a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4Zm2 12h26M6 24h30M6 32h18M30 22v12M24 28h12',
+    caption: 'To‘lov rejasi va shartlar',
+  },
+  invest: {
+    path: 'M6 6v34h34M12 32l9-8 7 5 12-15M34 14h6v6',
+    caption: 'Ishtirok modeli',
+  },
+};
+
+function ArrowIcon() {
+  return (
+    <svg
+      className="h-4 w-4 transition-transform duration-300 ease-smooth group-hover:translate-x-1"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function GoalChooser({
   vehicleImage,
   productImage,
@@ -18,193 +49,103 @@ export function GoalChooser({
   vehicleImage: string | null;
   productImage: string | null;
 }) {
-  const [car, electronics, financing, invest] = homepageGoals;
+  const cards = [
+    { ...homepageGoals[0], image: vehicleImage, alt: 'Muddatli to‘lovga taqdim etilayotgan avtomobil' },
+    { ...homepageGoals[1], image: productImage, alt: 'Muddatli to‘lovga taqdim etilayotgan elektronika' },
+    { ...homepageGoals[2], image: null, alt: '' },
+    { ...homepageGoals[3], image: null, alt: '' },
+  ];
 
   return (
-    <section
-      aria-labelledby="goals-heading"
-      className="bg-surface-muted py-20 sm:py-24 lg:py-28"
-    >
+    <section aria-labelledby="goals-heading" className="bg-surface-muted py-14 sm:py-16 lg:py-20">
       <Container>
-        <SectionHeading
-          id="goals-heading"
-          eyebrow="Yo‘nalish tanlang"
-          title="Sizga nima kerak?"
-          description="To‘rtta asosiy yo‘nalish — har biri aniq keyingi qadam bilan."
-        />
-
-        <div className="mt-12 grid gap-5 lg:grid-cols-2">
-          {/* Avtomobil — photography-led */}
-          <Reveal>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <SectionHeading
+            id="goals-heading"
+            eyebrow="Yo‘nalish tanlang"
+            title="Sizga nima kerak?"
+            description="To‘rtta asosiy yo‘nalish — har biri aniq keyingi qadam bilan."
+          />
+          <p className="hidden shrink-0 text-sm text-ink-500 lg:block">
+            O‘rganishni xohlaysizmi?{' '}
             <Link
-              href={car.href}
-              className="group relative flex min-h-[300px] flex-col justify-end overflow-hidden rounded-2xl bg-ink-900 p-7 transition-transform duration-500 ease-smooth hover:-translate-y-1 lg:min-h-[340px]"
+              href="/academy"
+              className="font-medium text-brand-700 underline underline-offset-4 transition-colors hover:text-brand-800"
             >
-              {vehicleImage ? (
-                <>
-                  <Image
-                    src={vehicleImage}
-                    alt=""
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover opacity-80 transition-transform duration-[900ms] ease-smooth group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/70 to-ink-900/10" aria-hidden="true" />
-                </>
-              ) : null}
-
-              <div className="relative">
-                <h3 className="text-2xl font-semibold text-white sm:text-3xl">{car.title}</h3>
-                <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/70">
-                  {car.description}
-                </p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white">
-                  {car.cta}
-                  <svg
-                    className="h-4 w-4 transition-transform duration-300 ease-smooth group-hover:translate-x-1"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.9"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </div>
+              Markab Academy
             </Link>
-          </Reveal>
-
-          {/* Elektronika — photography-led */}
-          <Reveal delay={70}>
-            <Link
-              href={electronics.href}
-              className="group relative flex min-h-[300px] flex-col justify-end overflow-hidden rounded-2xl bg-ink-900 p-7 transition-transform duration-500 ease-smooth hover:-translate-y-1 lg:min-h-[340px]"
-            >
-              {productImage ? (
-                <>
-                  <Image
-                    src={productImage}
-                    alt=""
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover opacity-80 transition-transform duration-[900ms] ease-smooth group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/70 to-ink-900/10" aria-hidden="true" />
-                </>
-              ) : null}
-
-              <div className="relative">
-                <h3 className="text-2xl font-semibold text-white sm:text-3xl">
-                  {electronics.title}
-                </h3>
-                <p className="mt-2 max-w-sm text-sm leading-relaxed text-white/70">
-                  {electronics.description}
-                </p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white">
-                  {electronics.cta}
-                  <svg
-                    className="h-4 w-4 transition-transform duration-300 ease-smooth group-hover:translate-x-1"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.9"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </div>
-            </Link>
-          </Reveal>
-
-          {/* Moliyalashtirish — typographic */}
-          <Reveal delay={140}>
-            <Link
-              href={financing.href}
-              className="group relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface p-7 transition-all duration-500 ease-smooth hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover"
-            >
-              <svg
-                className="h-24 w-auto self-end text-surface-sunken transition-colors duration-500 group-hover:text-brand-50"
-                viewBox="0 0 96 64"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                aria-hidden="true"
-              >
-                <rect x="1" y="1" width="94" height="62" rx="8" />
-                <path d="M14 20h30M14 30h20M14 40h14M60 20v24M54 32h12" strokeLinecap="round" />
-              </svg>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-ink-900">{financing.title}</h3>
-                <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink-500">
-                  {financing.description}
-                </p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-700">
-                  {financing.cta}
-                  <svg
-                    className="h-4 w-4 transition-transform duration-300 ease-smooth group-hover:translate-x-1"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.9"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </div>
-            </Link>
-          </Reveal>
-
-          {/* Sarmoya — typographic */}
-          <Reveal delay={210}>
-            <Link
-              href={invest.href}
-              className="group relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface p-7 transition-all duration-500 ease-smooth hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover"
-            >
-              <svg
-                className="h-24 w-auto self-end text-surface-sunken transition-colors duration-500 group-hover:text-brand-50"
-                viewBox="0 0 96 64"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                aria-hidden="true"
-              >
-                <path d="M6 6v52h84" strokeLinecap="round" />
-                <path d="M14 46l18-16 14 10 22-26" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M62 18h10v10" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-
-              <div>
-                <h3 className="text-2xl font-semibold text-ink-900">{invest.title}</h3>
-                <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink-500">
-                  {invest.description}
-                </p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-700">
-                  {invest.cta}
-                  <svg
-                    className="h-4 w-4 transition-transform duration-300 ease-smooth group-hover:translate-x-1"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.9"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-              </div>
-            </Link>
-          </Reveal>
+          </p>
         </div>
 
-        <p className="mt-8 text-sm text-ink-500">
+        {/* Mobile: snap rail. sm+: grid. */}
+        <ul className="no-scrollbar -mx-5 mt-9 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:mt-11 lg:grid-cols-4">
+          {cards.map((card, index) => {
+            const art = GOAL_ART[card.id];
+            return (
+              <li
+                key={card.id}
+                className="w-[78%] shrink-0 snap-start sm:w-auto"
+              >
+                <Reveal delay={index * 70}>
+                  <Link
+                    href={card.href}
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-card transition-all duration-500 ease-smooth hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover"
+                  >
+                    <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken">
+                      {card.image ? (
+                        <>
+                          <Image
+                            src={card.image}
+                            alt={card.alt}
+                            fill
+                            sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
+                            className="object-cover transition-transform duration-[900ms] ease-smooth group-hover:scale-[1.05]"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-ink-900/25 to-transparent" aria-hidden="true" />
+                        </>
+                      ) : (
+                        <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-brand-50 via-brand-50 to-brand-100/70 px-4">
+                          <svg
+                            viewBox="0 0 48 48"
+                            className="h-16 w-16 text-brand-600/70"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                          >
+                            <path d={art?.path ?? ''} />
+                          </svg>
+                          <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700/80">
+                            {art?.caption}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex flex-1 flex-col p-5">
+                      <h3 className="text-[1.0625rem] font-semibold text-ink-900">{card.title}</h3>
+                      <p className="mt-1.5 flex-1 text-sm leading-relaxed text-ink-500">
+                        {card.description}
+                      </p>
+                      <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700">
+                        {card.cta}
+                        <ArrowIcon />
+                      </span>
+                    </div>
+                  </Link>
+                </Reveal>
+              </li>
+            );
+          })}
+        </ul>
+
+        <p className="mt-7 text-sm text-ink-500 lg:hidden">
           O‘rganishni xohlaysizmi?{' '}
           <Link
             href="/academy"
-            className="font-medium text-brand-700 underline underline-offset-4 transition-colors hover:text-brand-800"
+            className="inline-flex min-h-[24px] items-center font-medium text-brand-700 underline underline-offset-4"
           >
             Markab Academy
           </Link>

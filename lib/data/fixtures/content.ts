@@ -90,9 +90,20 @@ export const financingSteps = [
   },
 ];
 
+/**
+ * Home page investor diagram (markab.uz).
+ *
+ * TRUST CORRECTION (Phase 1 visual pass): the live diagram's middle step reads
+ * "Oylik foyda" (monthly profit). Rendering that as a confirmed feature would
+ * state a return — period, amount and guarantee — that no official document
+ * supports. The step is shown with Markab's own published value-distribution
+ * wording ("Foyda taqsimoti", from the public "Adolatli foyda taqsimoti" value
+ * proposition) and the whole diagram is labelled as the company's published
+ * description, not as verified mechanics.
+ */
 export const investorFlow = {
   title: 'Sarmoyadorlar uchun',
-  steps: ['Biznesdagi ulush', 'Oylik foyda', 'Pul yechish/qo‘shish'],
+  steps: ['Biznesdagi ulush', 'Foyda taqsimoti', 'Pul yechish/qo‘shish'],
   cta: 'Sarmoyalashni boshlash',
 };
 
