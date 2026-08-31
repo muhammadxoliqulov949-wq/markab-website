@@ -5,6 +5,7 @@ import { formatKm, formatUzs } from '@/lib/format';
 import { fuelLabel, transmissionLabel } from '@/lib/labels';
 import { Badge } from '@/components/ui/Badge';
 import { PendingValue } from '@/components/ui/StateBlock';
+import { SaveButton } from '@/components/account/SaveButton';
 
 function NoImage({ label }: { label: string }) {
   return (
@@ -81,6 +82,22 @@ export function VehicleCard({
               </Badge>
             ) : null}
           </div>
+
+          {/*
+            Floated inside the existing 4:3 frame, so saving adds no height and
+            cannot disturb the tuned marketplace grid.
+          */}
+          <SaveButton
+            variant="overlay"
+            item={{
+              kind: 'car',
+              ref: vehicle.slug,
+              title: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`,
+              priceUzs: vehicle.priceUzs,
+              image: image ?? null,
+              href,
+            }}
+          />
         </div>
 
         <div className="flex flex-1 flex-col p-5">

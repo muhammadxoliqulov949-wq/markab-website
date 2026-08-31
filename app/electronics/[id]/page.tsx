@@ -5,6 +5,7 @@ import { Container } from '@/components/ui/Section';
 import { Badge } from '@/components/ui/Badge';
 import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
 import { ButtonLink } from '@/components/ui/Button';
+import { SaveButton } from '@/components/account/SaveButton';
 import { ArrowLink } from '@/components/ui/ArrowLink';
 import { ProductGallery } from '@/components/products/ProductGallery';
 import { AddToCartButton } from '@/components/products/AddToCartButton';
@@ -222,6 +223,16 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
               <ButtonLink href="/contact" variant="ghost" size="lg" fullWidth>
                 Savol berish
               </ButtonLink>
+              <SaveButton
+                item={{
+                  kind: 'electronics',
+                  ref: product.id,
+                  title: product.name,
+                  priceUzs: product.priceUzs,
+                  image: product.images[0] ?? null,
+                  href: `/electronics/${product.id}`,
+                }}
+              />
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useId, useMemo, useState } from 'react';
+import { saveDraft } from '@/lib/account/draft';
 import Link from 'next/link';
 import { Field, Select, TextInput, Textarea } from '@/components/ui/Field';
 import { Button } from '@/components/ui/Button';
@@ -154,6 +155,12 @@ export function ApplicationForm({
           Hech qanday oylik to‘lov yoki tasdiqlash natijasi hisoblanmadi — ular rasmiy jarayon va
           shartnoma asosida belgilanadi.
         </p>
+        <p className="mt-2 text-xs leading-relaxed text-ink-400">
+          Shu brauzerda ariza qoralama sifatida belgilandi: u “Mening Markabim” bo‘limida{' '}
+          <strong className="font-semibold text-ink-600">Qoralama / yuborilmagan</strong> holatida
+          ko‘rsatiladi. Qoralamada faqat mahsulot nomi saqlanadi — ism, telefon va izoh
+          saqlanmaydi.
+        </p>
       </div>
     );
   }
@@ -166,6 +173,15 @@ export function ApplicationForm({
         event.preventDefault();
         setTouched(true);
         if (Object.keys(errors).length > 0) return;
+
+        // Record that an application was STARTED — not that one was submitted.
+        // Only the product context is stored; no name, phone or message is ever
+        // written to browser storage (see lib/account/draft.ts).
+        saveDraft({
+          productTitle: subject?.title ?? (values.product || null),
+          productHref: subject?.href ?? null,
+          kind: subject?.kind ?? null,
+        });
         setStatus('blocked');
       }}
     >

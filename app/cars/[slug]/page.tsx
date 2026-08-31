@@ -5,6 +5,7 @@ import { Container } from '@/components/ui/Section';
 import { Badge } from '@/components/ui/Badge';
 import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
 import { ButtonLink } from '@/components/ui/Button';
+import { SaveButton } from '@/components/account/SaveButton';
 import { ArrowLink } from '@/components/ui/ArrowLink';
 import { VehicleGallery } from '@/components/vehicles/VehicleGallery';
 import { FinancingPanel } from '@/components/vehicles/FinancingPanel';
@@ -271,6 +272,16 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
             <ButtonLink href="/contact" variant="secondary" size="lg" fullWidth>
               Menejer bilan bog‘lanish
             </ButtonLink>
+            <SaveButton
+              item={{
+                kind: 'car',
+                ref: vehicle.slug,
+                title: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`,
+                priceUzs: vehicle.priceUzs,
+                image: vehicle.images[0] ?? null,
+                href: `/cars/${vehicle.slug}`,
+              }}
+            />
           </div>
 
           {/* 11 — Trust / support */}

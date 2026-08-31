@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { Product } from '@/lib/data/types';
 import { formatUzs } from '@/lib/format';
 import { Badge } from '@/components/ui/Badge';
+import { SaveButton } from '@/components/account/SaveButton';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { AddToCartButton } from '@/components/products/AddToCartButton';
 import { stockMeta } from '@/lib/products/stock';
@@ -76,6 +77,22 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           <div className="absolute left-3 top-3">
             <Badge tone={stock.tone}>{stock.label}</Badge>
           </div>
+
+          {/*
+            Floated inside the existing 4:3 frame, so saving adds no height and
+            cannot disturb the tuned marketplace grid.
+          */}
+          <SaveButton
+            variant="overlay"
+            item={{
+              kind: 'electronics',
+              ref: product.id,
+              title: product.name,
+              priceUzs: product.priceUzs,
+              image: image,
+              href,
+            }}
+          />
         </div>
 
         <div className="flex flex-1 flex-col p-4">

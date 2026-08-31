@@ -3,7 +3,7 @@ import { vehicles } from './fixtures/vehicles';
 import { faqItems, lessons } from './fixtures/academy';
 import { investorFlow } from './fixtures/content';
 import { investmentProfile } from './fixtures/investment';
-import { empty, notFound, success } from './types';
+import { empty, notFound, success, unavailable } from './types';
 import type {
   FaqItem,
   Lesson,
@@ -17,6 +17,7 @@ import type {
   VehicleQuery,
   InvestmentProfile,
 } from './types';
+import type { AccountSnapshot } from '../account/types';
 import type { DataAdapter } from './adapter';
 
 const DEFAULT_PAGE_SIZE = 12;
@@ -281,6 +282,18 @@ export const mockProvider: DataAdapter = {
    * of the fields a person needs before investing — every one of them null,
    * because none of them is published.
    */
+  /**
+   * Deliberately `unavailable`.
+   *
+   * The fixtures describe public catalogue data, not a customer. There is no
+   * real person behind this prototype, so there is no account to return — and
+   * inventing one would put fake private data on screen. Demo rows live in
+   * `lib/account/demo.ts`, behind an explicit, labelled demo mode.
+   */
+  async getAccountSnapshot(): Promise<Result<AccountSnapshot>> {
+    return unavailable();
+  },
+
   async getInvestmentProfile(): Promise<Result<InvestmentProfile>> {
     return success({
       ...investmentProfile,

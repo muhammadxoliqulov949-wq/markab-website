@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/components/auth/AuthProvider';
 import { CartProvider } from '@/components/cart/CartProvider';
+import { DemoModeProvider } from '@/components/account/DemoModeProvider';
+import { SavedItemsProvider } from '@/components/account/SavedItemsProvider';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { MobileTabBar } from '@/components/layout/MobileTabBar';
@@ -52,15 +54,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
 
         <AuthProvider>
-          <CartProvider>
-            <SiteHeader />
-            {/* Bottom padding reserves space for the mobile tab bar. */}
-            <main id="main" className="pb-[76px] md:pb-0">
-              {children}
-            </main>
-            <SiteFooter />
-            <MobileTabBar />
-          </CartProvider>
+          <DemoModeProvider>
+            <SavedItemsProvider>
+              <CartProvider>
+                <SiteHeader />
+                {/* Bottom padding reserves space for the mobile tab bar. */}
+                <main id="main" className="pb-[76px] md:pb-0">
+                  {children}
+                </main>
+                <SiteFooter />
+                <MobileTabBar />
+              </CartProvider>
+            </SavedItemsProvider>
+          </DemoModeProvider>
         </AuthProvider>
       </body>
     </html>

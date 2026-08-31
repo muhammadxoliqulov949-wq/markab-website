@@ -11,6 +11,7 @@ import type {
   VehicleQuery,
   InvestmentProfile,
 } from './types';
+import type { AccountSnapshot } from '../account/types';
 
 /**
  * Data-source contract.
@@ -49,4 +50,15 @@ export interface DataAdapter {
    * number the UI invented.
    */
   getInvestmentProfile(): Promise<Result<InvestmentProfile>>;
+
+  /**
+   * The signed-in customer's account: applications, agreements, payment
+   * schedule and notifications.
+   *
+   * There is no authentication backend and no account backend in this
+   * prototype, so BOTH providers return `unavailable` — that is the truthful
+   * answer and the UI renders it as an explicit state. The interface exists so
+   * a real account service can be dropped in without touching a component.
+   */
+  getAccountSnapshot(): Promise<Result<AccountSnapshot>>;
 }

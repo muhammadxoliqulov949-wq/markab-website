@@ -1,26 +1,35 @@
 import type { Metadata } from 'next';
 import { Container } from '@/components/ui/Section';
-import { ProfileDashboard } from '@/components/profile/ProfileDashboard';
+import { AccountDashboard } from '@/components/account/AccountDashboard';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Mening Markabim',
   description:
-    'Shaxsiy kabinet: buyurtmalar, to‘lovlar, shartnomalar, sarmoya va bildirishnomalar. Kontsept holatida.',
+    'Shaxsiy kabinet: arizalar, moliyalashtirish, to‘lovlar, saqlangan mahsulotlar va bildirishnomalar. Real hisob manbasi ulanmagani uchun shaxsiy ma’lumotlar ko‘rsatilmaydi.',
   path: '/profile',
   noindex: true,
 });
 
+/**
+ * /profile — My Markab.
+ *
+ * Direct navigation is safe by construction: the dashboard reads its state from
+ * the auth service, which is `unavailable`, so there is no path by which this
+ * page could show a name, a phone number, a balance, a contract or a payment.
+ * The one thing it can show unprompted is saved products, because those are
+ * real visitor actions held in this browser — and they are disclosed as such.
+ */
 export default function ProfilePage() {
   return (
     <Container className="py-10 sm:py-14">
       {/*
-        The h1 lives here, not in the client dashboard: the dashboard shows a
-        skeleton until the demo session is read from storage, so a server-rendered
-        heading keeps the document outline valid on first paint.
+        The h1 lives here rather than in the client dashboard: the dashboard
+        renders a skeleton until the session state is known, and a
+        server-rendered heading keeps the document outline valid on first paint.
       */}
       <h1 className="sr-only">Mening Markabim</h1>
-      <ProfileDashboard />
+      <AccountDashboard />
       <p className="mt-6 text-xs leading-relaxed text-ink-400">
         Eslatma: asl saytda <code className="rounded bg-surface-sunken px-1 py-0.5">/profile</code>{' '}
         manzili kirish sahifasiga yo‘naltirilmasdan bosh sahifani ko‘rsatardi (soft 404).

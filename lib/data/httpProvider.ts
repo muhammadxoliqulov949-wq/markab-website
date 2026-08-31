@@ -65,6 +65,14 @@ export const httpProvider: DataAdapter = {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/faq/
     return unavailable();
   },
+  async getAccountSnapshot() {
+    // TODO(api): GET  {MARKAB_API_BASE_URL}/account/snapshot/  (Bearer required)
+    //
+    // Requires authenticated requests. The prototype has no auth provider and
+    // will not attempt to bypass one, so this stays `unavailable` until both
+    // authentication and the account endpoints exist.
+    return unavailable();
+  },
   async getInvestmentProfile() {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/investment/profile/
     //

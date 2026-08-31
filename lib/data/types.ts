@@ -9,6 +9,8 @@
  *  - 'unavailable'  no data source configured            → Pending integration state
  */
 
+import type { AccountSnapshot } from '../account/types';
+
 export type Result<T> =
   | { status: 'success'; data: T }
   | { status: 'empty' }

@@ -28,6 +28,7 @@ export const repository = {
   getLessonBySlug: (slug: string) => getAdapter().getLessonBySlug(slug),
   listFaq: () => getAdapter().listFaq(),
   getInvestmentProfile: () => getAdapter().getInvestmentProfile(),
+  getAccountSnapshot: () => getAdapter().getAccountSnapshot(),
 };
 
 export const activeDataSourceName = getAdapter().name;

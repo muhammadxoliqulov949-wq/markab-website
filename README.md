@@ -11,6 +11,7 @@
 | **3** | Electronics marketplace + cart foundation (`/electronics`, `/electronics/[id]`, `/cart`) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **4** | Financing & calculator (`/financing`, `/financing/calculator`, `/financing/apply`) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **5** | Investment experience (`/invest` + investment truth states) | ✅ Implemented — awaiting stakeholder visual sign-off |
+| **6** | My Markab account experience (`/login`, `/profile`, account/dashboard architecture) | ✅ Implemented — awaiting stakeholder visual sign-off |
 
 ### Why 0.5 is blocked
 
@@ -38,6 +39,62 @@ financing values, legal text or reviews. `api.markab.uz/api/v1/` requires a Bear
 | [`docs/LEGAL-TRUST-REGISTER.md`](docs/LEGAL-TRUST-REGISTER.md) | Legal entity, address, domain, phone and privacy conflicts — flagged, **not** resolved by engineering |
 | [`docs/UZ-COPY-FIXES.md`](docs/UZ-COPY-FIXES.md) | Verified Uzbek typos, untranslated values, enum→label map, terminology standards |
 | [`docs/API-CONTRACT.md`](docs/API-CONTRACT.md) | Verified backend facts (Django REST Framework, Bearer auth, 429s), adapter interface, fields needed |
+
+
+---
+
+## Phase 6 — My Markab (account experience)
+
+Scope: `/login`, `/profile`, and the account/dashboard data architecture. No other surface was
+redesigned.
+
+### No authentication exists in this prototype
+
+There is **no verified production auth or customer backend**, so nothing here authenticates,
+identifies or submits. The rules encoded in code:
+
+| Rule | Implementation |
+|---|---|
+| No fake OTP | `unavailableAuthService` returns `unavailable` — it cannot produce a code |
+| No fake success | the auth state machine has **no** `authenticated` path unless a real service returns one |
+| Honest unavailable copy | `Kirish tizimi rasmiy autentifikatsiya xizmati bilan integratsiya qilinmoqda.` |
+| No fake identity | `AccountSnapshot` has **no** name, phone, balance, debt, income or credit-score field |
+| No fake submission | application status `draft` renders **"Qoralama / yuborilmagan"**, never "Ko‘rib chiqilmoqda" |
+| Demo is labelled | demo mode renders a persistent **"Demo rejim — namunaviy ma’lumotlar"** banner |
+| Structure, not figures | every monetary field in `DEMO_ACCOUNT` is `null`; panels render placeholders |
+
+`/profile` is **not** an authenticated area. Direct navigation lands on the honest
+authentication-unavailable state; nothing private is shown.
+
+### Architecture
+
+```
+UI (AccountDashboard / panels)  →  repository.getAccountSnapshot()
+                                 →  MarketplaceAdapter
+                                 →  mockProvider | httpProvider   ← both return `unavailable`
+```
+
+Both providers return `unavailable()` because no account backend exists. When one is connected,
+`httpProvider.getAccountSnapshot()` is the single place to implement, and the UI needs no change.
+`AuthProvider` takes an injectable `AuthService`, so a real OTP provider drops in without touching
+the login form.
+
+### Local prototype state (disclosed in the UI)
+
+| Feature | Storage key | Disclosure shown to the visitor |
+|---|---|---|
+| Saved products | `markab.demo.saved` | "Bu prototipda saqlangan mahsulotlar faqat shu brauzerda turadi — ular Markab hisobiga yuborilmaydi." |
+| Application drafts | `markab.demo.application-drafts` | "Qoralamada faqat mahsulot nomi saqlanadi — ism, telefon va izoh saqlanmaydi." |
+| Demo mode | `markab.demo.dashboard` | Persistent "Demo rejim" banner + badge; default **off** |
+
+A draft deliberately stores **no name, phone number or message** — only that an application was
+started, for which product, and when. Privacy-minimal by construction.
+
+### Verification
+
+`npx tsc --noEmit` clean · `npm run build` clean · no console or hydration errors · zero horizontal
+overflow at 320/375/390/430/768/1024/1280/1440 · contrast clean on `/login` and `/profile` ·
+no collision with the mobile tab bar · true 404s preserved under `/login/*` and `/profile/*`.
 
 ---
 

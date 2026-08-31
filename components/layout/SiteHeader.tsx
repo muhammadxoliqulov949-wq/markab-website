@@ -35,7 +35,9 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { count } = useCart();
-  const { user } = useAuth();
+  // No auth provider exists, so this is always false — the header therefore
+  // always offers 'Kirish', which is the honest state.
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -157,10 +159,10 @@ export function SiteHeader() {
           <span className="mx-0.5 hidden h-6 w-px bg-line lg:mx-1 lg:block" aria-hidden="true" />
 
           <Link
-            href={user ? '/profile' : '/login'}
+            href={isAuthenticated ? '/profile' : '/login'}
             className="inline-flex h-10 shrink-0 items-center rounded-lg bg-ink-900 px-3 text-[0.8125rem] font-medium text-white transition-colors duration-200 hover:bg-ink-800 sm:h-11 sm:px-5 sm:text-sm"
           >
-            {user ? 'Kabinet' : 'Kirish'}
+            {isAuthenticated ? 'Kabinet' : 'Kirish'}
           </Link>
 
           <button
@@ -234,10 +236,10 @@ export function SiteHeader() {
             </div>
 
             <Link
-              href={user ? '/profile' : '/login'}
+              href={isAuthenticated ? '/profile' : '/login'}
               className="mt-4 flex h-12 items-center justify-center rounded-xl bg-ink-900 text-sm font-semibold text-white transition-colors hover:bg-ink-800"
             >
-              {user ? 'Kabinet' : 'Kirish'}
+              {isAuthenticated ? 'Kabinet' : 'Kirish'}
             </Link>
           </nav>
         </div>
