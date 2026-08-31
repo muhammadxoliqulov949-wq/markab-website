@@ -10,6 +10,7 @@
 | **2** | Automobile marketplace experience (`/cars`, `/cars/[slug]`) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **3** | Electronics marketplace + cart foundation (`/electronics`, `/electronics/[id]`, `/cart`) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **4** | Financing & calculator (`/financing`, `/financing/calculator`, `/financing/apply`) | ✅ Implemented — awaiting stakeholder visual sign-off |
+| **5** | Investment experience (`/invest` + investment truth states) | ✅ Implemented — awaiting stakeholder visual sign-off |
 
 ### Why 0.5 is blocked
 
@@ -318,3 +319,87 @@ routes plus the handoff and contact variants; 906 text samples with 0 contrast
 failures on the financing surface; no console or hydration errors; invalid
 product identifiers fail safely; real 404s intact for unknown routes; 43
 internal links across five pages all resolve.
+
+### Phase 5 — investment experience
+
+`/invest`, plus the investment truth states on the homepage. Nothing else was
+redesigned for this phase.
+
+**The primary rule is that no investment information is invented.** There is no
+return rate, yield, ROI, expected income, guaranteed profit, term, minimum
+amount, withdrawal rule, fee, payout schedule, risk rating, historical
+performance or investor count anywhere on the page or in the data model. The
+rendered `/invest` page contains no percentages and no large numbers except the
+office hours in the footer and the step numbers 1–4.
+
+**Removed: "2 oydan 36 oygacha".** That duration range was carried by three
+places — `/invest`, the homepage investment section, and the `valueProps`
+fixture. It could not be substantiated for the investment product, so it was
+deleted from all three and the row moved into the pending list. It was **not**
+replaced with another guessed duration; the pending row says only that the term
+will be shown once it is officially published. A repository-wide search now
+finds the string only inside the three comments that record *why* it was
+removed, so it cannot be quietly reintroduced.
+
+Because the same fixture feeds the homepage "Nima uchun Markab?" list and
+`/about`, the field is now nullable and both consumers render an explicit
+pending marker instead of a value.
+
+**`/invest` carries the ten sections the brief asked for** (hero, what the
+product is, how the published model works, available official information,
+pending information, journey, transparency & documents, risk disclosure, FAQ,
+contact CTA), with deep-link ids.
+
+**Published vs pending is a first-class distinction.** `lib/investment/status.ts`
+defines the two labels, and `components/investment/FactRow.tsx` renders them so
+they cannot be confused:
+
+| State | Treatment |
+| --- | --- |
+| Published | solid row, value in strong ink, a `E'lon qilingan` badge **and the named source** underneath, so the claim is attributed rather than asserted |
+| Pending | dashed border, muted surface, a clock glyph, the required `Rasmiy ma'lumot kutilmoqda.` marker, and a hint saying what is unknown |
+
+A pending row is never allowed to read as a filled-in one — no dash, no
+placeholder number, nothing that looks like a value.
+
+**The data reaches the page through the repository, not through a fixture
+import.** `getInvestmentProfile()` was added to the adapter, mock provider,
+HTTP provider (which returns `unavailable()`) and repository, so the investment
+page obeys the same `UI → repository → adapter → provider` chain as everything
+else. The old `/invest` page imported fixtures directly; it no longer does.
+
+**Three facts are published** — the profit-distribution principle, monthly
+accountability, and the company's own statement that profit can be withdrawn at
+any time. Each names its source and carries a caution that the mechanics are
+not published. **Nine fields are pending** — minimum amount, term, profit
+mechanism, distribution schedule, contract type, fees, withdrawal rules, risk
+information, reporting format.
+
+**Risk is disclosed, not hidden.** A dedicated section states plainly that any
+investment can lose money, that no return is promised or promiseable, that
+final terms depend on the official Markab contract, and that the prototype
+gives no investment advice. It explicitly refuses to show a risk rating
+(low/medium/high) until an official source provides one.
+
+**AAOIFI is attributed, never certified.** The page renders Markab's own
+statement and pairs it with the reason the prototype cannot verify it:
+*"Tasdiqlovchi rasmiy hujjatlar integratsiyasi kutilmoqda. Bu prototip mustaqil
+tekshiruv o'tkazmaydi va da'voni tasdiqlangan deb ko'rsatmaydi."*
+
+**Documents show pending, never a fake download.** Five document categories are
+listed with `href: null`. A null href renders a pending badge and a "So'rash"
+action that opens the contact form — there is no download button for a file
+that does not exist, and no fictional contract or certificate.
+
+**There is no fake investing.** No invest-now button, no balance, no deposit,
+no confirmation, no successful investment. Every CTA — "Batafsil ma'lumot
+olish", "Mutaxassis bilan bog'lanish", "Risk hujjatini so'rash" — opens
+`/contact?type=sarmoya`, optionally with `&about=documents|terms|risk`, and
+prefills both the topic and the message. An unrecognised `about` value falls
+back to the general enquiry rather than producing a broken form.
+
+**Verified:** `npx tsc --noEmit` and `npm run build` clean; zero horizontal
+overflow across 320 / 375 / 390 / 430 / 768 / 1024 / 1280 / 1440 on `/invest`
+and the investment contact handoffs; 192 text samples on `/invest` with 0
+contrast failures; no console or hydration errors; real 404s intact (including
+`/invest/nope`); 47 internal links across seven pages all resolve.

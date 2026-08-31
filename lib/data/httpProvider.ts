@@ -65,4 +65,12 @@ export const httpProvider: DataAdapter = {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/faq/
     return unavailable();
   },
+  async getInvestmentProfile() {
+    // TODO(api): GET  {MARKAB_API_BASE_URL}/investment/profile/
+    //
+    // When this is implemented, every field Markab has not published must come
+    // back as null. The UI renders null as a pending marker; it has no code
+    // path that turns a missing investment value into a number.
+    return unavailable();
+  },
 };

@@ -9,6 +9,7 @@ import type {
   Vehicle,
   VehicleFacets,
   VehicleQuery,
+  InvestmentProfile,
 } from './types';
 
 /**
@@ -41,4 +42,11 @@ export interface DataAdapter {
   getLessonBySlug(slug: string): Promise<Result<Lesson>>;
 
   listFaq(): Promise<Result<FaqItem[]>>;
+
+  /**
+   * The investment product as the source can support it. Any value Markab has
+   * not published arrives as null and renders as a pending marker — never as a
+   * number the UI invented.
+   */
+  getInvestmentProfile(): Promise<Result<InvestmentProfile>>;
 }

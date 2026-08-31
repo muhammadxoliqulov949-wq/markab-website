@@ -1,6 +1,8 @@
 import { productCategories, products } from './fixtures/products';
 import { vehicles } from './fixtures/vehicles';
 import { faqItems, lessons } from './fixtures/academy';
+import { investorFlow } from './fixtures/content';
+import { investmentProfile } from './fixtures/investment';
 import { empty, notFound, success } from './types';
 import type {
   FaqItem,
@@ -13,6 +15,7 @@ import type {
   Vehicle,
   VehicleFacets,
   VehicleQuery,
+  InvestmentProfile,
 } from './types';
 import type { DataAdapter } from './adapter';
 
@@ -268,5 +271,22 @@ export const mockProvider: DataAdapter = {
 
   async listFaq(): Promise<Result<FaqItem[]>> {
     return faqItems.length ? success(faqItems) : empty<FaqItem[]>();
+  },
+
+  /**
+   * Investment profile.
+   *
+   * The published half comes from the fixture (which only contains wording that
+   * appears in Markab's own public material). The pending half is a fixed list
+   * of the fields a person needs before investing — every one of them null,
+   * because none of them is published.
+   */
+  async getInvestmentProfile(): Promise<Result<InvestmentProfile>> {
+    return success({
+      ...investmentProfile,
+      // The published model description is Markab's own three-step diagram.
+      modelTitle: investorFlow.title,
+      modelSteps: investorFlow.steps,
+    });
   },
 };

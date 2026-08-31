@@ -6,6 +6,10 @@ import { ButtonLink } from '@/components/ui/Button';
 import { site } from '@/lib/site';
 import { buildMetadata } from '@/lib/seo';
 import { describeSubject } from '@/lib/financing/subject';
+import {
+  investmentEnquiryMessage,
+  isInvestmentEnquiry,
+} from '@/lib/investment/status';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Aloqa',
@@ -30,11 +34,25 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
   const type = first(sp.type);
   const subject = await describeSubject(type, ref);
 
-  const initialMessage = subject
-    ? `Salom! “${subject.title}” mahsulotining mavjudligini aniqlashda yordam bera olasizmi?`
-    : '';
-  const initialTopic =
-    type === 'electronics' ? 'elektronika' : type === 'car' ? 'avtomobil' : '';
+  // Investment interest from /invest. Every investment CTA ends here — there is
+  // no invest-now flow, no balance and no deposit anywhere in the prototype.
+  // An unrecognised `about` value falls back to the general enquiry, so a
+  // hand-typed URL can never produce a broken or empty form.
+  const enquiry = first(sp.about);
+  const investmentEnquiry = type === 'sarmoya';
+
+  const initialMessage = investmentEnquiry
+    ? investmentEnquiryMessage(isInvestmentEnquiry(enquiry) ? enquiry : 'general')
+    : subject
+      ? `Salom! “${subject.title}” mahsulotining mavjudligini aniqlashda yordam bera olasizmi?`
+      : '';
+  const initialTopic = investmentEnquiry
+    ? 'sarmoya'
+    : type === 'electronics'
+      ? 'elektronika'
+      : type === 'car'
+        ? 'avtomobil'
+        : '';
 
   return (
     <Container className="py-10 sm:py-14">

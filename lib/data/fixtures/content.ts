@@ -11,7 +11,13 @@
  *  • trustBadges     — vehicle-detail trust badges (spelling corrected)
  */
 
-export const valueProps = [
+export const valueProps: {
+  id: string;
+  title: string;
+  /** null → the value is not substantiated; the UI renders a pending marker. */
+  description: string | null;
+  note: string | null;
+}[] = [
   {
     id: 'standards',
     title: 'Qadriyatlarga asoslangan moliya',
@@ -28,8 +34,16 @@ export const valueProps = [
   {
     id: 'flexible',
     title: 'Moslashuvchan',
-    description: '2 oydan 36 oygacha muddat',
-    note: null,
+    /**
+     * REMOVED (Phase 5): this card previously carried the term range
+     * "2 oydan 36 oygacha muddat". That range could not be substantiated for
+     * the investment product, and an unsubstantiated duration is exactly the
+     * kind of number this prototype must not print. It is null now, which the
+     * UI renders as a pending marker — it was not replaced with another
+     * guessed duration.
+     */
+    description: null as string | null,
+    note: 'Muddat oralig‘i rasmiy manbada e’lon qilingach ko‘rsatiladi',
   },
   {
     id: 'withdraw',

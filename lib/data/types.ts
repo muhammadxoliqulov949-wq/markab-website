@@ -209,3 +209,83 @@ export interface ProductFacets {
   unknownStock: number;
   withFinancing: number;
 }
+
+/* ------------------------------------------------------------------ */
+/* Investment                                                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * One row of investment information.
+ *
+ * `value` is null unless an official Markab source actually publishes it.
+ * There is deliberately no field for a guessed or illustrative value — the UI
+ * renders a pending marker instead.
+ */
+export interface InvestmentFact {
+  id: string;
+  label: string;
+  /** Published value, or null when nothing official exists. */
+  value: string | null;
+  /** Where the published value comes from, so it can be attributed. */
+  source: string | null;
+  /** Caution printed under a published value. */
+  note: string | null;
+}
+
+/** A field a person needs before investing, and which is not published. */
+export interface InvestmentPendingField {
+  id: string;
+  label: string;
+  /** What is unknown, so an empty row still says something useful. */
+  hint: string | null;
+}
+
+/** A document category. `href` is null until a real document exists. */
+export interface InvestmentDocument {
+  id: string;
+  title: string;
+  description: string;
+  /** null → render a pending state, never a download button. */
+  href: string | null;
+}
+
+/** One journey step. `confirmed` marks whether an official source describes it. */
+export interface InvestmentJourneyStep {
+  step: number;
+  title: string;
+  description: string;
+  confirmed: boolean;
+}
+
+/** A compliance/standards claim attributed to Markab, never independently asserted. */
+export interface ComplianceStatement {
+  id: string;
+  /** What Markab itself states. */
+  statement: string;
+  /** Why the prototype does not present it as verified. */
+  attribution: string;
+}
+
+/**
+ * The investment product as the source can actually support it.
+ *
+ * Everything here is either published (and attributed) or absent. There is no
+ * return rate, yield, term, minimum, fee, risk score or payout schedule
+ * anywhere in this type — by design.
+ */
+export interface InvestmentProfile {
+  /** Markab's own published label for the model. */
+  modelTitle: string;
+  /** Markab's published three-step description of the model. */
+  modelSteps: string[];
+  /** Facts an official source supports. */
+  published: InvestmentFact[];
+  /** Fields nobody has published. */
+  pending: InvestmentPendingField[];
+  /** Standards claims, attributed to Markab. */
+  compliance: ComplianceStatement[];
+  /** Document categories — all pending until real files exist. */
+  documents: InvestmentDocument[];
+  /** The journey, with unconfirmed steps flagged rather than smoothed over. */
+  journey: InvestmentJourneyStep[];
+}

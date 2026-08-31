@@ -1,5 +1,7 @@
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { Reveal } from '@/components/ui/Reveal';
+import { PendingValue } from '@/components/ui/StateBlock';
+import { PENDING_LABEL } from '@/lib/investment/status';
 import { valueProps } from '@/lib/data/fixtures/content';
 
 /**
@@ -32,9 +34,17 @@ export function WhyMarkab() {
                     </span>
                     <div className="max-w-lg">
                       <h3 className="text-lg font-semibold text-ink-900">{prop.title}</h3>
-                      <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-600">
-                        {prop.description}
-                      </p>
+                      {prop.description ? (
+                        <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-600">
+                          {prop.description}
+                        </p>
+                      ) : (
+                        // A value proposition with no substantiated figure is
+                        // shown as pending, not filled with a plausible one.
+                        <p className="mt-2">
+                          <PendingValue label={PENDING_LABEL} />
+                        </p>
+                      )}
                       {prop.note ? (
                         <p className="mt-2.5 text-xs leading-relaxed text-ink-400">{prop.note}</p>
                       ) : null}

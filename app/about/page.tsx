@@ -4,6 +4,7 @@ import { Container, SectionHeading } from '@/components/ui/Section';
 import { Badge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
 import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
+import { PENDING_LABEL } from '@/lib/investment/status';
 import { legal, legalFlags } from '@/lib/legal';
 import { site } from '@/lib/site';
 import { valueProps } from '@/lib/data/fixtures/content';
@@ -99,7 +100,13 @@ export default function AboutPage() {
             {valueProps.map((prop) => (
               <div key={prop.id} className="rounded-xl border border-line bg-surface p-6">
                 <h3 className="text-base font-semibold text-ink-900">{prop.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-600">{prop.description}</p>
+                {prop.description ? (
+                  <p className="mt-2 text-sm leading-relaxed text-ink-600">{prop.description}</p>
+                ) : (
+                  <p className="mt-2">
+                    <PendingValue label={PENDING_LABEL} />
+                  </p>
+                )}
                 {prop.note ? (
                   <p className="mt-3 border-t border-line pt-3 text-xs text-ink-400">{prop.note}</p>
                 ) : null}
