@@ -15,6 +15,7 @@ import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 import { financingSteps, trustBadges } from '@/lib/data/fixtures/content';
 import { relatedReason, selectRelatedVehicles } from '@/lib/vehicles/related';
+import { applyHref, calculatorHref } from '@/lib/financing/handoff';
 
 type Params = Promise<{ slug: string }>;
 
@@ -257,14 +258,14 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
             <FinancingPanel
               financing={vehicle.financing}
               priceUzs={vehicle.priceUzs}
-              href="/financing/calculator"
-              applyHref={`/financing/apply?type=car&ref=${vehicle.slug}`}
+              href={calculatorHref('car', vehicle.slug)}
+              applyHref={applyHref('car', vehicle.slug)}
             />
           </div>
 
           {/* 7 — Main CTA */}
           <div className="mt-4 flex flex-col gap-2">
-            <ButtonLink href={`/financing/apply?type=car&ref=${vehicle.slug}`} size="lg" fullWidth>
+            <ButtonLink href={applyHref('car', vehicle.slug)} size="lg" fullWidth>
               Ariza yuborish
             </ButtonLink>
             <ButtonLink href="/contact" variant="secondary" size="lg" fullWidth>

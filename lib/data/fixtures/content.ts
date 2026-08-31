@@ -45,7 +45,7 @@ export const howItWorks = [
   {
     step: 3,
     title: 'Shartnoma',
-    description: 'Oldi-sotdi (taqsit yoki murobaha) shartnomasini imzolang',
+    description: 'Oldi-sotdi (taqsit yoki murabaha) shartnomasini imzolang',
   },
   { step: 4, title: 'Oling', description: 'Avtomobilingizni haydang yoki mahsulotni qabul qiling' },
 ];
@@ -79,7 +79,7 @@ export const financingSteps = [
   {
     step: 5,
     title: 'Shartnoma',
-    description: 'Oldi-sotdi (taqsit yoki murobaha) shartnomasini imzolang.',
+    description: 'Oldi-sotdi (taqsit yoki murabaha) shartnomasini imzolang.',
     href: null,
   },
   {

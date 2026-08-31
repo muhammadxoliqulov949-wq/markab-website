@@ -14,13 +14,20 @@ type Status = 'idle' | 'submitting' | 'demo-blocked';
  * message: it renders an explicit "backend ulanmagan" state. This mirrors the
  * requirement that every data-driven area has a real state for every outcome.
  */
-export function ContactForm() {
+export function ContactForm({
+  initialMessage = '',
+  initialTopic = '',
+}: {
+  /** Pre-filled when the visitor arrives from a product's availability action. */
+  initialMessage?: string;
+  initialTopic?: string;
+}) {
   const [status, setStatus] = useState<Status>('idle');
   const [values, setValues] = useState({
     name: '',
     phone: '',
-    topic: '',
-    message: '',
+    topic: initialTopic,
+    message: initialMessage,
   });
 
   return (

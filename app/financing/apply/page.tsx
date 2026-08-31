@@ -1,54 +1,29 @@
 import type { Metadata } from 'next';
 import { Container } from '@/components/ui/Section';
 import { Badge } from '@/components/ui/Badge';
-import { ApplicationForm, type ApplicationContext } from '@/components/financing/ApplicationForm';
-import { repository } from '@/lib/data';
-import { formatUzs } from '@/lib/format';
+import { ApplicationForm } from '@/components/financing/ApplicationForm';
+import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
+import { ButtonLink } from '@/components/ui/Button';
+import { resolveFinancingSubject } from '@/lib/financing/subject';
+import { firstParam } from '@/lib/financing/handoff';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Ariza yuborish',
   description:
-    'Muddatli to‘lov uchun ariza: mahsulot, boshlang‘ich to‘lov, muddat va aloqa ma’lumotlari.',
+    'Muddatli to‘lov uchun ariza: mahsulot, xohis bildirilgan boshlang‘ich to‘lov va muddat, ism, telefon hamda qulay aloqa usuli. Ariza rasmiy backendga ulanmagan.',
   path: '/financing/apply',
 });
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-function first(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
-
-const checklist = [
-  'Pasport yoki ID-karta',
-  'Telefon raqami (SMS tasdiqlash uchun)',
-  'Boshlang‘ich to‘lov uchun mablag‘',
-  'Daromad manbai haqida ma’lumot',
-];
-
 export default async function ApplyPage({ searchParams }: { searchParams: SearchParams }) {
   const sp = await searchParams;
-  const type = first(sp.type);
-  const ref = first(sp.ref);
 
-  // Resolve the chosen item from the fixtures when possible; never invent one.
-  const context: ApplicationContext = { type: type ?? null, ref: ref ?? null, title: null, price: null };
-
-  if (ref) {
-    if (type === 'electronics') {
-      const product = await repository.getProductById(ref);
-      if (product.status === 'success') {
-        context.title = product.data.name;
-        context.price = product.data.priceUzs;
-      }
-    } else {
-      const vehicle = await repository.getVehicleBySlug(ref);
-      if (vehicle.status === 'success') {
-        context.title = vehicle.data.title;
-        context.price = vehicle.data.priceUzs;
-      }
-    }
-  }
+  // Same resolver the calculator uses, so a handoff behaves identically in both
+  // places. An unknown id is a normal outcome, not an error.
+  const resolution = await resolveFinancingSubject(firstParam(sp.type), firstParam(sp.ref));
+  const subject = resolution.status === 'resolved' ? resolution.subject : null;
 
   return (
     <Container className="py-10 sm:py-14">
@@ -56,38 +31,62 @@ export default async function ApplyPage({ searchParams }: { searchParams: Search
         <Badge tone="pending" className="mb-3">
           Prototip — ariza backend ulanmagan
         </Badge>
-        <h1 className="text-display-sm sm:text-display-md">Ariza yuborish</h1>
-        <p className="mt-3 text-base leading-relaxed text-ink-500">
-          Muddatli to‘lov uchun arizani to‘rt bosqichda to‘ldiring. Prototipda yuborish
-          tugmasi ma’lumotlarni saqlamaydi — bu interfeys real tizim ulanganda ishlaydi.
+        <h1 className="text-[1.75rem] font-semibold leading-tight tracking-tight text-ink-900 sm:text-[2.25rem]">
+          Ariza yuborish
+        </h1>
+        <p className="mt-3 text-base leading-relaxed text-ink-600">
+          Faqat birinchi bog‘lanish uchun kerakli maydonlar. Ariza yuborilgach, tizim integratsiya
+          qilinmagani aniq ko‘rsatiladi — «yuborildi» degan tasdiq chiqmaydi.
         </p>
-        {context.title ? (
-          <p className="mt-4 rounded-lg border border-line bg-surface-muted px-4 py-3 text-sm text-ink-700">
-            Tanlangan mahsulot: <span className="font-semibold">{context.title}</span>
-            {context.price !== null ? ` · ${formatUzs(context.price)}` : ''}
-          </p>
-        ) : null}
       </header>
 
       <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
-        <ApplicationForm context={context} />
+        <ApplicationForm subject={subject} invalidRef={resolution.status === 'invalid'} />
 
         <aside className="space-y-6">
           <div className="rounded-xl border border-line bg-surface p-5">
-            <h2 className="text-sm font-semibold text-ink-900">Kerakli hujjatlar</h2>
+            <h2 className="text-sm font-semibold text-ink-900">Nima so‘ralmaydi</h2>
             <ul className="mt-3 space-y-2">
-              {checklist.map((item) => (
+              {[
+                'Pasport yoki ID-karta ma’lumotlari',
+                'JSHSHIR (shaxsiy identifikatsiya raqami)',
+                'Bank karta yoki hisob ma’lumotlari',
+                'Selfi yoki biometrik ma’lumot',
+                'Daromadni tasdiqlovchi hujjatlar',
+              ].map((item) => (
                 <li key={item} className="flex items-start gap-2 text-sm text-ink-600">
-                  <svg className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                    <path d="m5 13 4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                  <svg
+                    className="mt-0.5 h-4 w-4 shrink-0 text-ink-400"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
                   </svg>
                   {item}
                 </li>
               ))}
             </ul>
             <p className="mt-3 text-xs leading-relaxed text-ink-400">
-              To‘liq ro‘yxat rasmiy tasdiqlangach kengaytiriladi.
+              Bu ma’lumotlar faqat rasmiy jarayon va huquqiy asos tasdiqlangandan so‘ng, real
+              tizimda talab qilinishi mumkin. Prototip ularni so‘ramaydi.
             </p>
+          </div>
+
+          <div className="rounded-xl border border-line bg-surface p-5">
+            <h2 className="text-sm font-semibold text-ink-900">Kerakli hujjatlar</h2>
+            <p className="mt-2">
+              <PendingValue label="Rasmiy ro‘yxat kutilmoqda" />
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-ink-400">
+              Hujjatlar ro‘yxati rasmiy jarayon tasdiqlangach shu yerda ko‘rsatiladi. Hozircha u
+              menejer orqali aniqlashtiriladi.
+            </p>
+            <ButtonLink href="/contact" variant="secondary" size="sm" className="mt-4">
+              Menejer bilan bog‘lanish
+            </ButtonLink>
           </div>
 
           <div className="rounded-xl border border-line bg-surface p-5">
@@ -103,6 +102,18 @@ export default async function ApplyPage({ searchParams }: { searchParams: Search
               Bosqichlar va muddatlar rasmiy jarayon tasdiqlangach aniq ko‘rsatiladi.
             </p>
           </div>
+
+          <StateBlock
+            compact
+            variant="pending"
+            title="Shartlar"
+            description="Boshlang‘ich to‘lov, muddat, ustama va komissiyalar rasmiy manbada e’lon qilingach ko‘rsatiladi."
+            actions={
+              <ButtonLink href="/financing" variant="secondary" size="sm">
+                Moliyalashtirish bo‘limi
+              </ButtonLink>
+            }
+          />
         </aside>
       </div>
     </Container>

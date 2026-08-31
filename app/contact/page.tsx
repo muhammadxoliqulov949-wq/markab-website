@@ -5,6 +5,7 @@ import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
 import { ButtonLink } from '@/components/ui/Button';
 import { site } from '@/lib/site';
 import { buildMetadata } from '@/lib/seo';
+import { describeSubject } from '@/lib/financing/subject';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Aloqa',
@@ -13,7 +14,28 @@ export const metadata: Metadata = buildMetadata({
   path: '/contact',
 });
 
-export default function ContactPage() {
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+function first(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export default async function ContactPage({ searchParams }: { searchParams: SearchParams }) {
+  const sp = await searchParams;
+
+  // Arriving from "Mavjudligini aniqlash": resolve the item through the
+  // repository so the message names it, and fall back silently if the id is
+  // unknown — a bad handoff must never break the page.
+  const ref = first(sp.ref);
+  const type = first(sp.type);
+  const subject = await describeSubject(type, ref);
+
+  const initialMessage = subject
+    ? `Salom! “${subject.title}” mahsulotining mavjudligini aniqlashda yordam bera olasizmi?`
+    : '';
+  const initialTopic =
+    type === 'electronics' ? 'elektronika' : type === 'car' ? 'avtomobil' : '';
+
   return (
     <Container className="py-10 sm:py-14">
       <header className="mb-10 max-w-2xl">
@@ -26,7 +48,7 @@ export default function ContactPage() {
 
       <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-12">
         <div className="rounded-xl border border-line bg-surface p-6 sm:p-8">
-          <ContactForm />
+          <ContactForm initialMessage={initialMessage} initialTopic={initialTopic} />
         </div>
 
         <div className="space-y-6">

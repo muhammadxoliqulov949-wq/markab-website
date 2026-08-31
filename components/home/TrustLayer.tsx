@@ -26,7 +26,7 @@ const facts = [
   },
   {
     title: 'Shaffof jarayon',
-    detail: 'Muddat 2 oydan 36 oygacha',
+    detail: 'Muddat oralig‘i rasmiy manbada e’lon qilinadi',
     note: null,
     icon: <path d="M8 3v3M16 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z" />,
   },

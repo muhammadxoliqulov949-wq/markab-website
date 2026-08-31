@@ -4,7 +4,13 @@ import { Badge } from '@/components/ui/Badge';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { formatUzs } from '@/lib/format';
 
-/** Sample INPUTS for the preview — labelled as a sample, never as a result. */
+/**
+ * Sample INPUTS for the preview — labelled as a sample, never as a result.
+ *
+ * `TERM_OPTIONS` are placeholder chips that show what the control will look
+ * like. They are NOT Markab's offered durations: the real range is not
+ * published, and the note under the chips says so.
+ */
 const SAMPLE = { price: 120_000_000, downPercent: 20, termMonths: 24 };
 const DOWN_OPTIONS = [0, 10, 20, 30, 40];
 const TERM_OPTIONS = [12, 18, 24, 30, 36];
@@ -45,7 +51,6 @@ export function FinancingPreview() {
 
             <ul className="mt-7 space-y-3">
               {[
-                'Muddat: 2 oydan 36 oygacha',
                 'Shartnoma: taqsit yoki murabaha',
                 'Boshlang‘ich to‘lov miqdori o‘zingizga qulay holda tanlanadi',
               ].map((item) => (
@@ -155,6 +160,9 @@ export function FinancingPreview() {
                     </span>
                   ))}
                 </div>
+                <p className="mt-2 text-[11px] leading-relaxed text-white/60">
+                  Namuna tanlovlar — Markab taklif qiladigan muddatlar emas.
+                </p>
               </div>
 
               {/* Result area — honest: nothing is computed here. */}

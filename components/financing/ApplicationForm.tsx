@@ -1,316 +1,356 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { Field, Select, TextInput, Textarea } from '@/components/ui/Field';
 import { Button } from '@/components/ui/Button';
 import { StateBlock } from '@/components/ui/StateBlock';
-
-export type ApplicationContext = {
-  /** 'car' | 'electronics' — which catalogue the application is about. */
-  type: string | null;
-  /** Slug (car) or id (electronics) of the chosen item, when known. */
-  ref: string | null;
-  /** Catalogue title, pre-filled into the form. */
-  title: string | null;
-  price: number | null;
-};
-
-const steps = [
-  { id: 1, title: 'Mahsulot' },
-  { id: 2, title: 'Shartlar' },
-  { id: 3, title: 'Ma’lumotlar' },
-  { id: 4, title: 'Tasdiqlash' },
-] as const;
+import { formatUzs } from '@/lib/format';
+import type { FinancingSubject } from '@/lib/financing/handoff';
+import { subjectKindLabel } from '@/lib/financing/handoff';
 
 /**
  * Installment application — UI complete, backend pending.
  *
- * The audit found that the primary business action ("apply for installment")
- * cannot be completed on the web at all (P1). This prototype adds the missing
- * step as a tracked, intent-specific form with visible progress, a document
- * checklist shown up-front, and a real end state.
+ * FIELD POLICY: only what a first contact actually needs. No passport, no
+ * JSHSHIR/PINFL, no card or bank details, no selfie, no income proof. Those may
+ * become necessary in a real, legally-grounded process — but nothing here may
+ * request them before that exists.
  *
- * Because no backend is connected, submitting does not claim success: it renders
- * an explicit "integration pending" state. Nothing here computes an approval,
- * a monthly payment or a decision.
+ * SUBMISSION POLICY: there is no backend, so submitting does NOT say
+ * "yuborildi". It renders an explicit integration-pending state, keeps
+ * everything the visitor typed, and offers a copy-to-clipboard summary so the
+ * information is still useful.
+ *
+ * Nothing here computes an approval, a monthly payment or a decision.
  */
-export function ApplicationForm({ context }: { context: ApplicationContext }) {
-  const [step, setStep] = useState(1);
-  const [submitted, setSubmitted] = useState(false);
-  const [values, setValues] = useState({
-    product: context.title ?? '',
+
+const CONTACT_METHODS = ['Telefon qo‘ng‘irog‘i', 'Telegram / WhatsApp', 'Email'];
+
+type Values = {
+  product: string;
+  initialPayment: string;
+  term: string;
+  name: string;
+  phone: string;
+  contactMethod: string;
+  message: string;
+  consent: boolean;
+};
+
+type Errors = Partial<Record<'name' | 'phone' | 'consent', string>>;
+
+/**
+ * Deliberately permissive: accepts a local 9-digit number or an international
+ * one starting with 998. It exists to catch typos, not to verify a line.
+ */
+function normalisePhone(value: string): string | null {
+  const digits = value.replace(/\D/g, '');
+  if (digits.length === 9) return digits;
+  if (digits.length === 12 && digits.startsWith('998')) return digits.slice(3);
+  return null;
+}
+
+export function ApplicationForm({
+  subject,
+  invalidRef = false,
+}: {
+  /** Item handed over from a catalogue, already resolved by the repository. */
+  subject: FinancingSubject | null;
+  /** A handoff was attempted but the referenced item does not exist. */
+  invalidRef?: boolean;
+}) {
+  const uid = useId();
+  const [touched, setTouched] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'blocked'>('idle');
+  const [copied, setCopied] = useState(false);
+  const [values, setValues] = useState<Values>({
+    product: subject?.title ?? '',
     initialPayment: '',
-    termMonths: '',
+    term: '',
     name: '',
     phone: '',
-    extraPhone: '',
-    comment: '',
+    contactMethod: CONTACT_METHODS[0],
+    message: '',
     consent: false,
   });
 
-  const typeLabel = useMemo(
-    () => (context.type === 'electronics' ? 'Elektronika' : 'Avtomobil'),
-    [context.type],
+  const set = <K extends keyof Values>(key: K, value: Values[K]) =>
+    setValues((current) => ({ ...current, [key]: value }));
+
+  const errors = useMemo<Errors>(() => {
+    const next: Errors = {};
+    if (values.name.trim().length < 2) next.name = 'Ism va familiyani kiriting.';
+    if (!normalisePhone(values.phone)) {
+      next.phone = 'Telefon raqamini to‘liq kiriting (masalan: 90 123 45 67).';
+    }
+    if (!values.consent) next.consent = 'Davom etish uchun rozilik kerak.';
+    return next;
+  }, [values.name, values.phone, values.consent]);
+
+  const phone = normalisePhone(values.phone);
+
+  const summary = useMemo(
+    () =>
+      [
+        `Mahsulot: ${values.product || '—'}`,
+        `Turi: ${subject ? subjectKindLabel(subject.kind) : '—'}`,
+        `Narx: ${subject ? formatUzs(subject.priceUzs) : '—'}`,
+        `Boshlang‘ich to‘lov (xohish): ${values.initialPayment || '—'}`,
+        `Muddat (xohish): ${values.term ? `${values.term} oy` : '—'}`,
+        `Ism: ${values.name || '—'}`,
+        `Telefon: ${phone ? `+998 ${phone}` : '—'}`,
+        `Aloqa usuli: ${values.contactMethod}`,
+        values.message ? `Izoh: ${values.message}` : '',
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    [values, subject, phone],
   );
 
-  if (submitted) {
+  if (status === 'blocked') {
     return (
-      <StateBlock
-        variant="unavailable"
-        title="Ariza yuborilmadi — prototip holati"
-        description="Real backend ulanmagani uchun ariza tizimga tushmadi. Tizim ulangandan so‘ng ariza shu interfeys orqali qabul qilinadi, holati esa shaxsiy kabinetda kuzatiladi."
-        actions={
-          <>
-            <Button
-              variant="secondary"
+      <div className="rounded-xl border border-line bg-surface p-6 shadow-card sm:p-8">
+        <StateBlock
+          variant="unavailable"
+          title="Ariza yuborilmadi — tizim integratsiya qilinmagan"
+          description="Ariza yuborish tizimi hali rasmiy backend bilan integratsiya qilinmagan. Ma’lumotlaringiz hech qayerga yuborilmadi va saqlanmadi. Quyida kiritgan ma’lumotlaringiz nusxasi turibdi — xohlasangiz uni ko‘chirib, menejerga yuborishingiz mumkin."
+        />
+
+        <div className="mt-6 rounded-xl border border-line bg-surface-muted p-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h3 className="text-sm font-semibold text-ink-900">Kiritilgan ma’lumotlar</h3>
+            <button
+              type="button"
               onClick={() => {
-                setSubmitted(false);
-                setStep(1);
+                navigator.clipboard?.writeText(summary).then(
+                  () => setCopied(true),
+                  () => setCopied(false),
+                );
               }}
+              className="inline-flex h-9 items-center rounded-lg border border-line-strong bg-white px-3.5 text-sm font-medium text-ink-900 transition-colors hover:bg-surface"
             >
-              Qaytadan to‘ldirish
-            </Button>
-            <a
-              href="/contact"
-              className="inline-flex h-9 items-center rounded-lg border border-line-strong bg-white px-3.5 text-sm font-medium text-ink-900 transition-colors hover:bg-surface-muted"
-            >
-              Menejer bilan bog‘lanish
-            </a>
-          </>
-        }
-      />
+              {copied ? 'Nusxa olindi' : 'Nusxa olish'}
+            </button>
+          </div>
+          <pre className="mt-3 overflow-x-auto whitespace-pre-wrap break-words text-xs leading-relaxed text-ink-700">
+            {summary}
+          </pre>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Button variant="secondary" onClick={() => setStatus('idle')}>
+            Arizani tahrirlash
+          </Button>
+          <Link
+            href="/contact"
+            className="inline-flex h-11 items-center rounded-lg border border-line-strong px-5 text-sm font-medium text-ink-900 transition-colors hover:bg-surface-muted"
+          >
+            Menejer bilan bog‘lanish
+          </Link>
+        </div>
+
+        <p className="mt-4 text-xs leading-relaxed text-ink-400">
+          Hech qanday oylik to‘lov yoki tasdiqlash natijasi hisoblanmadi — ular rasmiy jarayon va
+          shartnoma asosida belgilanadi.
+        </p>
+      </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-line bg-surface p-6 shadow-card sm:p-8">
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-3" aria-label="Ariza bosqichlari">
-        {steps.map((item) => {
-          const state = step === item.id ? 'current' : step > item.id ? 'done' : 'todo';
-          return (
-            <li key={item.id} className="flex items-center gap-2">
-              <span
-                className={[
-                  'inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-colors',
-                  state === 'done'
-                    ? 'bg-brand-700 text-white'
-                    : state === 'current'
-                      ? 'bg-brand-50 text-brand-800 ring-2 ring-brand-500/30'
-                      : 'bg-surface-sunken text-ink-400',
-                ].join(' ')}
-              >
-                {state === 'done' ? (
-                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
-                    <path d="m5 13 4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                ) : (
-                  item.id
-                )}
-              </span>
-              <span className={`text-xs sm:text-sm ${state === 'todo' ? 'text-ink-400' : 'text-ink-800'}`}>
-                {item.title}
-              </span>
-              {item.id < steps.length ? (
-                <span className={`hidden h-px w-6 sm:block ${step > item.id ? 'bg-brand-600' : 'bg-line'}`} aria-hidden="true" />
-              ) : null}
-            </li>
-          );
-        })}
-      </ol>
+    <form
+      noValidate
+      className="rounded-xl border border-line bg-surface p-6 shadow-card sm:p-8"
+      onSubmit={(event) => {
+        event.preventDefault();
+        setTouched(true);
+        if (Object.keys(errors).length > 0) return;
+        setStatus('blocked');
+      }}
+    >
+      <h2 className="text-base font-semibold text-ink-900">Ariza ma’lumotlari</h2>
+      <p className="mt-1 text-sm text-ink-500">
+        Faqat birinchi bog‘lanish uchun kerakli maydonlar. Pasport, JSHSHIR, bank karta ma’lumotlari
+        yoki biometrik ma’lumot so‘ralmaydi.
+      </p>
 
-      <form
-        className="mt-6 flex flex-col gap-4"
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (step < steps.length) {
-            setStep((current) => current + 1);
-            return;
-          }
-          setSubmitted(true);
-        }}
-      >
-        {step === 1 ? (
-          <>
-            <Field label="Mahsulot turi" htmlFor="apply-type">
-              <Select
-                id="apply-type"
-                value={context.type === 'electronics' ? 'electronics' : 'car'}
-                disabled
-              >
-                <option value="car">Avtomobil</option>
-                <option value="electronics">Elektronika</option>
-              </Select>
-            </Field>
-            <Field
-              label="Mahsulot"
-              htmlFor="apply-product"
-              required
-              hint={context.title ? 'Tanlangan e’lon asosida to‘ldirildi' : 'Nomi va modelini yozing'}
-            >
-              <TextInput
-                id="apply-product"
-                required
-                value={values.product}
-                onChange={(event) => setValues({ ...values, product: event.target.value })}
-                placeholder="Masalan: Chevrolet Cobalt 2023"
-              />
-            </Field>
-            <p className="text-xs text-ink-400">
-              {context.ref
-                ? 'Ariza tanlangan e’longa bog‘lanadi — kabinetda shu mahsulot bilan ko‘rsatiladi.'
-                : 'Mahsulotni katalogdan tanlab kelsangiz, ariza avtomatik bog‘lanadi.'}
-            </p>
-          </>
-        ) : null}
-
-        {step === 2 ? (
-          <>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Boshlang‘ich to‘lov (so‘m)" htmlFor="apply-initial" required>
-                <TextInput
-                  id="apply-initial"
-                  required
-                  inputMode="numeric"
-                  value={values.initialPayment}
-                  onChange={(event) => setValues({ ...values, initialPayment: event.target.value })}
-                  placeholder="50 000 000"
-                />
-              </Field>
-              <Field label="Muddat" htmlFor="apply-term" required hint="2 oydan 36 oygacha">
-                <Select
-                  id="apply-term"
-                  required
-                  value={values.termMonths}
-                  onChange={(event) => setValues({ ...values, termMonths: event.target.value })}
-                >
-                  <option value="">Tanlang</option>
-                  {[12, 18, 24, 30, 36].map((months) => (
-                    <option key={months} value={String(months)}>
-                      {months} oy
-                    </option>
-                  ))}
-                </Select>
-              </Field>
-            </div>
-            <div className="rounded-lg border border-line bg-surface-muted p-4 text-xs leading-relaxed text-ink-500">
-              Bu yerda hech qanday oylik to‘lov hisoblanmaydi: hisob-kitob formulasi rasmiy manba
-              tomonidan taqdim etilgach kalkulyatorga ulanadi. Hozircha shartlar menejer bilan
-              tasdiqlanadi.
-            </div>
-          </>
-        ) : null}
-
-        {step === 3 ? (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Ism va familiya" htmlFor="apply-name" required>
-              <TextInput
-                id="apply-name"
-                required
-                value={values.name}
-                onChange={(event) => setValues({ ...values, name: event.target.value })}
-                placeholder="Ism Familiya"
-              />
-            </Field>
-            <Field label="Telefon" htmlFor="apply-phone" required hint="Masalan: 90 123 45 67">
-              <TextInput
-                id="apply-phone"
-                required
-                inputMode="tel"
-                value={values.phone}
-                onChange={(event) => setValues({ ...values, phone: event.target.value })}
-                placeholder="+998 __ ___ __ __"
-              />
-            </Field>
-            <Field label="Qo‘shimcha telefon" htmlFor="apply-extra" hint="Majburiy emas">
-              <TextInput
-                id="apply-extra"
-                inputMode="tel"
-                value={values.extraPhone}
-                onChange={(event) => setValues({ ...values, extraPhone: event.target.value })}
-                placeholder="+998 __ ___ __ __"
-              />
-            </Field>
-            <Field label="Izoh" htmlFor="apply-comment">
-              <Textarea
-                id="apply-comment"
-                className="min-h-[96px]"
-                value={values.comment}
-                onChange={(event) => setValues({ ...values, comment: event.target.value })}
-                placeholder="Qo‘shimcha ma’lumot"
-              />
-            </Field>
-          </div>
-        ) : null}
-
-        {step === 4 ? (
-          <>
-            <div className="rounded-xl border border-line bg-surface-muted p-5">
-              <h3 className="text-sm font-semibold text-ink-900">Ariza ma’lumotlari</h3>
-              <dl className="mt-3 space-y-2 text-sm">
-                <div className="flex justify-between gap-4">
-                  <dt className="text-ink-500">Mahsulot</dt>
-                  <dd className="max-w-[60%] text-right text-ink-800">{values.product || '—'}</dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-ink-500">Turi</dt>
-                  <dd className="text-ink-800">{typeLabel}</dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-ink-500">Boshlang‘ich to‘lov</dt>
-                  <dd className="text-ink-800">{values.initialPayment || '—'}</dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-ink-500">Muddat</dt>
-                  <dd className="text-ink-800">{values.termMonths ? `${values.termMonths} oy` : '—'}</dd>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <dt className="text-ink-500">Telefon</dt>
-                  <dd className="text-ink-800">{values.phone || '—'}</dd>
-                </div>
-              </dl>
-              <p className="mt-3 text-xs leading-relaxed text-ink-400">
-                Oylik to‘lov va yakuniy summa shu yerda ko‘rsatilmaydi — ular rasmiy hisob-kitob
-                asosida shartnomada belgilanadi.
-              </p>
-            </div>
-
-            <label className="flex items-start gap-3 text-xs leading-relaxed text-ink-500">
-              <input
-                type="checkbox"
-                required
-                checked={values.consent}
-                onChange={(event) => setValues({ ...values, consent: event.target.checked })}
-                className="mt-0.5 h-4 w-4 rounded border-line-strong text-brand-700 focus:ring-brand-500"
-              />
-              <span>
-                Ma’lumotlarimni qayta ishlashga roziman va{' '}
-                <a href="/privacy" className="text-brand-700 underline underline-offset-2">
-                  Maxfiylik siyosati
-                </a>{' '}
-                hamda{' '}
-                <a href="/terms" className="text-brand-700 underline underline-offset-2">
-                  Foydalanish shartlari
-                </a>{' '}
-                bilan tanishdim.
-              </span>
-            </label>
-          </>
-        ) : null}
-
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => setStep((current) => Math.max(1, current - 1))}
-            disabled={step === 1}
-          >
-            Orqaga
-          </Button>
-          <Button type="submit" disabled={step === 4 && !values.consent}>
-            {step < steps.length ? 'Keyingi' : 'Arizani yuborish'}
-          </Button>
+      {invalidRef ? (
+        <div className="mt-5">
+          <StateBlock
+            compact
+            variant="not-found"
+            title="Ko‘rsatilgan mahsulot topilmadi"
+            description="Havoladagi mahsulot katalogda mavjud emas. Arizani mahsulot nomini o‘zingiz yozib davom ettirishingiz mumkin."
+          />
         </div>
-      </form>
-    </div>
+      ) : null}
+
+      {subject ? (
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface-muted px-4 py-3">
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-500">
+              {subjectKindLabel(subject.kind)}
+            </p>
+            <p className="mt-0.5 truncate text-sm font-semibold text-ink-900">{subject.title}</p>
+            <p className="text-sm text-ink-600">{formatUzs(subject.priceUzs)}</p>
+          </div>
+          <Link href={subject.href} className="text-xs font-medium text-brand-700 underline underline-offset-4">
+            E’lonni ochish
+          </Link>
+        </div>
+      ) : null}
+
+      <div className="mt-6 flex flex-col gap-4">
+        <Field
+          label="Mahsulot"
+          htmlFor={`${uid}-product`}
+          required
+          hint={subject ? 'Tanlangan e’lon asosida to‘ldirildi' : 'Nomi va modelini yozing'}
+        >
+          <TextInput
+            id={`${uid}-product`}
+            required
+            value={values.product}
+            onChange={(event) => set('product', event.target.value)}
+            placeholder="Masalan: Chevrolet Cobalt 2023"
+          />
+        </Field>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Boshlang‘ich to‘lov (xohish)"
+            htmlFor={`${uid}-initial`}
+            hint="Majburiy emas — bu faqat sizning xohishingiz"
+          >
+            <TextInput
+              id={`${uid}-initial`}
+              inputMode="numeric"
+              value={values.initialPayment}
+              onChange={(event) => set('initialPayment', event.target.value)}
+              placeholder="50 000 000"
+            />
+          </Field>
+
+          <Field
+            label="So‘ralayotgan muddat (oy)"
+            htmlFor={`${uid}-term`}
+            hint="Majburiy emas. Mavjud muddatlar rasmiy tasdiqlanadi"
+          >
+            <TextInput
+              id={`${uid}-term`}
+              inputMode="numeric"
+              value={values.term}
+              onChange={(event) => set('term', event.target.value)}
+              placeholder="24"
+            />
+          </Field>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Ism va familiya"
+            htmlFor={`${uid}-name`}
+            required
+            error={touched ? errors.name : undefined}
+          >
+            <TextInput
+              id={`${uid}-name`}
+              required
+              value={values.name}
+              onChange={(event) => set('name', event.target.value)}
+              placeholder="Ism Familiya"
+              aria-invalid={touched && Boolean(errors.name)}
+              aria-describedby={touched && errors.name ? `${uid}-name-error` : undefined}
+            />
+          </Field>
+
+          <Field
+            label="Telefon"
+            htmlFor={`${uid}-phone`}
+            required
+            hint="Masalan: 90 123 45 67"
+            error={touched ? errors.phone : undefined}
+          >
+            <TextInput
+              id={`${uid}-phone`}
+              required
+              inputMode="tel"
+              value={values.phone}
+              onChange={(event) => set('phone', event.target.value)}
+              placeholder="+998 __ ___ __ __"
+              aria-invalid={touched && Boolean(errors.phone)}
+              aria-describedby={touched && errors.phone ? `${uid}-phone-error` : undefined}
+            />
+          </Field>
+        </div>
+
+        <Field label="Qulay aloqa usuli" htmlFor={`${uid}-method`} hint="Bu sizning xohishingiz">
+          <Select
+            id={`${uid}-method`}
+            value={values.contactMethod}
+            onChange={(event) => set('contactMethod', event.target.value)}
+          >
+            {CONTACT_METHODS.map((method) => (
+              <option key={method} value={method}>
+                {method}
+              </option>
+            ))}
+          </Select>
+        </Field>
+
+        <Field label="Izoh" htmlFor={`${uid}-message`} hint="Majburiy emas">
+          <Textarea
+            id={`${uid}-message`}
+            className="min-h-[96px]"
+            value={values.message}
+            onChange={(event) => set('message', event.target.value)}
+            placeholder="Qo‘shimcha ma’lumot"
+          />
+        </Field>
+
+        <div className="rounded-xl border border-line bg-surface-muted p-4 text-xs leading-relaxed text-ink-500">
+          Bu yerda hech qanday oylik to‘lov hisoblanmaydi: hisob-kitob formulasi rasmiy manba
+          tomonidan taqdim etilgach kalkulyatorga ulanadi. Shartlar menejer bilan tasdiqlanadi.
+        </div>
+
+        <label className="flex items-start gap-3 text-xs leading-relaxed text-ink-500">
+          <input
+            type="checkbox"
+            checked={values.consent}
+            onChange={(event) => set('consent', event.target.checked)}
+            aria-invalid={touched && Boolean(errors.consent)}
+            aria-describedby={touched && errors.consent ? `${uid}-consent-error` : undefined}
+            className="mt-0.5 h-4 w-4 rounded border-line-strong text-brand-700 focus:ring-brand-500"
+          />
+          <span>
+            Ma’lumotlarimni qayta ishlashga roziman va{' '}
+            <Link href="/privacy" className="text-brand-700 underline underline-offset-2">
+              Maxfiylik siyosati
+            </Link>{' '}
+            hamda{' '}
+            <Link href="/terms" className="text-brand-700 underline underline-offset-2">
+              Foydalanish shartlari
+            </Link>{' '}
+            bilan tanishdim.
+          </span>
+        </label>
+
+        {touched && errors.consent ? (
+          <p id={`${uid}-consent-error`} className="text-xs text-rose-700">
+            {errors.consent}
+          </p>
+        ) : null}
+      </div>
+
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-xs text-ink-400">
+          Yuborish tugmasi arizani serverga jo‘natmaydi — tizim integratsiya qilinmagan.
+        </p>
+        <Button type="submit" size="lg">
+          Arizani yuborish
+        </Button>
+      </div>
+    </form>
   );
 }

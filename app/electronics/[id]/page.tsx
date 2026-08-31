@@ -16,6 +16,7 @@ import { buildMetadata } from '@/lib/seo';
 import { trustBadges } from '@/lib/data/fixtures/content';
 import { availabilityNote, stockMeta } from '@/lib/products/stock';
 import { relatedProductReason, selectRelatedProducts } from '@/lib/products/related';
+import { applyHref, calculatorHref } from '@/lib/financing/handoff';
 
 type Params = Promise<{ id: string }>;
 
@@ -199,8 +200,8 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
               <FinancingPanel
                 financing={product.financing}
                 priceUzs={product.priceUzs}
-                href="/financing/calculator"
-                applyHref={`/financing/apply?type=electronics&ref=${product.id}`}
+                href={calculatorHref('electronics', product.id)}
+                applyHref={applyHref('electronics', product.id)}
               />
             </div>
 
@@ -211,7 +212,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
             <div className="mt-5 flex flex-col gap-2">
               <AddToCartButton product={product} size="lg" showHint />
               <ButtonLink
-                href={`/financing/apply?type=electronics&ref=${product.id}`}
+                href={applyHref('electronics', product.id)}
                 variant="secondary"
                 size="lg"
                 fullWidth

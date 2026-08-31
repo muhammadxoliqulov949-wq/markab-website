@@ -22,13 +22,21 @@ export function Field({
     <div className="flex flex-col gap-1.5">
       <label htmlFor={htmlFor} className="text-sm font-medium text-ink-700">
         {label}
-        {required ? <span className="ml-1 text-rose-500">*</span> : null}
+        {required ? <span className="ml-1 text-rose-700">*</span> : null}
       </label>
       {children}
+      {/*
+        Ids are derived from `htmlFor` so callers can point the control's
+        aria-describedby at the exact message that is currently rendered.
+      */}
       {error ? (
-        <p className="text-xs text-rose-600">{error}</p>
+        <p id={`${htmlFor}-error`} className="text-xs text-rose-600">
+          {error}
+        </p>
       ) : hint ? (
-        <p className="text-xs text-ink-400">{hint}</p>
+        <p id={`${htmlFor}-hint`} className="text-xs text-ink-400">
+          {hint}
+        </p>
       ) : null}
     </div>
   );

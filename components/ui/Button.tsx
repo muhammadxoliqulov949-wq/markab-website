@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { ComponentProps, ReactNode } from 'react';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'subtle';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'subtle' | 'onDark' | 'onDarkOutline';
 type Size = 'sm' | 'md' | 'lg';
 
 const base =
@@ -14,6 +14,14 @@ const variants: Record<Variant, string> = {
     'bg-white text-ink-900 border border-line-strong hover:border-ink-300 hover:bg-surface-muted',
   ghost: 'text-ink-700 hover:bg-surface-sunken hover:text-ink-900',
   subtle: 'bg-brand-50 text-brand-800 hover:bg-brand-100',
+  /**
+   * For dark grounds. These exist as variants rather than className overrides
+   * on purpose: Tailwind resolves conflicting utilities by stylesheet order,
+   * not class-attribute order, so a `text-white` in a variant silently beats a
+   * `text-ink-900` passed through className.
+   */
+  onDark: 'bg-white text-ink-900 hover:bg-white/90',
+  onDarkOutline: 'border border-white/30 bg-transparent text-white hover:bg-white/10',
 };
 
 const sizes: Record<Size, string> = {
