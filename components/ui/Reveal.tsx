@@ -58,7 +58,9 @@ export function Reveal({
   };
 
   return (
-    <Tag ref={ref as never} style={style} className={className}>
+    // data-reveal lets the <noscript> fallback in the root layout force the
+    // content visible when JS never runs — motion must never hide content.
+    <Tag ref={ref as never} data-reveal="" style={style} className={className}>
       {children}
     </Tag>
   );

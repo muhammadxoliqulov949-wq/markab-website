@@ -45,6 +45,7 @@ export function SectionHeading({
   tone = 'light',
   as: Tag = 'h2',
   className = '',
+  id,
 }: {
   eyebrow?: string;
   title: string;
@@ -53,6 +54,8 @@ export function SectionHeading({
   tone?: 'light' | 'dark';
   as?: 'h1' | 'h2' | 'h3';
   className?: string;
+  /** Set so the owning <section> can point aria-labelledby at this heading. */
+  id?: string;
 }) {
   const alignment = align === 'center' ? 'text-center mx-auto items-center' : 'text-left items-start';
   const titleTone = tone === 'dark' ? 'text-white' : 'text-ink-900';
@@ -66,7 +69,9 @@ export function SectionHeading({
           {eyebrow}
         </span>
       ) : null}
-      <Tag className={`text-2xl sm:text-3xl lg:text-[2.35rem] ${titleTone}`}>{title}</Tag>
+      <Tag id={id} className={`text-2xl sm:text-3xl lg:text-[2.35rem] ${titleTone}`}>
+        {title}
+      </Tag>
       {description ? (
         <p className={`text-base leading-relaxed sm:text-lg ${descTone}`}>{description}</p>
       ) : null}

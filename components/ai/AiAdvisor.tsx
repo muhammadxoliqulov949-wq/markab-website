@@ -157,7 +157,7 @@ export function AiAdvisor({
               {answer?.vehicles.map((vehicle) => (
                 <Link
                   key={vehicle.id}
-                  href={`/car/${vehicle.slug}`}
+                  href={`/cars/${vehicle.slug}`}
                   className="flex items-center gap-4 rounded-lg border border-line bg-surface p-3 transition-all duration-200 hover:border-brand-200 hover:shadow-card"
                 >
                   <div className="min-w-0 flex-1">

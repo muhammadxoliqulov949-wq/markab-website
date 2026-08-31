@@ -23,7 +23,7 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
 
   return (
     <article className="group overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
-      <Link href={`/car/${vehicle.slug}`} className="block">
+      <Link href={`/cars/${vehicle.slug}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken">
           {image ? (
             <Image
@@ -72,6 +72,26 @@ export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; p
             </div>
             <span className="text-xs text-ink-400">{formatViews(vehicle.views)}</span>
           </div>
+        </div>
+
+        {/*
+          The whole card is one link; this is the visible CTA affordance, not a
+          second interactive element.
+        */}
+        <div className="flex items-center justify-between border-t border-line px-5 py-3">
+          <span className="text-sm font-medium text-ink-800 transition-colors group-hover:text-brand-800">
+            Batafsil
+          </span>
+          <svg
+            className="h-4 w-4 text-ink-400 transition-transform duration-300 ease-smooth group-hover:translate-x-1 group-hover:text-brand-700"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
       </Link>
     </article>

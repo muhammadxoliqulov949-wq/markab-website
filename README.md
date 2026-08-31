@@ -102,3 +102,26 @@ Unknown URLs return **HTTP 404** with a branded page — they never silently ren
   placeholder pending official brand guidelines. Typeface is a system stack for the same reason.
 * Auth and cart are browser-local demo state, clearly labelled "Demo".
 * Academy lessons and FAQ answers are intentionally empty (`hasContent: false`, `answer: null`).
+
+### Phase 1 — homepage
+
+The homepage is composed of 15 blocks in a fixed order, all fed by the repository
+(no hardcoded product data):
+
+`header → hero → trust strip → "Sizga nima kerak?" → featured cars → featured
+electronics → financing/calculator preview → why Markab → how it works →
+investment preview → Academy preview → digital experience → FAQ → final CTA →
+footer`
+
+Homepage-specific components live in `components/home/`. Notable behaviours:
+
+* **Hero** prefers a catalogue item whose financing figures are actually published,
+  so the financing card shows real values; unavailable fields stay as explicit
+  pending markers.
+* **Marketplace showcases** are scroll-snap rails below `sm` and grids from `sm`
+  up — the mobile homepage is not a compressed desktop page.
+* **Calculator preview** on the homepage is a static composition: the interactive
+  calculator stays on `/financing/calculator`, which keeps homepage JS at ~1.2 kB.
+* **Motion** is scroll-reveal, hover and focus transitions only. `Reveal` honours
+  `prefers-reduced-motion`, and a `<noscript>` rule in the root layout forces
+  revealed content visible when JavaScript never runs.

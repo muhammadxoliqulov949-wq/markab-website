@@ -53,9 +53,46 @@ export const primaryNav: NavItem[] = [
   { href: '/cars', label: 'Avtomobillar' },
   { href: '/electronics', label: 'Elektronika' },
   { href: '/financing', label: 'Moliyalashtirish' },
-  { href: '/invest', label: 'Investitsiya' },
+  { href: '/invest', label: 'Sarmoya' },
   { href: '/academy', label: 'Academy' },
 ];
+
+/**
+ * The four homepage goal cards.
+ *
+ * Learning is the fifth Markab goal, but it has its own Academy section on the
+ * homepage, so it appears there as a link rather than as a fifth card.
+ */
+export const homepageGoals = [
+  {
+    id: 'car',
+    title: 'Avtomobil',
+    description: 'Avtomobil tanlang va mavjud shartlarni ko‘ring.',
+    cta: 'Avtomobillar',
+    href: '/cars',
+  },
+  {
+    id: 'electronics',
+    title: 'Elektronika',
+    description: 'Telefon, noutbuk va boshqa mahsulotlarni ko‘ring.',
+    cta: 'Elektronika',
+    href: '/electronics',
+  },
+  {
+    id: 'financing',
+    title: 'Moliyalashtirish',
+    description: 'To‘lov imkoniyatlari va jarayonni tushuning.',
+    cta: 'Moliyalashtirish',
+    href: '/financing',
+  },
+  {
+    id: 'invest',
+    title: 'Sarmoya',
+    description: 'Markab sarmoya modeli haqida ma’lumot oling.',
+    cta: 'Sarmoya',
+    href: '/invest',
+  },
+] as const;
 
 export const secondaryNav: NavItem[] = [
   { href: '/about', label: 'Markab haqida' },
@@ -65,37 +102,42 @@ export const secondaryNav: NavItem[] = [
   { href: '/contact', label: 'Aloqa' },
 ];
 
+/**
+ * Footer groups (Phase 1). Only routes that actually exist are linked; the live
+ * site's `/news` is empty and has no prototype route, so it is omitted rather
+ * than linked to a dead page.
+ */
 export const footerNav: { title: string; items: NavItem[] }[] = [
   {
-    title: 'Xarid',
+    title: 'Markab',
     items: [
-      { href: '/cars', label: 'Avtomobillar' },
-      { href: '/electronics', label: 'Elektronika' },
-      { href: '/financing/calculator', label: "To'lov kalkulyatori" },
-      { href: '/cart', label: 'Savatcha' },
-    ],
-  },
-  {
-    title: 'Moliya',
-    items: [
-      { href: '/financing', label: 'Muddatli to‘lov' },
-      { href: '/financing/apply', label: 'Ariza yuborish' },
-      { href: '/invest', label: 'Sarmoya' },
+      { href: '/about', label: 'Biz haqimizda' },
+      { href: '/academy', label: 'Academy' },
+      { href: '/advisor', label: 'AI maslahatchi' },
       { href: '/loyalty', label: 'Bonus dasturi' },
     ],
   },
   {
-    title: 'Ma’lumot',
+    title: 'Xizmatlar',
     items: [
-      { href: '/academy', label: 'Academy' },
-      { href: '/advisor', label: 'AI maslahatchi' },
-      { href: '/about', label: 'Kompaniya' },
-      { href: '/faq', label: 'Savol-javoblar' },
-      { href: '/contact', label: 'Aloqa' },
+      { href: '/cars', label: 'Avtomobillar' },
+      { href: '/electronics', label: 'Elektronika' },
+      { href: '/financing', label: 'Moliyalashtirish' },
+      { href: '/invest', label: 'Sarmoya' },
+      { href: '/sell', label: 'Avtomobil sotish' },
     ],
   },
   {
-    title: 'Hujjatlar',
+    title: 'Yordam',
+    items: [
+      { href: '/faq', label: 'Savol-javoblar' },
+      { href: '/contact', label: 'Aloqa' },
+      { href: '/financing/apply', label: 'Ariza yuborish' },
+      { href: '/financing/calculator', label: 'To‘lov kalkulyatori' },
+    ],
+  },
+  {
+    title: 'Huquqiy',
     items: [
       { href: '/privacy', label: 'Maxfiylik siyosati' },
       { href: '/terms', label: 'Foydalanish shartlari' },
@@ -103,37 +145,3 @@ export const footerNav: { title: string; items: NavItem[] }[] = [
   },
 ];
 
-export const goals = [
-  {
-    id: 'car',
-    emoji: '🚗',
-    title: 'Avtomobil olmoqchiman',
-    description: "Muddatli to'lov asosida avtomobil tanlang va oylik to'lovni hisoblang.",
-    href: '/cars',
-    cta: 'Avtomobillarni ko‘rish',
-  },
-  {
-    id: 'electronics',
-    emoji: '💻',
-    title: 'Elektronika olmoqchiman',
-    description: 'Smartfon va boshqa elektronika mahsulotlarini muddatli to‘lovga oling.',
-    href: '/electronics',
-    cta: 'Elektronikani ko‘rish',
-  },
-  {
-    id: 'financing',
-    emoji: '💰',
-    title: 'Moliyalashtirish kerak',
-    description: 'Muddatli to‘lov qanday ishlashini va qanday hujjatlar kerakligini bilib oling.',
-    href: '/financing',
-    cta: 'Shartlarni ko‘rish',
-  },
-  {
-    id: 'invest',
-    emoji: '📈',
-    title: 'Sarmoya qilmoqchiman',
-    description: 'Qadriyatlarga asoslangan sarmoya modeli bilan tanishing.',
-    href: '/invest',
-    cta: 'Sarmoya imkoniyatlari',
-  },
-] as const;

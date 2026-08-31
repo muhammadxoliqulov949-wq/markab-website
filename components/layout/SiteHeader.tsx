@@ -24,8 +24,17 @@ function MarkabMark({ className = '' }: { className?: string }) {
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  /** Subtle sticky state: the strip condenses and the bar gains a hairline shadow. */
+  const [scrolled, setScrolled] = useState(false);
   const { count } = useCart();
   const { user } = useAuth();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     setOpen(false);
@@ -41,9 +50,19 @@ export function SiteHeader() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-white/90 backdrop-blur-md">
-      {/* Prototype transparency strip */}
-      <div className="bg-ink-900 text-white/70">
+    <header
+      className={[
+        'sticky top-0 z-50 border-b bg-white/90 backdrop-blur-md transition-shadow duration-300 ease-smooth',
+        scrolled ? 'border-line-strong shadow-card' : 'border-line',
+      ].join(' ')}
+    >
+      {/* Prototype transparency strip — condenses once the page is scrolled. */}
+      <div
+        className={[
+          'overflow-hidden bg-ink-900 text-white/70 transition-[max-height,opacity] duration-300 ease-smooth',
+          scrolled ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100',
+        ].join(' ')}
+      >
         <div className="container-page flex items-center justify-between py-1.5 text-[11px]">
           <span className="truncate">
             Markab 2.0 kontsept-prototip · real API ulanmagan · namuna ma’lumotlari

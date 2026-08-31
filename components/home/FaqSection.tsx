@@ -2,26 +2,25 @@ import Link from 'next/link';
 import { Accordion } from '@/components/ui/Accordion';
 import { ButtonLink } from '@/components/ui/Button';
 import { Container, SectionHeading } from '@/components/ui/Section';
-import { PendingValue } from '@/components/ui/StateBlock';
+import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
 import type { FaqItem } from '@/lib/data/types';
 
 /**
- * FAQ — questions are verbatim from the homepage; answers were never publicly
- * rendered, so each one carries an explicit pending marker instead of invented text.
+ * FAQ — questions are verbatim from the public homepage block; answers were
+ * never publicly rendered, so each one carries an explicit pending marker
+ * instead of invented text.
  */
 export function FaqSection({ items }: { items: FaqItem[] }) {
   return (
-    <section className="bg-surface py-16 sm:py-20" aria-labelledby="faq-heading">
+    <section aria-labelledby="faq-heading" className="bg-surface py-16 sm:py-20 lg:py-24">
       <Container className="max-w-3xl">
         <SectionHeading
+          id="faq-heading"
           eyebrow="Savol-javoblar"
           title="Tez-tez so‘raladigan savollar"
           description="Rasmiy javoblar tasdiqlangach shu yerda paydo bo‘ladi."
           align="center"
         />
-        <h2 id="faq-heading" className="sr-only">
-          Tez-tez so‘raladigan savollar
-        </h2>
 
         <div className="mt-10">
           {items.length > 0 ? (
@@ -46,9 +45,11 @@ export function FaqSection({ items }: { items: FaqItem[] }) {
               }))}
             />
           ) : (
-            <div className="rounded-xl border border-dashed border-line-strong bg-surface-muted p-8 text-center text-sm text-ink-500">
-              Hozircha savol-javoblar mavjud emas.
-            </div>
+            <StateBlock
+              variant="empty"
+              title="Hozircha savol-javoblar mavjud emas"
+              description="Ma’lumotlar manbasi ulangandan so‘ng savollar shu yerda ko‘rsatiladi."
+            />
           )}
         </div>
 
