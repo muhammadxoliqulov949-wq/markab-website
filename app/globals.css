@@ -60,6 +60,27 @@
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 100%);
   }
 
+  /* Hero scrims: one horizontal (image → ink) and one bottom fade. */
+  .hero-scrim-x {
+    background: linear-gradient(
+      to right,
+      #0c1116 0%,
+      #0c1116 34%,
+      rgba(12, 17, 22, 0.92) 52%,
+      rgba(12, 17, 22, 0.45) 74%,
+      rgba(12, 17, 22, 0.2) 100%
+    );
+  }
+
+  .hero-scrim-y {
+    background: linear-gradient(to top, #0c1116 2%, rgba(12, 17, 22, 0) 60%);
+  }
+
+  /* Very low-opacity vignette for dark sections — no glow, no colour cast. */
+  .vignette {
+    background: radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 70%);
+  }
+
   .skeleton {
     @apply relative overflow-hidden bg-surface-sunken;
   }

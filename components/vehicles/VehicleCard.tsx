@@ -18,12 +18,76 @@ function NoImage({ label }: { label: string }) {
   );
 }
 
-export function VehicleCard({ vehicle, priority = false }: { vehicle: Vehicle; priority?: boolean }) {
+export function VehicleCard({
+  vehicle,
+  priority = false,
+  featured = false,
+}: {
+  vehicle: Vehicle;
+  priority?: boolean;
+  /** Homepage hero slot: wider frame, larger type, overlay layout. */
+  featured?: boolean;
+}) {
   const image = vehicle.images[0];
+  const href = `/cars/${vehicle.slug}`;
+
+  if (featured) {
+    return (
+      <article className="group relative overflow-hidden rounded-2xl bg-ink-900 shadow-card transition-all duration-500 ease-smooth hover:-translate-y-1 hover:shadow-card-hover">
+        <Link href={href} className="block">
+          <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken lg:aspect-[16/10]">
+            {image ? (
+              <Image
+                src={image}
+                alt={vehicle.title}
+                fill
+                priority={priority}
+                sizes="(max-width: 1024px) 100vw, 66vw"
+                className="object-cover transition-transform duration-[900ms] ease-smooth group-hover:scale-[1.04]"
+              />
+            ) : (
+              <NoImage label="Rasm mavjud emas" />
+            )}
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/60 to-ink-900/5"
+              aria-hidden="true"
+            />
+            <div className="absolute left-4 top-4 flex gap-2">
+              {vehicle.isNew ? (
+                <Badge tone="brand" className="bg-white/95 backdrop-blur">
+                  Yangi
+                </Badge>
+              ) : null}
+            </div>
+            <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+              <p className="text-xs uppercase tracking-[0.12em] text-white/60">
+                {vehicle.year} · {formatKm(vehicle.mileageKm)} · {fuelLabel(vehicle.fuelType)}
+              </p>
+              <h3 className="mt-1.5 text-xl font-semibold text-white sm:text-2xl">{vehicle.title}</h3>
+              <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="text-lg font-semibold text-white">
+                  {formatUzs(vehicle.priceUzs)}
+                </span>
+                {vehicle.financing.monthlyPaymentUzs ? (
+                  <span className="text-sm text-brand-200">
+                    {formatUzs(vehicle.financing.monthlyPaymentUzs)} / oy
+                  </span>
+                ) : (
+                  <span className="text-sm text-white/60">
+                    Oylik to‘lov: hisob-kitob tayyorlanmoqda
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </Link>
+      </article>
+    );
+  }
 
   return (
     <article className="group overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
-      <Link href={`/cars/${vehicle.slug}`} className="block">
+      <Link href={href} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-surface-sunken">
           {image ? (
             <Image

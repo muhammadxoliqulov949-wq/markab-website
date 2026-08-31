@@ -20,7 +20,7 @@ const config: Config = {
           700: '#1D262F',
           600: '#2A3540',
           500: '#47535F',
-          400: '#6B7784',
+          400: '#5F6B77',
           300: '#939DA7',
         },
         surface: {
@@ -57,6 +57,10 @@ const config: Config = {
       },
       fontSize: {
         'display-sm': ['2rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        'display-xl': [
+          'clamp(2.35rem, 5.4vw, 4.25rem)',
+          { lineHeight: '1.03', letterSpacing: '-0.035em' },
+        ],
         'display-md': ['2.75rem', { lineHeight: '1.08', letterSpacing: '-0.025em' }],
         'display-lg': ['3.5rem', { lineHeight: '1.04', letterSpacing: '-0.03em' }],
       },
@@ -94,6 +98,11 @@ const config: Config = {
       animation: {
         'fade-up': 'fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both',
         'fade-in': 'fade-in 0.4s ease-out both',
+        'rise-1': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both',
+        'rise-2': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both',
+        'rise-3': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.23s both',
+        'rise-4': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.32s both',
+        'rise-5': 'fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.42s both',
       },
     },
   },

@@ -11,7 +11,6 @@ import { AcademySection } from '@/components/home/AcademySection';
 import { AppSection } from '@/components/home/AppSection';
 import { FaqSection } from '@/components/home/FaqSection';
 import { FinalCta } from '@/components/home/FinalCta';
-import { Reveal } from '@/components/ui/Reveal';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
@@ -25,9 +24,9 @@ export const metadata: Metadata = buildMetadata({
 
 /**
  * Homepage — 15 blocks in a deliberate order:
- *   header · hero · trust · choose your goal · featured cars · featured
+ *   header · hero · trust strip · "Sizga nima kerak?" · featured cars · featured
  *   electronics · financing/calculator preview · why Markab · how it works ·
- *   investment · academy · digital experience · FAQ · final CTA · footer
+ *   investment · Academy · digital experience · FAQ · final CTA · footer
  *
  * Data comes only from the repository (adapter → fixtures today, API later);
  * nothing is hardcoded and nothing is computed on this page.
@@ -40,9 +39,10 @@ export default async function HomePage() {
   const products = featured.status === 'success' ? featured.data.products : [];
 
   /*
-   * The hero prefers an item whose financing figures are actually published, so
-   * the card shows real values rather than three pending markers. This is a
-   * presentation choice over verified data — nothing is computed or invented.
+   * The hero and the two catalogue goal cards prefer items whose financing
+   * figures are actually published, so the interfaces show verified values
+   * rather than three pending markers. Presentation choice over real data —
+   * nothing is computed or invented.
    */
   const heroVehicle =
     vehicles.find((vehicle) => vehicle.financing.monthlyPaymentUzs) ?? vehicles[0] ?? null;
@@ -55,10 +55,12 @@ export default async function HomePage() {
 
       <TrustLayer />
 
-      <GoalChooser />
+      <GoalChooser
+        vehicleImage={vehicles[0]?.images[0] ?? heroVehicle?.images[0] ?? null}
+        productImage={products[0]?.images[0] ?? heroProduct?.images[0] ?? null}
+      />
 
       <FeaturedShowcase
-        tone="muted"
         eyebrow="Tanlangan takliflar"
         title="Avtomobillar"
         description="Muddatli to‘lov asosida taqdim etilayotgan avtomobillar."
@@ -72,6 +74,7 @@ export default async function HomePage() {
       />
 
       <FeaturedShowcase
+        tone="muted"
         eyebrow="Elektronika"
         title="Telefonlar va elektronika"
         description="Muddatli to‘lov asosida xarid qilish mumkin bo‘lgan mahsulotlar."
@@ -92,9 +95,7 @@ export default async function HomePage() {
 
       <InvestSection />
 
-      <Reveal>
-        <AcademySection />
-      </Reveal>
+      <AcademySection />
 
       <AppSection />
 

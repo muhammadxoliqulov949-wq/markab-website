@@ -31,54 +31,56 @@ function StoreBadge({ store, href }: { store: 'App Store' | 'Google Play'; href:
 }
 
 /**
- * Digital experience section — Markab is more than a website.
+ * Digital experience — the Markab 2.0 ecosystem concept.
  *
- * The dashboard visual is explicitly labelled as a concept so prototype UI is
- * never presented as production capability. Store links are the verified public
+ * The dashboard is explicitly labelled as a concept, so prototype UI is never
+ * presented as production capability. Store links are the verified public
  * listings.
  */
 export function AppSection() {
   return (
     <section
       aria-labelledby="app-heading"
-      className="bg-surface-muted py-16 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-ink-900 py-20 text-white sm:py-24 lg:py-28"
     >
-      <Container>
-        <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-16">
+      <div className="vignette pointer-events-none absolute inset-0" aria-hidden="true" />
+
+      <Container className="relative">
+        <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-16">
           <div>
             <SectionHeading
               id="app-heading"
               eyebrow="Raqamli tajriba"
-              title="Markab ilovasida — hammasi bir joyda"
-              description="Buyurtmalar, to‘lovlar, bildirishnomalar, shartnomalar va sarmoya — bitta kabinetdan boshqariladi."
+              title="Hammasi bitta kabinetda"
+              description="Buyurtmalar, to‘lovlar, shartnomalar, sarmoya va bildirishnomalar — bitta ilovada."
+              tone="dark"
             />
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <StoreBadge store="App Store" href={site.apps.appStore} />
-              <StoreBadge store="Google Play" href={site.apps.googlePlay} />
-            </div>
-
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+            <ul className="mt-9 grid gap-x-8 gap-y-4 sm:grid-cols-2">
               {appFeatures.map((feature) => (
-                <li
-                  key={feature.title}
-                  className="rounded-xl border border-line bg-surface p-4 transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:shadow-card-hover"
-                >
-                  <h3 className="text-sm font-semibold text-ink-900">{feature.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-ink-500">
+                <li key={feature.title} className="border-t border-white/10 pt-4">
+                  <h3 className="text-sm font-semibold text-white">{feature.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-white/60">
                     {feature.description}
                   </p>
                 </li>
               ))}
             </ul>
 
-            <p className="mt-5 text-xs leading-relaxed text-ink-400">
-              Ilova ma’lumotlari rasmiy do‘kon sahifalaridan olingan. Kabinet ko‘rinishi —
-              kontsept: real ma’lumotlar ulanishi kutilmoqda.
+            <div className="mt-9 flex flex-wrap gap-3">
+              <StoreBadge store="App Store" href={site.apps.appStore} />
+              <StoreBadge store="Google Play" href={site.apps.googlePlay} />
+            </div>
+
+            <p className="mt-5 text-xs leading-relaxed text-white/45">
+              Ilova ma’lumotlari rasmiy do‘kon sahifalaridan olingan. Kabinet ko‘rinishi — Markab
+              2.0 kontsepti: real ma’lumotlar ulanishi kutilmoqda.
             </p>
           </div>
 
-          <DashboardMock />
+          <div className="pb-8 sm:pb-0">
+            <DashboardMock />
+          </div>
         </div>
       </Container>
     </section>

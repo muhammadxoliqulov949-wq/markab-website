@@ -1,7 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { ButtonLink } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 import { Container } from '@/components/ui/Section';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { formatUzs } from '@/lib/format';
@@ -9,134 +7,132 @@ import { site } from '@/lib/site';
 import type { Product, Vehicle } from '@/lib/data/types';
 
 /**
- * Premium hero — the entry point of the product.
+ * Premium hero — the visual centrepiece.
  *
- * Left: what Markab is, in one sentence, plus the two primary goals.
- * Right: a real catalogue composition (vehicle visual + financing card), so the
- * hero shows the actual product instead of an abstract illustration.
+ * Composition: a verified vehicle photograph bleeding off the right edge and
+ * dissolved into the ink background with a scrim; editorial headline over it;
+ * one compact financing card carrying ONLY published values.
  *
- * Only published values are shown: the monthly payment appears only when the
- * source publishes it, otherwise the explicit pending marker is rendered.
+ * Nothing here is computed. If the source does not publish a monthly payment,
+ * the card says so instead of showing a number.
  */
 export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: Product | null }) {
   const image = vehicle?.images[0] ?? null;
 
   return (
-    <section className="relative overflow-hidden border-b border-line bg-surface">
-      <div className="hero-grid pointer-events-none absolute inset-0" aria-hidden="true" />
+    <section
+      aria-labelledby="hero-heading"
+      className="relative isolate bg-ink-900 text-white"
+    >
+      {/* Layered background: photography → scrim → subtle grid. */}
+      {image ? (
+        <div className="absolute inset-y-0 right-0 hidden w-[60%] overflow-hidden lg:block" aria-hidden="true">
+          <Image src={image} alt="" fill priority sizes="60vw" className="object-cover object-center" />
+          <div className="hero-scrim-x absolute inset-0" />
+          <div className="hero-scrim-y absolute inset-0" />
+        </div>
+      ) : null}
+      <div className="hero-grid pointer-events-none absolute inset-0 opacity-30" aria-hidden="true" />
 
-      <Container className="relative py-12 sm:py-16 lg:py-24">
-        <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
-          <div>
-            <Badge tone="brand" className="mb-5">
+      <Container className="relative">
+        <div className="grid min-h-[80vh] items-center gap-10 py-14 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:py-20">
+          {/* Left: what Markab is, and the two primary goals. */}
+          <div className="max-w-2xl">
+            <p className="animate-rise-1 text-xs font-semibold uppercase tracking-[0.22em] text-brand-300">
               {site.positioning}
-            </Badge>
-
-            <h1 className="max-w-xl text-display-sm sm:text-display-md lg:text-display-lg">
-              Qadriyatlarga asoslangan zamonaviy moliyaviy ekotizim.
-            </h1>
-
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-500 sm:text-lg">
-              Markab — avtomobil va elektronikani muddatli to‘lovga taqdim etuvchi,
-              qadriyatlarga asoslangan moliya platformasi. Avtomobil, elektronika,
-              moliyalashtirish va sarmoya — bitta ekotizimda, ochiq shartlar bilan.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <ButtonLink href="/cars" size="lg" className="sm:w-auto">
+            <h1 id="hero-heading" className="animate-rise-2 mt-5 text-display-xl text-white sm:mt-6">
+              Qadriyatlarga asoslangan zamonaviy moliyaviy ekotizim
+            </h1>
+
+            <p className="animate-rise-3 mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
+              Markab orqali avtomobil va elektronikani muddatli to‘lov asosida xarid qilish,
+              moliyalashtirish shartlari bilan tanishish va sarmoya imkoniyatlarini o‘rganish
+              mumkin — barchasi bitta ekotizimda, ochiq shartlar bilan.
+            </p>
+
+            <div className="animate-rise-4 mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link
+                href="/cars"
+                className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl bg-white px-7 text-[0.9375rem] font-semibold text-ink-900 transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-ink-900"
+              >
                 Avtomobillarni ko‘rish
-              </ButtonLink>
-              <ButtonLink href="/invest" variant="secondary" size="lg" className="sm:w-auto">
-                Sarmoya imkoniyatlarini ko‘rish
-              </ButtonLink>
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+              <Link
+                href="/invest"
+                className="inline-flex h-[52px] items-center justify-center rounded-xl border border-white/25 px-7 text-[0.9375rem] font-semibold text-white transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+              >
+                Sarmoya imkoniyatlari
+              </Link>
             </div>
 
-            <p className="mt-5 text-sm text-ink-500">
+            <p className="animate-rise-5 mt-6 text-sm">
               <Link
                 href="#qanday-ishlaydi"
-                className="inline-flex items-center gap-1.5 font-medium text-brand-700 underline decoration-brand-200 underline-offset-4 transition-colors hover:decoration-brand-600"
+                className="inline-flex items-center gap-2 text-white/60 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60"
               >
                 Markab qanday ishlaydi?
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                  <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M12 5v14M6 13l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
             </p>
 
-            <dl className="mt-10 grid max-w-lg grid-cols-1 gap-4 sm:grid-cols-3">
-              <div>
-                <dt className="text-xs uppercase tracking-wide text-ink-400">Muddat</dt>
-                <dd className="mt-1 text-sm font-semibold text-ink-900">2 oydan 36 oygacha</dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-wide text-ink-400">Shartnoma</dt>
-                <dd className="mt-1 text-sm font-semibold text-ink-900">Taqsit yoki murabaha</dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-wide text-ink-400">Ofis</dt>
-                <dd className="mt-1 text-sm font-semibold text-ink-900">Toshkent, Yunusobod</dd>
-              </div>
+            <dl className="animate-rise-5 mt-12 grid max-w-lg grid-cols-3 gap-4 border-t border-white/10 pt-6">
+              {[
+                { label: 'Muddat', value: '2 oydan 36 oygacha' },
+                { label: 'Shartnoma', value: 'Taqsit yoki murabaha' },
+                { label: 'Ofis', value: 'Toshkent, Yunusobod' },
+              ].map((item) => (
+                <div key={item.label}>
+                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/40">{item.label}</dt>
+                  <dd className="mt-1.5 text-sm font-semibold text-white/90">{item.value}</dd>
+                </div>
+              ))}
             </dl>
           </div>
 
-          {/* Composition: real catalogue data — never stock imagery. */}
-          <div className="relative pb-2 sm:pb-10">
-            <div className="relative overflow-hidden rounded-2xl border border-line bg-ink-900 shadow-lift">
-              {image ? (
-                <div className="relative aspect-[4/3] sm:aspect-[16/11]">
+          {/*
+            Right column: the photograph on mobile (in flow), the financing card on
+            desktop (bottom-aligned over the bleeding photograph).
+          */}
+          <div className="lg:flex lg:h-full lg:flex-col lg:justify-end lg:pb-4">
+            {image ? (
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 lg:hidden">
+                <div className="relative aspect-[4/3]">
                   <Image
                     src={image}
-                    alt={vehicle ? vehicle.title : 'Markab katalogidagi avtomobil'}
+                    alt={vehicle ? vehicle.title : ''}
                     fill
                     priority
-                    sizes="(max-width: 1024px) 100vw, 46vw"
+                    sizes="100vw"
                     className="object-cover"
                   />
-                  <div
-                    className="absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/25 to-transparent"
-                    aria-hidden="true"
-                  />
+                  <div className="hero-scrim-y absolute inset-0" aria-hidden="true" />
+                </div>
+              </div>
+            ) : null}
 
-                  {vehicle ? (
-                    <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-                      <p className="text-xs uppercase tracking-[0.12em] text-white/60">
+            {vehicle ? (
+              <div className="animate-rise-5 mt-5 lg:mt-0 lg:w-[22rem] lg:self-end">
+                <div className="rounded-2xl border border-line bg-surface p-5 shadow-lift">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-ink-900">{vehicle.title}</p>
+                      <p className="mt-0.5 text-xs text-ink-500">
                         {vehicle.year} · {vehicle.location}
                       </p>
-                      <p className="mt-1.5 truncate text-lg font-semibold text-white sm:text-xl">
-                        {vehicle.title}
-                      </p>
-                      <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                        <span className="text-base font-semibold text-white sm:text-lg">
-                          {formatUzs(vehicle.priceUzs)}
-                        </span>
-                        {vehicle.financing.monthlyPaymentUzs ? (
-                          <span className="text-sm text-brand-200">
-                            {formatUzs(vehicle.financing.monthlyPaymentUzs)} / oy
-                          </span>
-                        ) : (
-                          <span className="text-sm text-white/60">
-                            Oylik to‘lov: hisob-kitob tayyorlanmoqda
-                          </span>
-                        )}
-                      </div>
                     </div>
-                  ) : null}
-                </div>
-              ) : (
-                <div className="flex aspect-[4/3] items-center justify-center text-sm text-white/60 sm:aspect-[16/11]">
-                  Ma’lumot tayyorlanmoqda
-                </div>
-              )}
-            </div>
+                    <p className="shrink-0 text-sm font-semibold text-ink-900">
+                      {formatUzs(vehicle.priceUzs)}
+                    </p>
+                  </div>
 
-            {/* Financing card — floating on tablet and up, inline on mobile. */}
-            {vehicle ? (
-              <div className="mt-3 sm:absolute sm:-bottom-4 sm:left-6 sm:mt-0 sm:w-[19rem]">
-                <div className="rounded-xl border border-line bg-surface p-4 shadow-lift">
-                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-400">
-                    Muddatli to‘lov
-                  </p>
-                  <dl className="mt-3 space-y-2">
+                  <dl className="mt-4 space-y-2.5 border-t border-line pt-4">
                     <div className="flex items-center justify-between gap-4">
                       <dt className="text-sm text-ink-500">Boshlang‘ich to‘lov</dt>
                       <dd className="text-sm font-medium text-ink-900">
@@ -157,9 +153,9 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                         )}
                       </dd>
                     </div>
-                    <div className="flex items-center justify-between gap-4 border-t border-line pt-2">
+                    <div className="flex items-center justify-between gap-4 border-t border-line pt-2.5">
                       <dt className="text-sm text-ink-500">Oylik to‘lov</dt>
-                      <dd className="text-sm font-semibold text-brand-700">
+                      <dd className="text-[0.9375rem] font-semibold text-brand-700">
                         {vehicle.financing.monthlyPaymentUzs ? (
                           formatUzs(vehicle.financing.monthlyPaymentUzs)
                         ) : (
@@ -168,38 +164,26 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                       </dd>
                     </div>
                   </dl>
-                </div>
-              </div>
-            ) : null}
 
-            {product ? (
-              <div className="absolute -right-1 top-4 hidden w-44 rounded-xl border border-line bg-surface/95 p-3 shadow-lift backdrop-blur lg:block">
-                <div className="flex items-center gap-3">
-                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-surface-sunken">
-                    {product.images[0] ? (
-                      <Image
-                        src={product.images[0]}
-                        alt={product.name}
-                        fill
-                        sizes="40px"
-                        className="object-cover"
-                      />
-                    ) : null}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="truncate text-xs font-semibold text-ink-900">{product.name}</p>
-                    <p className="mt-0.5 text-xs text-ink-500">Elektronika</p>
-                  </div>
+                  <Link
+                    href={`/cars/${vehicle.slug}`}
+                    className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 underline-offset-4 transition-colors hover:underline"
+                  >
+                    E’lonni ochish
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </Link>
                 </div>
               </div>
             ) : null}
           </div>
         </div>
-
-        <p className="mt-10 text-xs text-ink-400">
-          Ko‘rsatilgan e’lonlar markab.uz ochiq sahifalaridan olingan namuna ma’lumotlari.
-        </p>
       </Container>
+
+      {product ? (
+        <p className="sr-only">Katalogda elektronika mahsulotlari ham mavjud: {product.name}.</p>
+      ) : null}
     </section>
   );
 }
