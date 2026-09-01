@@ -7,7 +7,7 @@ import { StateBlock } from '@/components/ui/StateBlock';
 import { AdvisorResultCard } from './AdvisorResultCard';
 import { CompareTray } from './CompareTray';
 import { advise } from '@/lib/advisor/engine';
-import { ADVISOR_DISCLOSURE, isRuleBasedOnly, joinUnmet } from '@/lib/advisor/explanation';
+import { joinUnmet } from '@/lib/advisor/explanation';
 import { buildCarQuestions, buildElectronicsQuestions, type AdvisorQuestion } from '@/lib/advisor/questions';
 import {
   EMPTY_CAR_PREFERENCES,
@@ -76,7 +76,6 @@ export function AdvisorFlow({
     [prefs, vehicles, products],
   );
 
-  const ruleBased = isRuleBasedOnly();
   const compareMatches = useMemo(() => {
     if (!result) return [];
     const all = [...result.exact, ...result.nearest];
@@ -124,18 +123,8 @@ export function AdvisorFlow({
 
   return (
     <div className="space-y-6">
-      {/* Honest labelling: this is rules over catalogue data, not a model. */}
-      <div className="rounded-xl border border-dashed border-line-strong bg-surface-muted px-4 py-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge tone={ruleBased ? 'pending' : 'brand'}>
-            {ruleBased ? 'Qoidalar asosidagi tavsiya' : 'AI tavsiya'}
-          </Badge>
-          <span className="text-xs font-medium text-ink-500">Tanlov yordamchisi</span>
-        </div>
-        <p className="mt-2 text-xs leading-relaxed text-ink-500">{ADVISOR_DISCLOSURE}</p>
-      </div>
-
-      {/* Progress */}
+      {/* Progress. The honest-labelling disclosure is rendered by the page so
+          it stays visible in every state, including "catalogue unavailable". */}
       <nav aria-label="Yordamchi bosqichlari">
         <ol className="flex flex-wrap items-center gap-2 text-xs">
           {STEP_LABELS.map((label, index) => {

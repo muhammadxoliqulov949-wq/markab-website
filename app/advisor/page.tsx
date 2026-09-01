@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Container } from '@/components/ui/Section';
 import { StateBlock } from '@/components/ui/StateBlock';
 import { AdvisorFlow, type CategoryState } from '@/components/advisor/AdvisorFlow';
+import { AdvisorDisclosure } from '@/components/advisor/AdvisorDisclosure';
 import { repository } from '@/lib/data';
 import type { Result } from '@/lib/data/types';
 import { buildMetadata } from '@/lib/seo';
@@ -43,6 +44,7 @@ export default async function AdvisorPage() {
     return (
       <Container className="py-10 sm:py-14">
         <Header />
+        <AdvisorDisclosure />
         <StateBlock
           variant="unavailable"
           title="Katalog ma’lumotlari ulanmagan"
@@ -56,6 +58,7 @@ export default async function AdvisorPage() {
     return (
       <Container className="py-10 sm:py-14">
         <Header />
+        <AdvisorDisclosure />
         <StateBlock
           variant="error"
           title="Katalogni o‘qib bo‘lmadi"
@@ -72,6 +75,7 @@ export default async function AdvisorPage() {
   return (
     <Container className="py-10 sm:py-14">
       <Header />
+      <AdvisorDisclosure />
       <AdvisorFlow
         vehicles={vehicles}
         products={products}
