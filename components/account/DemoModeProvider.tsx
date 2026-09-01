@@ -4,7 +4,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -21,9 +20,13 @@ import { DEMO_BANNER_TEXT } from '@/lib/account/demo';
  *
  * The banner text is exported from here so every surface uses the identical
  * wording and it cannot drift.
+ *
+ * STATE OWNERSHIP: this provider no longer reads or writes localStorage. Demo
+ * mode is driven entirely by the URL (`/profile?holat=demo`) and mirrored in
+ * here by the dashboard. Two independent sources — a persisted flag plus local
+ * component state — is what let the two disagree and made the "Demo rejimda
+ * ko‘rish" button look broken.
  */
-
-const STORAGE_KEY = 'markab.demo.dashboard';
 
 type DemoContextValue = {
   demo: boolean;
@@ -36,25 +39,13 @@ type DemoContextValue = {
 const DemoContext = createContext<DemoContextValue | null>(null);
 
 export function DemoModeProvider({ children }: { children: ReactNode }) {
+  // In-memory only. There is nothing to hydrate from, so `ready` is
+  // immediately true and there is no first-paint mismatch to reconcile.
   const [demo, setDemoState] = useState(false);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    try {
-      setDemoState(window.localStorage.getItem(STORAGE_KEY) === '1');
-    } catch {
-      // Storage blocked → demo stays off, which is the honest default.
-    }
-    setReady(true);
-  }, []);
+  const ready = true;
 
   const setDemo = useCallback((value: boolean) => {
     setDemoState(value);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, value ? '1' : '0');
-    } catch {
-      // Persistence is a convenience; the session still works in memory.
-    }
   }, []);
 
   const toggle = useCallback(() => setDemo(!demo), [demo, setDemo]);

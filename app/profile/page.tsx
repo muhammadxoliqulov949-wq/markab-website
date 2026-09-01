@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Container } from '@/components/ui/Section';
 import { AccountDashboard } from '@/components/account/AccountDashboard';
 import { buildMetadata } from '@/lib/seo';
@@ -29,7 +30,25 @@ export default function ProfilePage() {
         server-rendered heading keeps the document outline valid on first paint.
       */}
       <h1 className="sr-only">Mening Markabim</h1>
-      <AccountDashboard />
+      {/*
+        The dashboard reads the prototype account state from the URL
+        (`?holat=`), so it needs a Suspense boundary: this route is statically
+        prerendered and `useSearchParams` opts the subtree into client
+        rendering. The fallback is the same skeleton the dashboard shows while
+        the session state is unknown.
+      */}
+      <Suspense
+        fallback={
+          <div className="space-y-4" aria-busy="true" aria-live="polite">
+            <span className="sr-only">Hisob holati yuklanmoqda</span>
+            <div className="h-28 animate-pulse rounded-xl bg-surface-muted" />
+            <div className="h-10 animate-pulse rounded-lg bg-surface-muted" />
+            <div className="h-64 animate-pulse rounded-xl bg-surface-muted" />
+          </div>
+        }
+      >
+        <AccountDashboard />
+      </Suspense>
       <p className="mt-6 text-xs leading-relaxed text-ink-400">
         Eslatma: asl saytda <code className="rounded bg-surface-sunken px-1 py-0.5">/profile</code>{' '}
         manzili kirish sahifasiga yo‘naltirilmasdan bosh sahifani ko‘rsatardi (soft 404).

@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Badge } from '@/components/ui/Badge';
 import { ButtonLink, Button } from '@/components/ui/Button';
 import { StateBlock } from '@/components/ui/StateBlock';
@@ -50,35 +51,80 @@ const TABS: { id: TabId; label: string }[] = [
   { id: 'support', label: 'Yordam' },
 ];
 
-/** Reviewer-only preview of the auth state. Never persisted, defaults to truth. */
-type PreviewState = 'real' | 'unauthenticated' | 'signed-in';
+/**
+ * Reviewer-only preview of the auth state.
+ *
+ * CARRIED IN THE URL, not in component state: `/profile?holat=demo` is
+ * deterministic, survives a refresh and can be shared as a link. Unknown or
+ * missing values fall back to 'real', so a fresh visit always shows the honest
+ * answer first and a mistyped URL can never reach a fake account.
+ */
+type PreviewState = 'real' | 'kirilmagan' | 'kirilgan' | 'demo';
+
+const PREVIEW_PARAM = 'holat';
+
+function parseHolat(raw: string | null): PreviewState {
+  return raw === 'kirilmagan' || raw === 'kirilgan' || raw === 'demo' ? raw : 'real';
+}
 
 export function AccountDashboard() {
   const { state, status } = useAuth();
-  const { demo, setDemo, ready: demoReady } = useDemoMode();
+  const { setDemo } = useDemoMode();
   const { items: saved } = useSavedItems();
   const [tab, setTab] = useState<TabId>('overview');
   /** Refs for arrow-key movement across the tab strip. */
   const tabRefs = useRef<Partial<Record<TabId, HTMLButtonElement | null>>>({});
-  const [preview, setPreview] = useState<PreviewState>('real');
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
   /**
-   * The effective status shown to the user. `preview` only ever makes the UI
-   * show a state the real service would produce; it cannot invent a session,
-   * and 'real' is always the default on a fresh load.
+   * The ONE source of truth for which account state is on screen.
+   *
+   * Previously `demo` (a provider flag) and `preview` (local useState) were
+   * independent, so pressing "Demo rejimda ko‘rish" set the demo flag but left
+   * `preview` on 'real'. The page stayed in the `unavailable` branch and the
+   * button looked dead. Both now derive from the URL and cannot drift.
+   */
+  const holat = parseHolat(searchParams.get(PREVIEW_PARAM));
+  const isDemo = holat === 'demo';
+
+  const setHolat = useCallback(
+    (next: PreviewState) => {
+      const query = next === 'real' ? '' : `?${PREVIEW_PARAM}=${next}`;
+      // `replace` keeps switching out of the history stack; scroll is
+      // preserved so the reviewer stays where they were.
+      router.replace(`${pathname}${query}`, { scroll: false });
+    },
+    [pathname, router],
+  );
+
+  /**
+   * Mirror the URL into the provider so the banner and the panels read the
+   * same value. The URL wins on every render, so the two cannot drift.
+   */
+  useEffect(() => {
+    setDemo(isDemo);
+  }, [isDemo, setDemo]);
+
+  /**
+   * The effective status shown to the user. `holat` only ever makes the UI show
+   * a state the real service would produce; it cannot invent a session, and
+   * 'real' is always the default on a fresh load.
    */
   const effectiveStatus = useMemo(() => {
-    if (preview === 'real') return status;
-    if (preview === 'unauthenticated') return 'unauthenticated' as const;
+    if (holat === 'real') return status;
+    if (holat === 'kirilmagan') return 'unauthenticated' as const;
     return 'authenticated' as const;
-  }, [preview, status]);
+  }, [holat, status]);
 
   /**
    * Account data comes from the repository in the real build. Both providers
    * return `unavailable` today, so this is null and every panel renders its
    * pending state — demo rows are substituted only when demo mode is on.
    */
-  const snapshot: AccountSnapshot | null = demo ? DEMO_ACCOUNT : null;
+  const snapshot: AccountSnapshot | null = isDemo ? DEMO_ACCOUNT : null;
   const hasAccountBackend = false;
 
   // ---- loading ------------------------------------------------------------
@@ -122,14 +168,14 @@ export function AccountDashboard() {
               <ButtonLink href="/login" size="sm">
                 Kirish sahifasi
               </ButtonLink>
-              <Button variant="secondary" size="sm" onClick={() => setDemo(true)}>
+              <Button variant="secondary" size="sm" onClick={() => setHolat('demo')}>
                 Demo rejimda ko‘rish
               </Button>
             </>
           }
         />
-        <SavedProductsPreview />
-        <PrototypeControls preview={preview} setPreview={setPreview} />
+        <SavedProductsPreview holat={holat} />
+        <PrototypeControls holat={holat} setHolat={setHolat} />
       </div>
     );
   }
@@ -147,14 +193,14 @@ export function AccountDashboard() {
               <ButtonLink href="/login" size="sm">
                 Kirish
               </ButtonLink>
-              <Button variant="secondary" size="sm" onClick={() => setDemo(true)}>
+              <Button variant="secondary" size="sm" onClick={() => setHolat('demo')}>
                 Demo rejimda ko‘rish
               </Button>
             </>
           }
         />
-        <SavedProductsPreview />
-        <PrototypeControls preview={preview} setPreview={setPreview} />
+        <SavedProductsPreview holat={holat} />
+        <PrototypeControls holat={holat} setHolat={setHolat} />
       </div>
     );
   }
@@ -189,7 +235,7 @@ export function AccountDashboard() {
             <Badge tone={hasAccountBackend ? 'brand' : 'pending'}>
               {hasAccountBackend ? 'Hisob ulangan' : 'Integratsiya kutilmoqda'}
             </Badge>
-            {demo ? <Badge tone="warning">Demo</Badge> : null}
+            {isDemo ? <Badge tone="warning">Demo</Badge> : null}
           </div>
         </div>
       </div>
@@ -268,31 +314,31 @@ export function AccountDashboard() {
           <OverviewPanel
             snapshot={snapshot}
             saved={saved}
-            demo={demo}
+            demo={isDemo}
             hasAccountBackend={hasAccountBackend}
           />
         ) : null}
-        {tab === 'applications' ? <ApplicationsPanel snapshot={snapshot} demo={demo} /> : null}
-        {tab === 'financing' ? <AgreementsPanel snapshot={snapshot} demo={demo} /> : null}
-        {tab === 'payments' ? <PaymentsPanel snapshot={snapshot} demo={demo} /> : null}
+        {tab === 'applications' ? <ApplicationsPanel snapshot={snapshot} demo={isDemo} /> : null}
+        {tab === 'financing' ? <AgreementsPanel snapshot={snapshot} demo={isDemo} /> : null}
+        {tab === 'payments' ? <PaymentsPanel snapshot={snapshot} demo={isDemo} /> : null}
         {tab === 'saved' ? <SavedPanel /> : null}
-        {tab === 'notifications' ? <NotificationsPanel snapshot={snapshot} demo={demo} /> : null}
+        {tab === 'notifications' ? <NotificationsPanel snapshot={snapshot} demo={isDemo} /> : null}
         {tab === 'support' ? <SupportPanel /> : null}
       </div>
 
-      {demo && demoReady ? (
+      {isDemo ? (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-surface-muted px-4 py-3">
           <p className="text-xs leading-relaxed text-ink-500">
             Demo rejim yoqilgan: ko‘rsatilgan ariza, shartnoma va bildirishnomalar namuna
             ma’lumotlari bo‘lib, real hisob yoki shartnoma emas.
           </p>
-          <Button variant="secondary" size="sm" onClick={() => setDemo(false)}>
+          <Button variant="secondary" size="sm" onClick={() => setHolat('real')}>
             Demo rejimdan chiqish
           </Button>
         </div>
       ) : null}
 
-      <PrototypeControls preview={preview} setPreview={setPreview} />
+      <PrototypeControls holat={holat} setHolat={setHolat} />
     </div>
   );
 }
@@ -302,7 +348,7 @@ export function AccountDashboard() {
  * they are surfaced even when the account itself is unavailable — behind the
  * same "local only" disclosure the full panel carries.
  */
-function SavedProductsPreview() {
+function SavedProductsPreview({ holat }: { holat: PreviewState }) {
   const { items, ready } = useSavedItems();
   if (!ready || items.length === 0) return null;
   return (
@@ -311,7 +357,11 @@ function SavedProductsPreview() {
         <h2 className="text-base font-semibold text-ink-900">
           Saqlangan mahsulotlar ({items.length})
         </h2>
-        <ButtonLink href="/profile?saved=1" variant="secondary" size="sm">
+        <ButtonLink
+          href={holat === 'real' ? '/profile?saved=1' : `/profile?holat=${holat}&saved=1`}
+          variant="secondary"
+          size="sm"
+        >
           Barchasini ko‘rish
         </ButtonLink>
       </div>
@@ -325,20 +375,22 @@ function SavedProductsPreview() {
 /**
  * Prototype-only state switcher.
  *
- * Clearly labelled as a prototype control, never persisted, and defaults to the
- * real state so a fresh visit always shows the honest answer first.
+ * Writes to the URL, so every state is deterministic, refresh-safe and
+ * shareable — `/profile?holat=demo` can be sent to a reviewer as a link. These
+ * buttons cannot authenticate: they only choose which honest state to display.
  */
 function PrototypeControls({
-  preview,
-  setPreview,
+  holat,
+  setHolat,
 }: {
-  preview: PreviewState;
-  setPreview: (value: PreviewState) => void;
+  holat: PreviewState;
+  setHolat: (value: PreviewState) => void;
 }) {
   const options: { id: PreviewState; label: string }[] = [
     { id: 'real', label: 'Haqiqiy holat' },
-    { id: 'unauthenticated', label: 'Kirilmagan' },
-    { id: 'signed-in', label: 'Kirilgan (bo‘sh)' },
+    { id: 'kirilmagan', label: 'Kirilmagan' },
+    { id: 'kirilgan', label: 'Kirilgan (bo‘sh)' },
+    { id: 'demo', label: 'Demo rejimi' },
   ];
   return (
     <div className="rounded-xl border border-dashed border-line-strong bg-surface-muted px-4 py-3">
@@ -347,18 +399,19 @@ function PrototypeControls({
       </p>
       <p className="mt-1.5 text-xs leading-relaxed text-ink-400">
         Bu tugmalar real autentifikatsiya qilmaydi. Ular kabinet holatlarini ko‘rsatish uchun
-        mo‘ljallangan; sahifa yangilanganda haqiqiy holat qaytadi.
+        mo‘ljallangan. Holat URLda saqlanadi, shuning uchun sahifa yangilanganda yoki havola
+        orqali ochilganda ham shu holat qoladi.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {options.map((option) => (
           <button
             key={option.id}
             type="button"
-            onClick={() => setPreview(option.id)}
-            aria-pressed={preview === option.id}
+            onClick={() => setHolat(option.id)}
+            aria-pressed={holat === option.id}
             className={[
               'inline-flex h-9 items-center rounded-lg border px-3 text-xs font-medium transition-colors',
-              preview === option.id
+              holat === option.id
                 ? 'border-ink-300 bg-surface text-ink-900'
                 : 'border-line bg-surface text-ink-500 hover:border-line-strong hover:text-ink-800',
             ].join(' ')}
