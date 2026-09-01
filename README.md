@@ -849,12 +849,16 @@ All of the following were measured in this environment, not estimated.
 
 | Route | Perf | A11y | Best practices | SEO | LCP | CLS | TBT |
 |---|---|---|---|---|---|---|---|
-| `/` | 98 | 100 | 96 | 100 | 2.3 s | 0.001 | 90 ms |
-| `/cars` | 99 | 100 | 96 | 92 | 2.0 s | 0.001 | 40 ms |
-| `/cars/chevrolet-cobalt-2023` | 99 | 100 | 96 | 92 | 1.4 s | 0.001 | 100 ms |
-| `/electronics` | 99 | 100 | 96 | 92 | 2.2 s | 0.001 | 60 ms |
-| `/invest` | 99 | 100 | 100 | 100 | 2.0 s | 0.001 | 100 ms |
-| `/academy` | 99 | 100 | 100 | 91 | 1.9 s | 0.001 | 70 ms |
+| `/` | 99 | 100 | 96 | 100 | 1.8 s | 0.001 | 50 ms |
+| `/cars` | 97 | 100 | 96 | 92 | 1.5 s | 0.001 | 200 ms |
+| `/cars/chevrolet-cobalt-2023` | 99 | 100 | 96 | 92 | 1.9 s | 0.001 | 70 ms |
+| `/electronics` | 95 | 100 | 96 | 92 | 2.0 s | 0.001 | 230 ms |
+| `/invest` | 98 | 100 | 100 | 100 | 2.1 s | 0.001 | 140 ms |
+| `/academy` | 99 | 100 | 100 | 91 | 2.1 s | 0.001 | 70 ms |
+
+Accessibility, best practices and SEO are stable across runs. Performance is
+not: repeated runs on this shared sandbox ranged 95–99 with TBT between 40 ms
+and 230 ms, so read that column as a band rather than a measurement.
 
 Two caveats on those numbers, both material:
 
