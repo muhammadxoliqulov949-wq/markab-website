@@ -56,6 +56,7 @@ export function HeaderSearch() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-controls="global-search-form"
         aria-label="Qidirish"
         className="rounded-lg p-2 text-ink-600 transition-colors hover:bg-surface-muted hover:text-ink-900 xl:hidden"
       >
@@ -63,6 +64,7 @@ export function HeaderSearch() {
       </button>
 
       <form
+        id="global-search-form"
         action="/search"
         method="get"
         role="search"
@@ -102,7 +104,12 @@ export function HeaderSearch() {
                 // Return focus to the trigger on the way out. Blurring alone
                 // drops a keyboard visitor at the top of the document.
                 setOpen(false);
-                triggerRef.current?.focus();
+                // Above the nav breakpoint the field is permanently inline and
+                // the trigger is display:none — focusing it is a silent no-op
+                // that strands focus in the input with no visible way out. Only
+                // restore focus when the trigger can actually receive it.
+                const trigger = triggerRef.current;
+                if (trigger && trigger.offsetParent !== null) trigger.focus();
               }
             }}
             placeholder="Avtomobil yoki elektronika"
