@@ -191,11 +191,13 @@ export function InstallmentCalculator({
             <dt className="text-xs uppercase tracking-wide text-ink-400">
               Moliyalashtiriladigan qoldiq
             </dt>
-            <dd className="mt-1 text-lg font-semibold text-ink-900">{formatUzs(remaining)}</dd>
-            <p className="mt-1 text-xs leading-relaxed text-ink-400">
-              Oddiy arifmetika: narx − boshlang‘ich to‘lov. Bu rasmiy moliyalashtirish hisobi
-              emas — ustama, komissiya va boshqa shartlar kiritilmagan.
-            </p>
+            <dd className="mt-1 text-lg font-semibold text-ink-900">
+              {formatUzs(remaining)}
+              <p className="mt-1 text-xs font-normal leading-relaxed text-ink-400">
+                Oddiy arifmetika: narx − boshlang‘ich to‘lov. Bu rasmiy moliyalashtirish hisobi
+                emas — ustama, komissiya va boshqa shartlar kiritilmagan.
+              </p>
+            </dd>
           </div>
           <ResultRow label="So‘ralayotgan muddat" value={`${term} oy`} />
         </dl>

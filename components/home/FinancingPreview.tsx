@@ -97,32 +97,35 @@ export function FinancingPreview() {
               </Badge>
             </div>
 
-            <dl className="mt-6 space-y-5">
-              <div>
+            {/* One description list per pair, not one around the whole panel:
+                a <div> inside a <dl> may hold only <dt>/<dd>, and these rows
+                also carry a slider, sample chips and explanatory notes. */}
+            <div className="mt-6 space-y-5">
+              <dl>
                 <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                   Mahsulot narxi
                 </dt>
                 <dd className="mt-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-[1.0625rem] font-semibold text-white">
                   {formatUzs(SAMPLE.price)}
                 </dd>
-              </div>
+              </dl>
 
               <div>
-                <div className="flex items-baseline justify-between">
+                <dl className="flex items-baseline justify-between">
                   <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                     Boshlang‘ich to‘lov
                   </dt>
-                  <span className="text-sm font-semibold text-brand-200">{SAMPLE.downPercent}%</span>
-                </div>
+                  <dd className="text-sm font-semibold text-brand-200">{SAMPLE.downPercent}%</dd>
+                </dl>
                 <div className="mt-2.5 h-1.5 w-full rounded-full bg-white/10" aria-hidden="true">
                   <div
                     className="h-1.5 rounded-full bg-brand-400"
                     style={{ width: `${(SAMPLE.downPercent / 40) * 100}%` }}
                   />
                 </div>
-                <dd className="mt-2 text-[1.0625rem] font-semibold text-white">
+                <p className="mt-2 text-[1.0625rem] font-semibold text-white">
                   {formatUzs(downPayment)}
-                </dd>
+                </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {DOWN_OPTIONS.map((option) => (
                     <span
@@ -141,10 +144,10 @@ export function FinancingPreview() {
               </div>
 
               <div>
-                <div className="flex items-baseline justify-between">
+                <dl className="flex items-baseline justify-between">
                   <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">Muddat</dt>
-                  <span className="text-sm font-semibold text-brand-200">{SAMPLE.termMonths} oy</span>
-                </div>
+                  <dd className="text-sm font-semibold text-brand-200">{SAMPLE.termMonths} oy</dd>
+                </dl>
                 <div className="mt-2.5 flex flex-wrap gap-2">
                   {TERM_OPTIONS.map((months) => (
                     <span
@@ -167,7 +170,7 @@ export function FinancingPreview() {
 
               {/* Result area — honest: nothing is computed here. */}
               <div className="space-y-3 rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4">
-                <div className="flex items-baseline justify-between gap-4">
+                <dl className="flex items-baseline justify-between gap-4">
                   <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                     Oylik to‘lov
                   </dt>
@@ -177,8 +180,8 @@ export function FinancingPreview() {
                       className="text-white/70"
                     />
                   </dd>
-                </div>
-                <div className="flex items-baseline justify-between gap-4 border-t border-white/10 pt-3">
+                </dl>
+                <dl className="flex items-baseline justify-between gap-4 border-t border-white/10 pt-3">
                   <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                     Jami to‘lov
                   </dt>
@@ -188,9 +191,9 @@ export function FinancingPreview() {
                       className="text-white/70"
                     />
                   </dd>
-                </div>
+                </dl>
               </div>
-            </dl>
+            </div>
 
             <p className="mt-5 text-xs leading-relaxed text-white/60">
               Bu yerda hech qanday oylik to‘lov hisoblanmaydi. Hisob-kitob funksiyasi rasmiy

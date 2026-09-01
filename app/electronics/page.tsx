@@ -155,6 +155,9 @@ async function ProductResults({
         </p>
       </div>
 
+      {/* See /cars: the filter panel's h2 is hidden on small screens. */}
+      <h2 className="sr-only">Mahsulotlar ro‘yxati</h2>
+
       <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {products.map((product, index) => (
           <li key={product.id} className="flex">

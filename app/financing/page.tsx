@@ -365,8 +365,14 @@ export default async function FinancingPage() {
                 {PUBLISHED_TERMS.map((item) => (
                   <div key={item.label} className="px-5 py-4">
                     <dt className="text-xs uppercase tracking-wide text-ink-400">{item.label}</dt>
-                    <dd className="mt-1 text-sm font-semibold text-ink-900">{item.value}</dd>
-                    <p className="mt-1 text-xs leading-relaxed text-ink-400">{item.note}</p>
+                    <dd className="mt-1 text-sm font-semibold text-ink-900">
+                      {item.value}
+                      {item.note ? (
+                        <p className="mt-1 text-xs font-normal leading-relaxed text-ink-400">
+                          {item.note}
+                        </p>
+                      ) : null}
+                    </dd>
                   </div>
                 ))}
               </dl>

@@ -145,6 +145,11 @@ async function VehicleResults({
         </p>
       </div>
 
+      {/* The filter panel's own "Filtrlar" h2 is hidden below the desktop
+          breakpoint, so on a phone the card h3s would otherwise follow the page
+          h1 directly and the outline would skip a level. */}
+      <h2 className="sr-only">Avtomobillar ro‘yxati</h2>
+
       <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {vehicles.map((vehicle, index) => (
           <li key={vehicle.id} className="flex">

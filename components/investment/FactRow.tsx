@@ -36,10 +36,13 @@ function ClockGlyph() {
 export function PublishedFact({ fact }: { fact: InvestmentFact }) {
   return (
     <div className="border-t border-line px-5 py-4 first:border-t-0 sm:px-6">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+      {/* One <dl> per row, not one around the whole table: a <div> inside a
+          <dl> may hold only <dt>/<dd>, and a row also carries the status badge,
+          the source attribution and a note, none of which belong to a term. */}
+      <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <dt className="text-sm text-ink-500">{fact.label}</dt>
         <dd className="text-sm font-semibold text-ink-900 sm:text-right">{fact.value}</dd>
-      </div>
+      </dl>
       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
         <Badge tone="brand">{PUBLISHED_LABEL}</Badge>
         {fact.source ? (
@@ -56,12 +59,12 @@ export function PublishedFact({ fact }: { fact: InvestmentFact }) {
 export function PendingField({ field }: { field: InvestmentPendingField }) {
   return (
     <div className="border-t border-dashed border-line px-5 py-4 first:border-t-0 sm:px-6">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+      <dl className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <dt className="text-sm text-ink-500">{field.label}</dt>
         <dd className="text-sm sm:text-right">
           <PendingValue label={PENDING_LABEL} />
         </dd>
-      </div>
+      </dl>
       {field.hint ? (
         <div className="mt-1.5 flex gap-2">
           <ClockGlyph />
@@ -87,13 +90,13 @@ export function FactTable({
   className?: string;
 }) {
   return (
-    <dl className={`overflow-hidden rounded-xl border border-line bg-surface ${className}`}>
+    <div className={`overflow-hidden rounded-xl border border-line bg-surface ${className}`}>
       {published.map((fact) => (
         <PublishedFact key={fact.id} fact={fact} />
       ))}
       {pending.map((field) => (
         <PendingField key={field.id} field={field} />
       ))}
-    </dl>
+    </div>
   );
 }

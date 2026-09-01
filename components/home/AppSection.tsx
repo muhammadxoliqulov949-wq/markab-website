@@ -4,6 +4,17 @@ import { DashboardMock } from '@/components/home/DashboardMock';
 import { repository } from '@/lib/data';
 import { site } from '@/lib/site';
 
+/**
+ * The store badge names itself.
+ *
+ * WCAG 2.5.3 Label in Name wants the accessible name to contain the text the
+ * visitor can see. The caption is styled `uppercase`, so it *renders* as
+ * "DOWNLOAD ON THE" while its text content is "Download on the" — any aria-label
+ * we invent is compared against the rendered string and cannot contain it.
+ * Dropping the override makes the visible text the accessible name, which is
+ * both conformant and one less ARIA attribute to keep in sync. The surrounding
+ * section already establishes that this is the Markab app.
+ */
 function StoreBadge({ store, href }: { store: 'App Store' | 'Google Play'; href: string }) {
   return (
     <ExternalLink
@@ -11,7 +22,6 @@ function StoreBadge({ store, href }: { store: 'App Store' | 'Google Play'; href:
       variant="secondary"
       size="lg"
       className="justify-start gap-3 px-5"
-      aria-label={`Markab ilovasini ${store} dan yuklab olish`}
     >
       <svg className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         {store === 'App Store' ? (
