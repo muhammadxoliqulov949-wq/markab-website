@@ -56,15 +56,15 @@ export function FinalCta() {
 
         <dl className="mx-auto mt-14 grid max-w-3xl gap-6 border-t border-white/15 pt-8 text-sm sm:grid-cols-3">
           <div>
-            <dt className="text-[11px] uppercase tracking-[0.14em] text-white/45">Manzil</dt>
+            <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">Manzil</dt>
             <dd className="mt-1.5 text-white/75">{site.office.address}</dd>
           </div>
           <div>
-            <dt className="text-[11px] uppercase tracking-[0.14em] text-white/45">Ish vaqti</dt>
+            <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">Ish vaqti</dt>
             <dd className="mt-1.5 text-white/75">{site.office.hours}</dd>
           </div>
           <div>
-            <dt className="text-[11px] uppercase tracking-[0.14em] text-white/45">Yordam</dt>
+            <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">Yordam</dt>
             <dd className="mt-1.5">
               <Link
                 href="/contact"

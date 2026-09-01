@@ -53,10 +53,10 @@ export function DashboardMock() {
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {tiles.map((label) => (
                 <div key={label} className="rounded-lg border border-white/10 bg-white/[0.03] p-2.5">
-                  <p className="truncate text-[10px] uppercase tracking-wide text-white/40 sm:text-[11px]">
+                  <p className="truncate text-[10px] uppercase tracking-wide text-white/70 sm:text-[11px]">
                     {label}
                   </p>
-                  <p className="mt-1.5 text-sm font-semibold text-white/30" aria-hidden="true">
+                  <p className="mt-1.5 text-sm font-semibold text-white/60" aria-hidden="true">
                     —
                   </p>
                   <p className="sr-only">Ma’lumot kutilmoqda</p>
@@ -64,7 +64,7 @@ export function DashboardMock() {
               ))}
             </div>
 
-            <div className="mt-4 rounded-lg border border-dashed border-white/15 px-3 py-3 text-[11px] leading-relaxed text-white/45">
+            <div className="mt-4 rounded-lg border border-dashed border-white/15 px-3 py-3 text-[11px] leading-relaxed text-white/60">
               Buyurtmalar, to‘lovlar, shartnomalar, sarmoya va bildirishnomalar shu ko‘rinishda
               kabinetga ulanadi.
             </div>

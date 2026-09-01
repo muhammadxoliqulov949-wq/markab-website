@@ -99,7 +99,7 @@ export function FinancingPreview() {
 
             <dl className="mt-6 space-y-5">
               <div>
-                <dt className="text-[11px] uppercase tracking-[0.14em] text-white/45">
+                <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                   Mahsulot narxi
                 </dt>
                 <dd className="mt-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-[1.0625rem] font-semibold text-white">
@@ -109,7 +109,7 @@ export function FinancingPreview() {
 
               <div>
                 <div className="flex items-baseline justify-between">
-                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/45">
+                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                     Boshlang‘ich to‘lov
                   </dt>
                   <span className="text-sm font-semibold text-brand-200">{SAMPLE.downPercent}%</span>
@@ -142,7 +142,7 @@ export function FinancingPreview() {
 
               <div>
                 <div className="flex items-baseline justify-between">
-                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/45">Muddat</dt>
+                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">Muddat</dt>
                   <span className="text-sm font-semibold text-brand-200">{SAMPLE.termMonths} oy</span>
                 </div>
                 <div className="mt-2.5 flex flex-wrap gap-2">
@@ -168,7 +168,7 @@ export function FinancingPreview() {
               {/* Result area — honest: nothing is computed here. */}
               <div className="space-y-3 rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4">
                 <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/45">
+                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                     Oylik to‘lov
                   </dt>
                   <dd className="text-right text-xs">
@@ -179,7 +179,7 @@ export function FinancingPreview() {
                   </dd>
                 </div>
                 <div className="flex items-baseline justify-between gap-4 border-t border-white/10 pt-3">
-                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/45">
+                  <dt className="text-[11px] uppercase tracking-[0.14em] text-white/60">
                     Jami to‘lov
                   </dt>
                   <dd className="text-right text-xs">
@@ -192,7 +192,7 @@ export function FinancingPreview() {
               </div>
             </dl>
 
-            <p className="mt-5 text-xs leading-relaxed text-white/45">
+            <p className="mt-5 text-xs leading-relaxed text-white/60">
               Bu yerda hech qanday oylik to‘lov hisoblanmaydi. Hisob-kitob funksiyasi rasmiy
               formula ulangach faollashadi — shartlar shartnomada belgilanadi.
             </p>
