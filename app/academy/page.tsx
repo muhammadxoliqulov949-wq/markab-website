@@ -9,12 +9,27 @@ import { EducationNotice } from '@/components/academy/EducationNotice';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = buildMetadata({
-  title: 'Markab Academy',
-  description:
-    'Moliyaviy savodxonlik: avtomobil tanlash, moliyalashtirish va sarmoya asoslari bo‘yicha qisqa darslar. Darslar mazmuni Markab tomonidan to‘ldiriladi.',
-  path: '/academy',
-});
+/**
+ * The clean /academy hub is the indexable URL. Search and category views are
+ * near-duplicates of it, so they carry noindex and a canonical back here —
+ * otherwise every filter click becomes another crawlable permutation.
+ */
+export function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; category?: string }>;
+}): Promise<Metadata> {
+  return searchParams.then((params) => {
+    const filtered = Boolean((params.q ?? '').trim() || (params.category ?? '').trim());
+    return buildMetadata({
+      title: 'Markab Academy',
+      description:
+        'Moliyaviy savodxonlik: avtomobil tanlash, moliyalashtirish va sarmoya asoslari bo‘yicha qisqa darslar. Darslar mazmuni Markab tomonidan to‘ldiriladi.',
+      path: '/academy',
+      noindex: filtered,
+    });
+  });
+}
 
 /**
  * Academy hub.

@@ -10,6 +10,7 @@ import type {
   ProductFacets,
   ProductQuery,
   Result,
+  SiteContent,
   Vehicle,
   VehicleFacets,
   VehicleQuery,
@@ -70,6 +71,12 @@ export interface DataAdapter {
   listRelatedLessons(slug: string, limit?: number): Promise<Result<Lesson[]>>;
 
   listFaq(): Promise<Result<FaqItem[]>>;
+
+  /**
+   * Editorial blocks shared by marketing pages. Content rather than catalogue
+   * data, but served through the same seam so nothing bypasses the data layer.
+   */
+  getSiteContent(): Promise<Result<SiteContent>>;
 
   /**
    * The investment product as the source can support it. Any value Markab has

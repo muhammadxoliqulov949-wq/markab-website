@@ -8,24 +8,32 @@ import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { MobileTabBar } from '@/components/layout/MobileTabBar';
 import { site } from '@/lib/site';
+import { pageTitle } from '@/lib/seo';
+
+const DEFAULT_TITLE = 'Avtomobil, elektronika va moliyalashtirish';
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: 'Markab — Avtomobil, elektronika va shaffof investitsiya',
+  // Pages override this. It exists so nothing can ship without a title.
+  title: {
+    default: pageTitle(DEFAULT_TITLE),
+    template: '%s | Markab',
+  },
   description: site.description,
   applicationName: site.name,
   authors: [{ name: site.name, url: site.url }],
+  alternates: { canonical: site.url },
   openGraph: {
     type: 'website',
     url: site.url,
     siteName: site.name,
-    title: 'Markab — Avtomobil, elektronika va shaffof investitsiya',
+    title: pageTitle(DEFAULT_TITLE),
     description: site.description,
     locale: 'uz_UZ',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Markab — Avtomobil, elektronika va shaffof investitsiya',
+    title: pageTitle(DEFAULT_TITLE),
     description: site.description,
   },
   robots: { index: true, follow: true },

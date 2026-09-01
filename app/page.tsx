@@ -16,7 +16,7 @@ import { buildMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = buildMetadata({
-  fullTitle: 'Markab — Qadriyatlarga asoslangan xotirjamlik!',
+  fullTitle: 'Qadriyatlarga asoslangan xotirjamlik! | Markab',
   title: 'Markab',
   description: site.description,
   path: '/',

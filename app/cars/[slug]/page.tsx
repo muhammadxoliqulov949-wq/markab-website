@@ -14,7 +14,6 @@ import { formatKm, formatUzs, formatViews } from '@/lib/format';
 import { fuelLabel, transmissionLabel } from '@/lib/labels';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
-import { financingSteps, trustBadges } from '@/lib/data/fixtures/content';
 import { relatedReason, selectRelatedVehicles } from '@/lib/vehicles/related';
 import { applyHref, calculatorHref } from '@/lib/financing/handoff';
 
@@ -61,6 +60,13 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
   }
 
   const vehicle = result.data;
+
+  // Editorial blocks (instalment journey, trust badges) now arrive through the
+  // repository rather than a direct fixture import, so there is one access path.
+  const [contentResult] = await Promise.all([repository.getSiteContent()]);
+  const content = contentResult.status === 'success' ? contentResult.data : null;
+  const financingSteps = content?.financingSteps ?? [];
+  const trustBadges = content?.trustBadges ?? [];
 
   // Candidates for the related rail come from the repository, never from
   // fixtures directly. The selection itself is deterministic — see

@@ -434,3 +434,64 @@ export interface CatalogueSearchResults {
   vehicleTotal: number;
   productTotal: number;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Site content (marketing / editorial blocks)
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+export interface ValueProp {
+  id: string;
+  title: string;
+  /** null → not substantiated; the UI renders a pending marker, never a guess. */
+  description: string | null;
+  note: string | null;
+}
+
+export interface HowItWorksStep {
+  step: number;
+  title: string;
+  description: string;
+}
+
+export interface FinancingStep {
+  step: number;
+  title: string;
+  description: string;
+  href: string | null;
+}
+
+export interface AppFeature {
+  title: string;
+  description: string;
+}
+
+export interface TrustBadge {
+  title: string;
+  description: string;
+  note: string | null;
+}
+
+export interface InvestorFlow {
+  title: string;
+  steps: string[];
+  cta: string;
+}
+
+/**
+ * Editorial blocks reused across marketing pages: value propositions, the
+ * instalment journey, trust badges, app features and the investor diagram.
+ *
+ * These are content, not catalogue data — but they still come through the
+ * repository so there is exactly one way to read them. Before Phase 10 the
+ * same `investorFlow` object was read through the provider on /invest and
+ * imported straight from the fixture on the homepage, which is precisely the
+ * kind of split access path that drifts.
+ */
+export interface SiteContent {
+  valueProps: ValueProp[];
+  howItWorks: HowItWorksStep[];
+  financingSteps: FinancingStep[];
+  investorFlow: InvestorFlow;
+  appFeatures: AppFeature[];
+  trustBadges: TrustBadge[];
+}

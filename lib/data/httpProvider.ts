@@ -8,6 +8,7 @@ import type {
   LessonQuery,
   LoyaltyProgram,
   Result,
+  SiteContent,
 } from './types';
 
 /**
@@ -89,6 +90,11 @@ export const httpProvider: DataAdapter = {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/lessons/{slug}/
     return unavailable();
   },
+  async getSiteContent(): Promise<Result<SiteContent>> {
+    // TODO(api): content blocks come from the CMS when one exists.
+    return unavailable();
+  },
+
   async listFaq() {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/faq/
     return unavailable();

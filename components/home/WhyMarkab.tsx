@@ -2,7 +2,7 @@ import { Container, SectionHeading } from '@/components/ui/Section';
 import { Reveal } from '@/components/ui/Reveal';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { PENDING_LABEL } from '@/lib/investment/status';
-import { valueProps } from '@/lib/data/fixtures/content';
+import { repository } from '@/lib/data';
 
 /**
  * Why Markab — calm, editorial, four items.
@@ -12,7 +12,10 @@ import { valueProps } from '@/lib/data/fixtures/content';
  * superlative ("eng yaxshi", "eng tez"), and where supporting documentation is
  * missing (AAOIFI) the gap is stated on the item itself.
  */
-export function WhyMarkab() {
+export async function WhyMarkab() {
+  const content = await repository.getSiteContent();
+  const valueProps = content.status === 'success' ? content.data.valueProps : [];
+
   return (
     <section aria-labelledby="why-heading" className="bg-surface-muted section-y-sm">
       <Container>

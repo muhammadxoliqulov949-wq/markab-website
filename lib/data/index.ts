@@ -1,9 +1,17 @@
+import { cache } from 'react';
 import { httpProvider } from './httpProvider';
 import { mockProvider } from './mockProvider';
 import type { DataAdapter } from './adapter';
 import { vehicleBrands } from './fixtures/vehicles';
 import { productCategories } from './fixtures/products';
 import type { LessonQuery, ProductQuery, VehicleQuery } from './types';
+
+/**
+ * Several marketing blocks read the same content during one render. `cache`
+ * dedupes them to a single provider call per request, so moving content behind
+ * the repository does not multiply data access.
+ */
+const siteContentOnce = cache(() => getAdapter().getSiteContent());
 
 /**
  * Repository — the single entry point the UI talks to.
@@ -32,6 +40,7 @@ export const repository = {
   listRelatedLessons: (slug: string, limit?: number) =>
     getAdapter().listRelatedLessons(slug, limit),
   listFaq: () => getAdapter().listFaq(),
+  getSiteContent: () => siteContentOnce(),
   getInvestmentProfile: () => getAdapter().getInvestmentProfile(),
   getAccountSnapshot: () => getAdapter().getAccountSnapshot(),
   getLoyaltyProgram: () => getAdapter().getLoyaltyProgram(),

@@ -7,7 +7,7 @@ import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
 import { PENDING_LABEL } from '@/lib/investment/status';
 import { legal, legalFlags } from '@/lib/legal';
 import { site } from '@/lib/site';
-import { valueProps } from '@/lib/data/fixtures/content';
+import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
@@ -35,7 +35,10 @@ const legs = [
   },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const content = await repository.getSiteContent();
+  const valueProps = content.status === 'success' ? content.data.valueProps : [];
+
   return (
     <>
       <section className="border-b border-line bg-surface-muted section-y">

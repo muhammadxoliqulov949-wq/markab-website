@@ -1,7 +1,7 @@
 import { ExternalLink } from '@/components/ui/Button';
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { DashboardMock } from '@/components/home/DashboardMock';
-import { appFeatures } from '@/lib/data/fixtures/content';
+import { repository } from '@/lib/data';
 import { site } from '@/lib/site';
 
 function StoreBadge({ store, href }: { store: 'App Store' | 'Google Play'; href: string }) {
@@ -41,7 +41,10 @@ function StoreBadge({ store, href }: { store: 'App Store' | 'Google Play'; href:
  * presented as production capability. Store links are the verified public
  * listings.
  */
-export function AppSection() {
+export async function AppSection() {
+  const content = await repository.getSiteContent();
+  const appFeatures = content.status === 'success' ? content.data.appFeatures : [];
+
   return (
     <section aria-labelledby="app-heading" className="bg-surface-muted section-y">
       <Container>

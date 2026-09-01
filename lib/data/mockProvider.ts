@@ -1,7 +1,14 @@
 import { productCategories, products } from './fixtures/products';
 import { vehicles } from './fixtures/vehicles';
 import { academyCategories, faqItems, lessons } from './fixtures/academy';
-import { investorFlow } from './fixtures/content';
+import {
+  appFeatures,
+  financingSteps,
+  howItWorks,
+  investorFlow,
+  trustBadges,
+  valueProps,
+} from './fixtures/content';
 import { loyaltyProgram } from './fixtures/loyalty';
 import { investmentProfile } from './fixtures/investment';
 import { empty, notFound, success, unavailable } from './types';
@@ -18,6 +25,7 @@ import type {
   ProductQuery,
   Result,
   SearchHit,
+  SiteContent,
   Vehicle,
   VehicleFacets,
   VehicleQuery,
@@ -346,6 +354,17 @@ export const mockProvider: DataAdapter = {
       .map((entry) => entry.lesson);
 
     return scored.length ? success(scored) : empty<Lesson[]>();
+  },
+
+  async getSiteContent(): Promise<Result<SiteContent>> {
+    return success<SiteContent>({
+      valueProps,
+      howItWorks,
+      financingSteps,
+      investorFlow,
+      appFeatures,
+      trustBadges,
+    });
   },
 
   async listFaq(): Promise<Result<FaqItem[]>> {

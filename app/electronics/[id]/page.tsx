@@ -14,7 +14,6 @@ import { FinancingPanel } from '@/components/vehicles/FinancingPanel';
 import { formatUzs, formatViews } from '@/lib/format';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
-import { trustBadges } from '@/lib/data/fixtures/content';
 import { availabilityNote, stockMeta } from '@/lib/products/stock';
 import { relatedProductReason, selectRelatedProducts } from '@/lib/products/related';
 import { applyHref, calculatorHref } from '@/lib/financing/handoff';
@@ -62,12 +61,15 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
 
   const product = result.data;
 
+  // Editorial blocks arrive through the repository, not a direct fixture import.
   // Candidates come from the repository, never from fixtures directly. The
   // selection is deterministic — see lib/products/related.ts.
-  const [relatedResult, facetsResult] = await Promise.all([
+  const [relatedResult, facetsResult, contentResult] = await Promise.all([
     repository.listProducts({ pageSize: 50, sort: 'default' }),
     repository.getProductFacets(),
+    repository.getSiteContent(),
   ]);
+  const trustBadges = contentResult.status === 'success' ? contentResult.data.trustBadges : [];
   const related =
     relatedResult.status === 'success'
       ? selectRelatedProducts(

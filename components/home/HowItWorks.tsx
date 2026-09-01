@@ -1,6 +1,6 @@
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { ArrowLink } from '@/components/ui/ArrowLink';
-import { financingSteps } from '@/lib/data/fixtures/content';
+import { repository } from '@/lib/data';
 
 /**
  * How it works — six published steps.
@@ -10,7 +10,10 @@ import { financingSteps } from '@/lib/data/fixtures/content';
  * used (the public four-step flow plus the two stages published on the financing
  * journey); nothing is added for visual symmetry.
  */
-export function HowItWorks() {
+export async function HowItWorks() {
+  const content = await repository.getSiteContent();
+  const financingSteps = content.status === 'success' ? content.data.financingSteps : [];
+
   return (
     <section
       id="qanday-ishlaydi"

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { PendingValue } from '@/components/ui/StateBlock';
-import { investorFlow } from '@/lib/data/fixtures/content';
+import { repository } from '@/lib/data';
 import { PENDING_LABEL } from '@/lib/investment/status';
 
 /**
@@ -50,7 +50,13 @@ const pendingTerms = [
  *  • anything not published renders as an explicit pending row;
  *  • there is no duration, minimum or term claim of any kind.
  */
-export function InvestSection() {
+export async function InvestSection() {
+  const content = await repository.getSiteContent();
+  const investorFlow =
+    content.status === 'success'
+      ? content.data.investorFlow
+      : { title: '', steps: [] as string[], cta: '' };
+
   return (
     <section
       aria-labelledby="invest-heading"

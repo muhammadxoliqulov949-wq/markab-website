@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
 import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
 import { Accordion } from '@/components/ui/Accordion';
-import { financingSteps } from '@/lib/data/fixtures/content';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
@@ -137,12 +136,14 @@ const faq = [
 
 export default async function FinancingPage() {
   // Real catalogue counts, read through the repository — not invented figures.
-  const [vehicleFacets, productFacets] = await Promise.all([
+  const [vehicleFacets, productFacets, content] = await Promise.all([
     repository.getVehicleFacets(),
     repository.getProductFacets(),
+    repository.getSiteContent(),
   ]);
   const carCount = vehicleFacets.status === 'success' ? vehicleFacets.data.total : null;
   const productCount = productFacets.status === 'success' ? productFacets.data.total : null;
+  const financingSteps = content.status === 'success' ? content.data.financingSteps : [];
 
   return (
     <>
