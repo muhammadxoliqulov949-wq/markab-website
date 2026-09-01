@@ -23,7 +23,7 @@ export function AgreementsPanel({
   return (
     <Panel
       title="Mening moliyalashtirishim"
-      description="Faol shartnomalar shu yerda ko‘rsatiladi. Shartnoma qiymatlari faqat rasmiy manbadan olinadi — hisoblanmaydi."
+      description="Faol shartnomalar shu yerda ko‘rsatiladi. Shartnoma qiymatlari faqat Markab tomonidan taqdim etiladi — hisoblanmaydi."
       action={<Badge tone="pending">Struktura tayyor</Badge>}
     >
       {!snapshot || snapshot.agreements.length === 0 ? (

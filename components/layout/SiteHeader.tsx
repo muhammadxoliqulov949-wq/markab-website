@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { primaryNav, secondaryNav, site } from '@/lib/site';
+import { HeaderSearch } from '@/components/search/HeaderSearch';
 import { useCart } from '@/components/cart/CartProvider';
 import { useAuth } from '@/components/auth/AuthProvider';
 
@@ -68,7 +69,9 @@ export function SiteHeader() {
           : 'border-transparent bg-white/80 backdrop-blur-xl',
       ].join(' ')}
     >
-      {/* Prototype transparency strip — condenses away once the page scrolls. */}
+      {/* Honest, short disclosure — condenses away once the page scrolls.
+          No internal vocabulary: it says what the visitor needs to know and
+          nothing about how the site is built. */}
       <div
         className={[
           'overflow-hidden bg-brand-900 text-white/70 transition-[max-height,opacity] duration-300 ease-smooth',
@@ -77,7 +80,7 @@ export function SiteHeader() {
       >
         <div className="container-page flex items-center justify-between py-1.5 text-[11px]">
           <span className="truncate">
-            Markab 2.0 kontsept-prototip · real API ulanmagan · namuna ma’lumotlari
+            Kontsept-prototip · e’lonlar namunaviy
           </span>
           <span className="hidden sm:inline">{site.positioning}</span>
         </div>
@@ -127,7 +130,11 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="ml-auto flex items-center gap-1.5 lg:gap-2">
+        <div className="ml-auto flex items-center gap-0.5 sm:gap-1.5 lg:gap-2">
+          <Suspense fallback={<div className="h-11 w-[260px] xl:block hidden" aria-hidden="true" />}>
+            <HeaderSearch />
+          </Suspense>
+
           <Link
             href="/cart"
             aria-label={`Savatcha${count ? `, ${count} ta mahsulot` : ''}`}
@@ -160,7 +167,7 @@ export function SiteHeader() {
 
           <Link
             href={isAuthenticated ? '/profile' : '/login'}
-            className="inline-flex h-10 shrink-0 items-center rounded-lg bg-ink-900 px-3 text-[0.8125rem] font-medium text-white transition-colors duration-200 hover:bg-ink-800 sm:h-11 sm:px-5 sm:text-sm"
+            className="hidden h-10 shrink-0 items-center rounded-lg bg-ink-900 px-3 text-[0.8125rem] font-medium text-white transition-colors duration-200 hover:bg-ink-800 sm:inline-flex sm:h-11 sm:px-5 sm:text-sm"
           >
             {isAuthenticated ? 'Kabinet' : 'Kirish'}
           </Link>

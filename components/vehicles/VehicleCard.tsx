@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import type { Vehicle } from '@/lib/data/types';
 import { formatKm, formatUzs } from '@/lib/format';
@@ -6,25 +5,7 @@ import { fuelLabel, transmissionLabel } from '@/lib/labels';
 import { Badge } from '@/components/ui/Badge';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { SaveButton } from '@/components/account/SaveButton';
-
-function NoImage({ label }: { label: string }) {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-surface-sunken text-ink-400">
-      <svg
-        className="h-8 w-8"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        aria-hidden="true"
-      >
-        <rect x="3" y="5" width="18" height="14" rx="2.5" />
-        <path d="m4 16 4.5-4.5 3 3L16 10l4 4" strokeLinecap="round" />
-      </svg>
-      <span className="text-xs">{label}</span>
-    </div>
-  );
-}
+import { CatalogueImage } from '@/components/products/CatalogueImage';
 
 /**
  * Marketplace vehicle card.
@@ -56,19 +37,13 @@ export function VehicleCard({
       <Link href={href} className="flex flex-1 flex-col">
         {/* Fixed 4:3 frame — the same geometry the electronics cards use. */}
         <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
-          {image ? (
-            <Image
-              src={image}
-              alt={`${vehicle.brand} ${vehicle.model}`}
-              fill
-              priority={priority}
-              loading={priority ? undefined : 'lazy'}
-              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 30vw"
-              className="object-cover transition-transform duration-700 ease-smooth group-hover:scale-[1.04]"
-            />
-          ) : (
-            <NoImage label="Rasm mavjud emas" />
-          )}
+          <CatalogueImage
+            src={image ?? null}
+            alt={`${vehicle.brand} ${vehicle.model}`}
+            priority={priority}
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 30vw"
+            className="object-cover transition-transform duration-700 ease-smooth group-hover:scale-[1.04]"
+          />
 
           <div className="absolute left-3 top-3 flex flex-wrap gap-2">
             {highlight ? (
@@ -101,7 +76,7 @@ export function VehicleCard({
         </div>
 
         <div className="flex flex-1 flex-col p-5">
-          <h3 className="truncate text-[0.9375rem] font-semibold leading-snug text-ink-900">
+          <h3 className="truncate text-base font-semibold leading-snug text-ink-900">
             {vehicle.brand} {vehicle.model}
           </h3>
           <p className="mt-1 truncate text-sm text-ink-500">

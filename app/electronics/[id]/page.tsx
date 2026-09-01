@@ -153,7 +153,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
             <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700">
               {product.brand}
             </p>
-            <h1 className="mt-1.5 text-[1.75rem] font-semibold leading-tight tracking-tight text-ink-900 sm:text-[2.125rem]">
+            <h1 className="mt-1.5 text-display-sm sm:text-display-md">
               {product.name}
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-ink-500">{availabilityNote(product)}</p>
@@ -175,7 +175,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
               </p>
               <p className="mt-1 text-xs text-ink-400">
                 Oylik to‘lov (agar ko‘rsatilgan bo‘lsa) ochiq e’londan olingan. Yakuniy shartlar
-                rasmiy manba bilan tasdiqlanadi.
+                Markab tomonidan tasdiqlanadi.
               </p>
             </div>
 
@@ -265,7 +265,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
               <p className="mt-3 text-xs leading-relaxed text-ink-400">
                 Faqat ochiq e’londa ko‘rsatilgan xususiyatlar keltirilgan. E’lon qilinmagan
                 maydonlar chiqarib tashlangan — ular “N/A” bilan to‘ldirilmaydi. To‘liq texnik
-                ma’lumot rasmiy manba ulangandan so‘ng qo‘shiladi.
+                ma’lumot katalog ulangandan so‘ng qo‘shiladi.
               </p>
             </>
           ) : (
@@ -338,13 +338,13 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
               compact
               variant="pending"
               title="Kafolat shartlari"
-              description="Kafolat muddati va shartlari rasmiy manba tomonidan to‘ldiriladi."
+              description="Kafolat muddati va shartlari Markab tomonidan to‘ldiriladi."
             />
             <StateBlock
               compact
               variant="pending"
               title="Yetkazib berish"
-              description="Yetkazib berish muddati va narxi rasmiy manba ulangandan so‘ng ko‘rsatiladi."
+              description="Yetkazib berish muddati va narxi katalog ulangandan so‘ng ko‘rsatiladi."
             />
             <div className="rounded-xl border border-line bg-surface p-5">
               <h3 className="text-sm font-semibold text-ink-900">Qo‘llab-quvvatlash</h3>

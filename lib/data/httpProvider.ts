@@ -1,6 +1,7 @@
 import { unavailable } from './types';
 import type { DataAdapter } from './adapter';
 import type {
+  CatalogueSearchResults,
   FaqItem,
   Lesson,
   LessonCategory,
@@ -57,6 +58,13 @@ export const httpProvider: DataAdapter = {
     // hides the filters it cannot back with real values.
     return unavailable();
   },
+  async searchCatalogue(): Promise<Result<CatalogueSearchResults>> {
+    // TODO(api): GET {MARKAB_API_BASE_URL}/search/?q={query}
+    // No local fallback: inventing results the API did not return would be a
+    // fabricated product listing.
+    return unavailable();
+  },
+
   async getFeatured() {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/featured/
     return unavailable();

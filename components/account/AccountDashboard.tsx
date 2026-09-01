@@ -162,7 +162,7 @@ export function AccountDashboard() {
         <StateBlock
           variant="unavailable"
           title="Kirish tizimi ulanmagan"
-          description="Kirish tizimi rasmiy autentifikatsiya xizmati bilan integratsiya qilinmoqda. Shaxsiy kabinet real hisob ma’lumotlarisiz ishlay olmaydi, shuning uchun bu yerda hech qanday shaxsiy yoki moliyaviy ma’lumot ko‘rsatilmaydi."
+          description="Kirish hali ishlamaydi. Shaxsiy kabinet real hisob ma’lumotlarisiz ishlay olmaydi, shu sababli bu yerda hech qanday shaxsiy yoki moliyaviy ma’lumot ko‘rsatilmaydi."
           actions={
             <>
               <ButtonLink href="/login" size="sm">
@@ -398,9 +398,7 @@ function PrototypeControls({
         Prototip holati — faqat ko‘rib chiqish uchun
       </p>
       <p className="mt-1.5 text-xs leading-relaxed text-ink-400">
-        Bu tugmalar real autentifikatsiya qilmaydi. Ular kabinet holatlarini ko‘rsatish uchun
-        mo‘ljallangan. Holat URLda saqlanadi, shuning uchun sahifa yangilanganda yoki havola
-        orqali ochilganda ham shu holat qoladi.
+        Bu tugmalar hisobga kiritmaydi — ular kabinetning turli holatlarini ko‘rsatish uchun.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         {options.map((option) => (

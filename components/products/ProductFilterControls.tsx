@@ -163,7 +163,7 @@ export function ProductFilterControls({
           </button>
           <p className="mt-2 text-xs leading-relaxed text-ink-400">
             Faqat ochiq e’londa “Qolmadi” deb belgilangan mahsulotlar yashiriladi. Qolganlarning
-            mavjudligi rasmiy manbada tasdiqlanadi.
+            mavjudligi Markab tomonidan tasdiqlanadi.
           </p>
         </FilterGroup>
       ) : null}

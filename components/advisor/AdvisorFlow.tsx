@@ -281,7 +281,7 @@ export function AdvisorFlow({
             <StateBlock
               variant="unavailable"
               title="Katalog ma’lumotlari mavjud emas"
-              description="Tanlov yordamchisi katalog ma’lumotlari bilan ishlaydi. Ma’lumotlar manbasi ulangandan so‘ng ishga tushadi."
+              description="Tanlov yordamchisi katalog bo‘yicha ishlaydi. Katalog ulanmagani uchun hozir javob bera olmaydi."
             />
           ) : result.exact.length === 0 ? (
             <NoMatchBlock result={result} onRefine={() => setStep(1)} />

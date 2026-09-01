@@ -14,7 +14,7 @@ type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 export const metadata: Metadata = buildMetadata({
   title: 'To‘lov kalkulyatori',
   description:
-    'Muddatli to‘lov kalkulyatori: narx, boshlang‘ich to‘lov va muddat bo‘yicha interfeys. Rasmiy hisoblash formulasi integratsiya qilingach aniq oylik to‘lov ko‘rsatiladi.',
+    'Muddatli to‘lov kalkulyatori: narx, boshlang‘ich to‘lov va muddat bo‘yicha interfeys. Hisoblash tartibi Markab tomonidan tasdiqlangach aniq oylik to‘lov ko‘rsatiladi.',
   path: '/financing/calculator',
 });
 
@@ -31,19 +31,19 @@ export default async function CalculatorPage({ searchParams }: { searchParams: S
   const subject = resolution.status === 'resolved' ? resolution.subject : null;
 
   return (
-    <Container className="py-10 sm:py-14">
+    <Container className="section-y-sm">
       <header className="mb-8 max-w-3xl">
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="pending">Prototip</Badge>
           <Badge tone="neutral">Rasmiy formula ulanmagan</Badge>
         </div>
-        <h1 className="mt-3 text-[1.75rem] font-semibold leading-tight tracking-tight text-ink-900 sm:text-[2.25rem]">
+        <h1 className="mt-3 text-display-sm sm:text-display-md">
           To‘lov kalkulyatori
         </h1>
         <p className="mt-3 text-base leading-relaxed text-ink-600">
           Narx, boshlang‘ich to‘lov va muddatni kiriting. Kalkulyator hisoblashni{' '}
-          <strong className="font-semibold text-ink-900">bajarmaydi</strong> — Markab’ning rasmiy
-          formulasi integratsiya qilinguniga qadar aniq oylik to‘lov o‘rniga kutish holati
+          <strong className="font-semibold text-ink-900">bajarmaydi</strong> — Markab hisoblash
+          tartibini tasdiqlaguniga qadar aniq oylik to‘lov o‘rniga kutish holati
           ko‘rsatiladi. Noto‘g‘ri raqam ko‘rsatishdan ko‘ra, hisoblamaslik to‘g‘riroq.
         </p>
       </header>

@@ -23,7 +23,7 @@ export const metadata: Metadata = buildMetadata({
  */
 export default function ProfilePage() {
   return (
-    <Container className="py-10 sm:py-14">
+    <Container className="section-y-sm">
       {/*
         The h1 lives here rather than in the client dashboard: the dashboard
         renders a skeleton until the session state is known, and a

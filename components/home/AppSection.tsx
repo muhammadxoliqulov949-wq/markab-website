@@ -24,7 +24,7 @@ function StoreBadge({ store, href }: { store: 'App Store' | 'Google Play'; href:
         <span className="text-[10px] uppercase tracking-wide text-ink-400">
           {store === 'App Store' ? 'Download on the' : 'Get it on'}
         </span>
-        <span className="text-sm font-semibold text-ink-900">{store}</span>
+        <span className="text-base font-semibold text-ink-900">{store}</span>
       </span>
     </ExternalLink>
   );
@@ -43,7 +43,7 @@ function StoreBadge({ store, href }: { store: 'App Store' | 'Google Play'; href:
  */
 export function AppSection() {
   return (
-    <section aria-labelledby="app-heading" className="bg-surface-muted py-12 sm:py-14 lg:py-16">
+    <section aria-labelledby="app-heading" className="bg-surface-muted section-y">
       <Container>
         <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-14">
           <div>
@@ -57,7 +57,7 @@ export function AppSection() {
             <ul className="mt-8 grid gap-x-8 gap-y-5 sm:grid-cols-2">
               {appFeatures.map((feature) => (
                 <li key={feature.title} className="border-t border-line pt-4">
-                  <h3 className="text-sm font-semibold text-ink-900">{feature.title}</h3>
+                  <h3 className="text-base font-semibold text-ink-900">{feature.title}</h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-ink-500">
                     {feature.description}
                   </p>
@@ -71,8 +71,7 @@ export function AppSection() {
             </div>
 
             <p className="mt-5 text-xs leading-relaxed text-ink-400">
-              Ilova ma’lumotlari rasmiy do‘kon sahifalaridan olingan. Kabinet ko‘rinishi — Markab
-              2.0 kontsepti: real ma’lumotlar ulanishi kutilmoqda.
+              Kabinet ko‘rinishi — kontsept. Real ma’lumotlar ulanishi kutilmoqda.
             </p>
           </div>
 

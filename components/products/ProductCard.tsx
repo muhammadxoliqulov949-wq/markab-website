@@ -1,33 +1,14 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import type { Product } from '@/lib/data/types';
 import { formatUzs } from '@/lib/format';
 import { Badge } from '@/components/ui/Badge';
+import { CatalogueImage } from '@/components/products/CatalogueImage';
 import { SaveButton } from '@/components/account/SaveButton';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { AddToCartButton } from '@/components/products/AddToCartButton';
 import { stockMeta } from '@/lib/products/stock';
-
-function NoImage() {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-ink-400">
-      <svg
-        className="h-8 w-8"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        aria-hidden="true"
-      >
-        <rect x="6" y="3" width="12" height="18" rx="2.5" />
-        <path d="M11 18h2" strokeLinecap="round" />
-      </svg>
-      <span className="text-xs">Rasm mavjud emas</span>
-    </div>
-  );
-}
 
 /**
  * Electronics catalogue card.
@@ -59,20 +40,14 @@ export function ProductCard({ product, priority = false }: { product: Product; p
       <Link href={href} className="flex flex-1 flex-col">
         {/* Fixed frame — source photo proportions cannot change it. */}
         <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
-          {image ? (
-            <Image
-              src={image}
-              alt={product.name}
-              fill
-              priority={priority}
-              loading={priority ? undefined : 'lazy'}
-              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 45vw, 30vw"
-              /* contain + padding = the product floats on neutral ground */
-              className="object-contain object-center p-4 transition-transform duration-700 ease-smooth group-hover:scale-[1.03]"
-            />
-          ) : (
-            <NoImage />
-          )}
+          <CatalogueImage
+            src={image ?? null}
+            alt={product.name}
+            priority={priority}
+            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 45vw, 30vw"
+            /* contain + padding = the product floats on neutral ground */
+            className="object-contain object-center p-4 transition-transform duration-700 ease-smooth group-hover:scale-[1.03]"
+          />
 
           <div className="absolute left-3 top-3">
             <Badge tone={stock.tone}>{stock.label}</Badge>
@@ -101,7 +76,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
           </p>
 
           {/* Two lines, always — so every price starts on the same row. */}
-          <h3 className="mt-1 line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-snug text-ink-900">
+          <h3 className="mt-1 line-clamp-2 min-h-[2.5rem] text-base font-semibold leading-snug text-ink-900">
             {product.name}
           </h3>
 

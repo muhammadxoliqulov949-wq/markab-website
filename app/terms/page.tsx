@@ -40,7 +40,7 @@ const summary = [
 
 export default function TermsPage() {
   return (
-    <Container className="py-10 sm:py-14">
+    <Container className="section-y-sm">
       <header className="mb-10 max-w-2xl">
         <Badge tone="danger" className="mb-3">
           Hujjat manbada yuklanmagan

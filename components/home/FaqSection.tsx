@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Accordion } from '@/components/ui/Accordion';
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
@@ -9,10 +8,14 @@ import type { FaqItem } from '@/lib/data/types';
  * FAQ — questions are verbatim from the public homepage block; answers were
  * never publicly rendered, so each one carries an explicit pending marker
  * instead of invented text.
+ *
+ * The "ask a manager" guidance appears ONCE, in the section intro, rather than
+ * being repeated inside every unanswered question — five copies of the same
+ * sentence read as defensive noise and teach the visitor nothing extra.
  */
 export function FaqSection({ items }: { items: FaqItem[] }) {
   return (
-    <section aria-labelledby="faq-heading" className="bg-surface py-10 sm:py-12 lg:py-14">
+    <section aria-labelledby="faq-heading" className="bg-surface section-y-sm">
       <Container>
         <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-14">
           <div>
@@ -20,7 +23,7 @@ export function FaqSection({ items }: { items: FaqItem[] }) {
               id="faq-heading"
               eyebrow="Savol-javoblar"
               title="Tez-tez so‘raladigan savollar"
-              description="Rasmiy javoblar tasdiqlangach shu yerda paydo bo‘ladi."
+              description="Javoblar Markab tomonidan tasdiqlangach shu yerda paydo bo‘ladi. Aniq ma’lumot kerak bo‘lsa, menejerimizga murojaat qiling."
               size="sm"
             />
             <div className="mt-7">
@@ -37,16 +40,7 @@ export function FaqSection({ items }: { items: FaqItem[] }) {
                   content: item.answer ? (
                     <p className="text-sm leading-relaxed text-ink-600">{item.answer}</p>
                   ) : (
-                    <div className="flex flex-col gap-3">
-                      <PendingValue label="Rasmiy javob tayyorlanmoqda" />
-                      <p className="text-xs leading-relaxed text-ink-400">
-                        Bu savol bo‘yicha aniq ma’lumotni menejerimizdan olishingiz yoki{' '}
-                        <Link href="/faq" className="text-brand-700 underline underline-offset-2">
-                          savol-javoblar bo‘limini
-                        </Link>{' '}
-                        kuzatishingiz mumkin.
-                      </p>
-                    </div>
+                    <PendingValue label="Javob tayyorlanmoqda" />
                   ),
                 }))}
               />
@@ -54,7 +48,7 @@ export function FaqSection({ items }: { items: FaqItem[] }) {
               <StateBlock
                 variant="empty"
                 title="Hozircha savol-javoblar mavjud emas"
-                description="Ma’lumotlar manbasi ulangandan so‘ng savollar shu yerda ko‘rsatiladi."
+                description="Katalog ulangandan so‘ng savollar shu yerda ko‘rsatiladi."
               />
             )}
           </div>

@@ -26,17 +26,17 @@ export default async function ApplyPage({ searchParams }: { searchParams: Search
   const subject = resolution.status === 'resolved' ? resolution.subject : null;
 
   return (
-    <Container className="py-10 sm:py-14">
+    <Container className="section-y-sm">
       <header className="mb-8 max-w-2xl">
         <Badge tone="pending" className="mb-3">
           Prototip — ariza backend ulanmagan
         </Badge>
-        <h1 className="text-[1.75rem] font-semibold leading-tight tracking-tight text-ink-900 sm:text-[2.25rem]">
+        <h1 className="text-display-sm sm:text-display-md">
           Ariza yuborish
         </h1>
         <p className="mt-3 text-base leading-relaxed text-ink-600">
-          Faqat birinchi bog‘lanish uchun kerakli maydonlar. Ariza yuborilgach, tizim integratsiya
-          qilinmagani aniq ko‘rsatiladi — «yuborildi» degan tasdiq chiqmaydi.
+          Faqat birinchi bog‘lanish uchun kerakli maydonlar. Ariza yuborilgach, u hech qayerga
+          ketmasligi aniq ko‘rsatiladi — «yuborildi» degan tasdiq chiqmaydi.
         </p>
       </header>
 
@@ -107,7 +107,7 @@ export default async function ApplyPage({ searchParams }: { searchParams: Search
             compact
             variant="pending"
             title="Shartlar"
-            description="Boshlang‘ich to‘lov, muddat, ustama va komissiyalar rasmiy manbada e’lon qilingach ko‘rsatiladi."
+            description="Boshlang‘ich to‘lov, muddat, ustama va komissiyalar Markab e’lon qilgach ko‘rsatiladi."
             actions={
               <ButtonLink href="/financing" variant="secondary" size="sm">
                 Moliyalashtirish bo‘limi

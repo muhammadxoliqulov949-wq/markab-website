@@ -163,7 +163,7 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
                     compact
                     variant="empty"
                     title="Jihozlar ro‘yxati kiritilmagan"
-                    description="Bu avtomobil uchun jihozlar ro‘yxati rasmiy manbaga kiritilgach ko‘rsatiladi."
+                    description="Bu avtomobil uchun jihozlar ro‘yxati Markab tomonidan kiritilgach ko‘rsatiladi."
                     actions={
                       <ButtonLink href="/contact" variant="secondary" size="sm">
                         Menejerga murojaat
@@ -184,7 +184,7 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
                     compact
                     variant="empty"
                     title="Tavsif kiritilmagan"
-                    description="Bu e’lon uchun tavsif rasmiy manbada mavjud emas. Batafsil ma’lumotni menejerdan olishingiz mumkin."
+                    description="Bu e’lon uchun tavsif Markab tomonidan taqdim etilmagan. Batafsil ma’lumotni menejerdan olishingiz mumkin."
                     actions={
                       <ButtonLink href="/contact" variant="secondary" size="sm">
                         Menejerga murojaat
@@ -210,7 +210,7 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
           <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700">
             {vehicle.brand}
           </p>
-          <h1 className="mt-1.5 text-[1.75rem] font-semibold leading-tight tracking-tight text-ink-900 sm:text-[2.125rem]">
+          <h1 className="mt-1.5 text-display-sm sm:text-display-md">
             {vehicle.model} <span className="text-ink-400">{vehicle.year}</span>
           </h1>
           <p className="mt-2 text-sm text-ink-500">
@@ -235,7 +235,7 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
             </p>
             <p className="mt-1 text-xs text-ink-400">
               Narx va oylik to‘lov (agar ko‘rsatilgan bo‘lsa) ochiq e’londan olingan. Yakuniy shartlar
-              rasmiy manba bilan tasdiqlanadi.
+              Markab tomonidan tasdiqlanadi.
             </p>
           </div>
 
@@ -332,7 +332,7 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-ink-600">
             Jarayon bosqichlari ochiq ma’lumotlar asosida ko‘rsatilgan. Har bir bosqichning aniq
-            muddati va shartlari rasmiy manba bilan tasdiqlanadi.
+            muddati va shartlari Markab tomonidan tasdiqlanadi.
           </p>
         </div>
 

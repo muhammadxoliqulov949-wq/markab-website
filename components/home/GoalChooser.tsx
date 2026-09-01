@@ -57,7 +57,7 @@ export function GoalChooser({
   ];
 
   return (
-    <section aria-labelledby="goals-heading" className="bg-surface-muted py-12 sm:py-14 lg:py-16">
+    <section aria-labelledby="goals-heading" className="bg-surface-muted section-y">
       <Container>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
@@ -128,7 +128,7 @@ export function GoalChooser({
                     </div>
 
                     <div className="flex flex-1 flex-col p-5">
-                      <h3 className="text-[1.0625rem] font-semibold leading-snug text-ink-900">
+                      <h3 className="text-base font-semibold leading-snug text-ink-900">
                         {card.title}
                       </h3>
                       <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-500">

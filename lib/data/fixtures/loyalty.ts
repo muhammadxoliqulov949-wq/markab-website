@@ -26,10 +26,10 @@ export const loyaltyProgram: LoyaltyProgram = {
   status: 'unconfirmed',
   statusTitle: 'Rasmiy dastur tafsilotlari kutilmoqda.',
   statusDescription:
-    'Bonus dasturining amaldagi holati tasdiqlanmagan: bosh sahifada dastur “ishlab chiqilmoqda” deb ko‘rsatilgan, /loyalty sahifasida esa to‘liq shartlar e’lon qilingan. Bu tafovut Markab tomonidan aniqlashtirilishi kerak. Prototipda ro‘yxatdan o‘tish, ball hisoblash yoki daraja olish ishlamaydi.',
+    'Dastur holati tasdiqlanmagan — sahifalarda turlicha ko‘rsatilgan. Bu prototipda a’zo bo‘lish, ball to‘plash va daraja olish ishlamaydi.',
   source: 'markab.uz /loyalty sahifasi',
   conflictNote:
-    'Manbalar bir-biriga mos kelmaydi: bosh sahifa dasturni ishlab chiqilayotganini bildiradi, /loyalty esa to‘liq shartlarni e’lon qilgan. Ikkala manba ham ko‘rsatiladi — ulardan biri tanlanmagan.',
+    'Bosh sahifada dastur “ishlab chiqilmoqda” deb ko‘rsatilgan, bu sahifada esa to‘liq shartlar e’lon qilingan. Ikkalasi ham ko‘rsatiladi — biri tanlanmagan.',
 
   // ── published half (attributed, never embellished) ──────────────────────
   tiers: loyaltyTiers.map((tier) => ({

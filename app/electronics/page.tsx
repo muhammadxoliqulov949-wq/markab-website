@@ -64,12 +64,12 @@ export default async function ElectronicsPage({
   });
 
   return (
-    <div className="container-page py-10 sm:py-12 lg:py-16">
+    <div className="container-page section-y-sm">
       <header className="max-w-2xl">
         <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700">
           Elektronika katalogi
         </p>
-        <h1 className="mt-3 text-[1.75rem] font-semibold leading-[1.12] tracking-tight text-ink-900 sm:text-[2.125rem] lg:text-[2.5rem]">
+        <h1 className="mt-3 text-display-sm sm:text-display-md">
           Muddatli to‘lov bilan elektronika
         </h1>
         <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-600 sm:text-base">
@@ -204,7 +204,7 @@ function EmptyCatalogue() {
     <StateBlock
       variant="empty"
       title="Katalog hozircha bo‘sh"
-      description="Mahsulotlar rasmiy manba ulangandan so‘ng shu yerda paydo bo‘ladi."
+      description="Mahsulotlar katalog ulangandan so‘ng shu yerda paydo bo‘ladi."
     />
   );
 }

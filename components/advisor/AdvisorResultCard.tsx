@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
@@ -8,6 +7,7 @@ import { SaveButton } from '@/components/account/SaveButton';
 import { formatUzs } from '@/lib/format';
 import { joinReasons, joinUnmet } from '@/lib/advisor/explanation';
 import type { AdvisorMatch } from '@/lib/advisor/types';
+import { CatalogueImage } from '@/components/products/CatalogueImage';
 
 function NoImage() {
   return (
@@ -55,16 +55,15 @@ export function AdvisorResultCard({
     <article className="flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card">
       <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
         {match.image ? (
-          <Image
+          <CatalogueImage
             src={match.image}
             alt={match.title}
-            fill
-            loading="lazy"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className={[
               'object-center transition-transform duration-700 ease-smooth',
               match.kind === 'electronics' ? 'object-contain p-4' : 'object-cover',
             ].join(' ')}
+            fallbackLabel="Rasm yuklanmadi"
           />
         ) : (
           <NoImage />

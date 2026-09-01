@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
   return buildMetadata({
     title: result.data.title,
-    description: `${result.data.title} — Markab Academy darsi. Dars mazmuni rasmiy manba bilan to‘ldiriladi.`,
+    description: `${result.data.title} — Markab Academy darsi. Dars mazmuni Markab tomonidan to‘ldiriladi.`,
     path: `/academy/${result.data.slug}`,
   });
 }
@@ -81,11 +81,11 @@ export default async function LessonPage({ params }: { params: Params }) {
 
   if (result.status === 'unavailable' || result.status === 'empty') {
     return (
-      <Container className="py-10 sm:py-14">
+      <Container className="section-y-sm">
         <StateBlock
           variant="unavailable"
           title="Dars yuklanmadi"
-          description="Academy ma’lumotlari rasmiy manba bilan to‘ldiriladi. Ma’lumotlar manbasi ulangandan so‘ng dars shu yerda ko‘rsatiladi."
+          description="Academy ma’lumotlari Markab tomonidan to‘ldiriladi. Katalog ulangandan so‘ng dars shu yerda ko‘rsatiladi."
           actions={
             <ButtonLink href="/academy" variant="secondary" size="sm">
               Academy ga qaytish
@@ -103,7 +103,7 @@ export default async function LessonPage({ params }: { params: Params }) {
   const nextStep = NEXT_STEP[lesson.category] ?? NEXT_STEP.moliyaviy_savodxonlik;
 
   return (
-    <Container className="py-10 sm:py-14">
+    <Container className="section-y-sm">
       {/* 1. Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-6 text-sm">
         <ol className="flex flex-wrap items-center gap-2 text-ink-400">
@@ -138,7 +138,10 @@ export default async function LessonPage({ params }: { params: Params }) {
           {/* 3. Category / topic */}
           <div className="flex flex-wrap items-center gap-2">
             {category ? (
-              <Link href={`/academy?category=${category.id}`} className="hover:opacity-80">
+              <Link
+                href={`/academy?category=${category.id}`}
+                className="inline-flex min-h-[40px] items-center hover:opacity-80"
+              >
                 <Badge tone="brand">{category.name}</Badge>
               </Link>
             ) : null}
@@ -159,7 +162,7 @@ export default async function LessonPage({ params }: { params: Params }) {
           <div className="mt-8">
             <StateBlock
               variant="pending"
-              title="Dars mazmuni rasmiy manba bilan to‘ldiriladi"
+              title="Dars mazmuni Markab tomonidan to‘ldiriladi"
               description="Ushbu dars matni, misollar va testlar Markab tomonidan tasdiqlangach shu yerda joylashtiriladi. Hech qanday taxminiy yoki yaratilgan o‘quv materiali ko‘rsatilmaydi."
             />
           </div>

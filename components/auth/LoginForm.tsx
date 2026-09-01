@@ -25,7 +25,7 @@ type SubmitState = 'idle' | 'sending' | 'verifying';
  *
  * Submitting the phone number asks the service for a code and renders whatever
  * the service actually said. Today that is always `unavailable`, and the page
- * shows `Kirish tizimi rasmiy autentifikatsiya xizmati bilan integratsiya
+ * shows `Kirish tizimi rasmiy autentifikatsiya xizmatiga ulanmagan
  * qilinmoqda.` verbatim.
  */
 

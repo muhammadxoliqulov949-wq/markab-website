@@ -12,7 +12,7 @@ import { buildMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildMetadata({
   title: 'Markab Academy',
   description:
-    'Moliyaviy savodxonlik: avtomobil tanlash, moliyalashtirish va sarmoya asoslari bo‘yicha qisqa darslar. Darslar mazmuni rasmiy manba bilan to‘ldiriladi.',
+    'Moliyaviy savodxonlik: avtomobil tanlash, moliyalashtirish va sarmoya asoslari bo‘yicha qisqa darslar. Darslar mazmuni Markab tomonidan to‘ldiriladi.',
   path: '/academy',
 });
 
@@ -51,12 +51,12 @@ export default async function AcademyPage({
     return (
       <>
         <Hero total={null} />
-        <section className="bg-surface py-10 sm:py-14">
+        <section className="bg-surface section-y-sm">
           <Container>
             <StateBlock
               variant="unavailable"
               title="Darslar yuklanmadi"
-              description="Academy ma’lumotlari rasmiy manba bilan to‘ldiriladi. Ma’lumotlar manbasi ulangandan so‘ng darslar shu yerda ko‘rsatiladi."
+              description="Academy ma’lumotlari Markab tomonidan to‘ldiriladi. Katalog ulangandan so‘ng darslar shu yerda ko‘rsatiladi."
             />
             <div className="mt-8">
               <EducationNotice />
@@ -71,7 +71,7 @@ export default async function AcademyPage({
     return (
       <>
         <Hero total={null} />
-        <section className="bg-surface py-10 sm:py-14">
+        <section className="bg-surface section-y-sm">
           <Container>
             <StateBlock
               variant="error"
@@ -91,7 +91,7 @@ export default async function AcademyPage({
     <>
       <Hero total={totalCount} />
 
-      <section className="bg-surface py-10 sm:py-14">
+      <section className="bg-surface section-y-sm">
         <Container>
           <AcademyFilters
             categories={categories}
@@ -112,7 +112,7 @@ export default async function AcademyPage({
                 description={
                   filtered
                     ? 'Bu filter bo‘yicha dars topilmadi. Boshqa so‘z yoki yo‘nalishni sinab ko‘ring.'
-                    : 'Darslar rasmiy manba tomonidan qo‘shiladi.'
+                    : 'Darslar Markab tomonidan qo‘shiladi.'
                 }
                 actions={
                   filtered ? (
@@ -197,7 +197,7 @@ export default async function AcademyPage({
 
 function Hero({ total }: { total: number | null }) {
   return (
-    <section className="border-b border-line bg-surface-muted py-12 sm:py-16">
+    <section className="border-b border-line bg-surface-muted section-y">
       <Container>
         <div className="max-w-3xl">
           <Badge tone="brand" className="mb-4">
@@ -211,7 +211,7 @@ function Hero({ total }: { total: number | null }) {
           {total !== null ? (
             <p className="mt-5 text-sm text-ink-500">
               Hozirda katalogda <span className="font-semibold text-ink-900">{total} dars</span>{' '}
-              mavjud. Darslar soni sun’iy ko‘paytirilmaydi — faqat rasmiy manbada mavjudlari
+              mavjud. Darslar soni sun’iy ko‘paytirilmaydi — faqat Markab tomonidan e’lon qilinganlari
               ko‘rsatiladi.
             </p>
           ) : null}

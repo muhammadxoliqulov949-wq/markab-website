@@ -22,7 +22,7 @@ const process = [
 export default function SellPage() {
   return (
     <>
-      <section className="border-b border-line bg-surface-muted py-12 sm:py-16">
+      <section className="border-b border-line bg-surface-muted section-y">
         <Container>
           <div className="max-w-2xl">
             <h1 className="text-display-sm sm:text-display-md">Avtomobil sotish</h1>
@@ -34,7 +34,7 @@ export default function SellPage() {
         </Container>
       </section>
 
-      <section className="bg-surface py-10 sm:py-14">
+      <section className="bg-surface section-y-sm">
         <Container className="grid gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
           <SellWizard />
 

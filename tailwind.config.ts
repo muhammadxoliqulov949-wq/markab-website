@@ -121,10 +121,24 @@ const config: Config = {
         shimmer: {
           '100%': { transform: 'translateX(100%)' },
         },
+        /**
+         * Restrained entrance motion only — no looping, no parallax. The
+         * global prefers-reduced-motion rule collapses these to ~0ms.
+         */
+        'sheet-up': {
+          from: { transform: 'translateY(8%)', opacity: '0.4' },
+          to: { transform: 'translateY(0)', opacity: '1' },
+        },
+        'dropdown-in': {
+          from: { transform: 'translateY(-6px)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both',
         'fade-in': 'fade-in 0.4s ease-out both',
+        'sheet-up': 'sheet-up 0.28s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'dropdown-in': 'dropdown-in 0.18s cubic-bezier(0.22, 1, 0.36, 1) both',
         'rise-1': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both',
         'rise-2': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both',
         'rise-3': 'fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.23s both',

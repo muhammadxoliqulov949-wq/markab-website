@@ -7,7 +7,7 @@ import { buildMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildMetadata({
   title: 'Kirish',
   description:
-    'Markab hisobiga telefon raqami orqali kirish. Kirish tizimi rasmiy autentifikatsiya xizmati bilan integratsiya qilinmoqda.',
+    'Markab hisobiga telefon raqami orqali kirish. Kirish tizimi kirish tizimi hali ishlamaydi.',
   path: '/login',
   noindex: true,
 });

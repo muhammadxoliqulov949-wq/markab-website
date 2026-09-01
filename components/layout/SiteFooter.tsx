@@ -5,7 +5,12 @@ import { legalFlags } from '@/lib/legal';
 export function SiteFooter() {
   return (
     <footer className="border-t border-line bg-surface-muted">
-      <div className="container-page py-16 sm:py-20">
+      {/*
+        Below md the mobile tab bar is fixed to the bottom of the viewport, so
+        the footer needs its own clearance — #main's padding only protects the
+        page content, not the footer that follows it.
+      */}
+      <div className="container-page pb-[calc(3rem+var(--tabbar-h)+env(safe-area-inset-bottom))] pt-16 sm:pb-20 sm:pt-20">
         <div className="grid gap-12 lg:grid-cols-[1.3fr_repeat(4,1fr)] lg:gap-10">
           <div className="max-w-sm">
             <div className="flex items-center gap-2.5">
@@ -47,7 +52,7 @@ export function SiteFooter() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="inline-flex min-h-[24px] items-center py-0.5 text-sm text-ink-600 transition-colors duration-200 hover:text-brand-700"
+                      className="inline-flex min-h-[40px] w-full items-center py-1.5 text-sm text-ink-600 transition-colors duration-200 hover:text-brand-700 sm:min-h-[28px] sm:w-auto sm:py-0.5"
                     >
                       {item.label}
                     </Link>
@@ -86,7 +91,7 @@ export function SiteFooter() {
           </p>
           <p className="max-w-md sm:text-right">
             Ushbu prototip moliyaviy, huquqiy yoki investitsiya tavsiyasi emas. Narxlar va shartlar
-            rasmiy manba bilan tasdiqlanadi.
+            Markab tomonidan tasdiqlanadi.
           </p>
         </div>
       </div>

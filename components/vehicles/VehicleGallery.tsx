@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import { useState } from 'react';
+import { CatalogueImage } from '@/components/products/CatalogueImage';
 
 /**
  * Vehicle gallery.
@@ -38,14 +38,14 @@ export function VehicleGallery({ images, title }: { images: string[]; title: str
   return (
     <div className="flex flex-col gap-3">
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-line bg-surface-sunken sm:aspect-[3/2]">
-        <Image
+        <CatalogueImage
           key={current}
           src={current}
           alt={hasGallery ? `${title} — rasm ${active + 1}` : title}
-          fill
           priority
           sizes="(max-width: 1024px) 100vw, 60vw"
           className="animate-fade-in object-cover"
+          fallbackLabel="Rasm yuklanmadi"
         />
 
         {hasGallery ? (
@@ -71,13 +71,13 @@ export function VehicleGallery({ images, title }: { images: string[]; title: str
                   : 'border-line hover:border-line-strong',
               ].join(' ')}
             >
-              <Image src={src} alt="" fill sizes="112px" className="object-cover" />
+              <CatalogueImage src={src} alt="" sizes="112px" className="object-cover" fallbackLabel="" />
             </button>
           ))}
         </div>
       ) : (
         <p className="text-xs text-ink-400">
-          Bu e’lon uchun bitta rasm mavjud. Qo‘shimcha suratlar rasmiy manba ulangandan so‘ng
+          Bu e’lon uchun bitta rasm mavjud. Qo‘shimcha suratlar katalog ulangandan so‘ng
           qo‘shiladi.
         </p>
       )}

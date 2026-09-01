@@ -55,7 +55,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
         : '';
 
   return (
-    <Container className="py-10 sm:py-14">
+    <Container className="section-y-sm">
       <header className="mb-10 max-w-2xl">
         <h1 className="text-display-sm sm:text-display-md">Biz bilan bog‘laning</h1>
         <p className="mt-3 text-base leading-relaxed text-ink-500">
@@ -107,7 +107,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
                     href={site.apps.googlePlay}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-brand-700 underline underline-offset-2"
+                    className="inline-flex min-h-[32px] items-center text-brand-700 underline underline-offset-2"
                   >
                     Google Play
                   </a>
@@ -116,7 +116,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
                     href={site.apps.appStore}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-brand-700 underline underline-offset-2"
+                    className="inline-flex min-h-[32px] items-center text-brand-700 underline underline-offset-2"
                   >
                     App Store
                   </a>

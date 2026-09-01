@@ -22,7 +22,7 @@ export function PaymentsPanel({
   return (
     <Panel
       title="To‘lovlar"
-      description="To‘lov jadvali va tarixi shu yerda ko‘rsatiladi. Jadval tuzilishi tayyor, qiymatlar esa rasmiy manbadan keladi."
+      description="To‘lov jadvali va tarixi shu yerda ko‘rsatiladi. Jadval tuzilishi tayyor, qiymatlar esa Markab tomonidan taqdim etiladi."
       action={<Badge tone="pending">Qiymatlar kutilmoqda</Badge>}
     >
       {!snapshot || snapshot.payments.length === 0 ? (

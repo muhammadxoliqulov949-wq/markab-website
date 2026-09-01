@@ -46,12 +46,26 @@ export function Accordion({
                 </svg>
               </button>
             </h3>
+            {/*
+              grid-rows-[0fr]→[1fr] animates height without measuring it in JS.
+              `inert` keeps a collapsed panel out of tab order and off the
+              accessibility tree, so the transition costs nothing in
+              accessibility. Reduced motion collapses the duration globally.
+            */}
             <div
               id={`accordion-panel-${item.id}`}
-              hidden={!open}
-              className="px-5 pb-5 text-sm leading-relaxed text-ink-500 sm:px-6"
+              aria-hidden={!open}
+              // React 19 types `inert` as a real boolean attribute.
+              inert={!open}
+              className={`grid transition-[grid-template-rows,opacity] duration-300 ease-smooth ${
+                open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+              }`}
             >
-              {item.content}
+              <div className="overflow-hidden">
+                <div className="px-5 pb-5 text-sm leading-relaxed text-ink-500 sm:px-6">
+                  {item.content}
+                </div>
+              </div>
             </div>
           </div>
         );

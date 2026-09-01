@@ -171,7 +171,7 @@ export function InstallmentCalculator({
           </div>
           <p id="calc-term-hint" className="mt-2 text-xs leading-relaxed text-ink-400">
             Bu sizning so‘rovingiz, Markab taklif qiladigan muddatlar emas. Mavjud muddat oralig‘i
-            rasmiy manbada e’lon qilingach ko‘rsatiladi.
+            Markab e’lon qilgach ko‘rsatiladi.
           </p>
         </div>
       </div>
@@ -226,8 +226,7 @@ export function InstallmentCalculator({
             </div>
           </dl>
           <p className="mt-3 text-xs leading-relaxed text-ink-400">
-            Aniq oylik to‘lov Markabning rasmiy hisoblash formulasi integratsiya qilingach
-            ko‘rsatiladi. Hech qanday foiz, ustama yoki komissiya bu yerda taxmin qilinmaydi.
+            Aniq oylik to‘lov hisoblash tartibi tasdiqlangach ko‘rsatiladi. Hech qanday foiz, ustama yoki komissiya bu yerda taxmin qilinmaydi.
           </p>
         </div>
 

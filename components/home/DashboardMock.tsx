@@ -11,9 +11,6 @@ const menu = [
   { label: 'Umumiy', active: true },
   { label: 'Buyurtmalar', active: false },
   { label: 'To‘lovlar', active: false },
-  { label: 'Shartnomalar', active: false },
-  { label: 'Sarmoya', active: false },
-  { label: 'Saqlanganlar', active: false },
 ];
 
 const tiles = ['Faol arizalar', 'Keyingi to‘lov', 'Sarmoya'];
@@ -66,25 +63,6 @@ export function DashboardMock() {
                 </div>
               ))}
             </div>
-
-            <p className="mt-4 text-[11px] uppercase tracking-[0.14em] text-white/40">
-              So‘nggi harakatlar
-            </p>
-            <ul className="mt-2.5 space-y-2">
-              {[0, 1, 2].map((row) => (
-                <li
-                  key={row}
-                  className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2.5"
-                >
-                  <span className="h-7 w-7 shrink-0 rounded-md bg-white/10" aria-hidden="true" />
-                  <span className="flex-1">
-                    <span className="block h-2 w-1/2 rounded-full bg-white/10" aria-hidden="true" />
-                    <span className="mt-1.5 block h-2 w-1/3 rounded-full bg-white/10" aria-hidden="true" />
-                  </span>
-                  <span className="text-[10px] text-white/35 sm:text-[11px]">Kutilmoqda</span>
-                </li>
-              ))}
-            </ul>
 
             <div className="mt-4 rounded-lg border border-dashed border-white/15 px-3 py-3 text-[11px] leading-relaxed text-white/45">
               Buyurtmalar, to‘lovlar, shartnomalar, sarmoya va bildirishnomalar shu ko‘rinishda

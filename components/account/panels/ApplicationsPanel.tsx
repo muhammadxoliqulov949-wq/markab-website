@@ -46,7 +46,7 @@ export function ApplicationsPanel({
               </div>
               <p className="mt-3 text-xs leading-relaxed text-ink-500">
                 Bu ariza hech qayerga yuborilmagan — ariza yuborish tizimi rasmiy backend bilan
-                integratsiya qilinmagan. Qoralamada faqat mahsulot nomi saqlanadi.
+                hali ishlamaydi. Qoralamada faqat mahsulot nomi saqlanadi.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {application.productHref ? (
@@ -92,7 +92,7 @@ export function ApplicationsPanel({
                     <span className="text-xs leading-relaxed text-ink-500 sm:max-w-xs sm:text-right">
                       {isDraft
                         ? 'Bu ariza hech qayerga yuborilmagan. U faqat shu brauzerda qoralama sifatida saqlanadi.'
-                        : 'Holat rasmiy manba tomonidan tasdiqlanadi.'}
+                        : 'Holat Markab tomonidan tasdiqlanadi.'}
                     </span>
                   </DetailRow>
                   {/*

@@ -54,7 +54,7 @@ export function InvestSection() {
   return (
     <section
       aria-labelledby="invest-heading"
-      className="bg-surface-muted py-12 sm:py-14 lg:py-16"
+      className="bg-surface-muted section-y"
     >
       <Container>
         <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
@@ -128,7 +128,7 @@ export function InvestSection() {
 
           <div className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
             <div className="flex items-center justify-between gap-4">
-              <h3 className="text-[0.9375rem] font-semibold text-ink-900">Asosiy shartlar</h3>
+              <h3 className="text-base font-semibold text-ink-900">Asosiy shartlar</h3>
               <Badge tone="pending">Rasmiy ma’lumot bilan to‘ldiriladi</Badge>
             </div>
 

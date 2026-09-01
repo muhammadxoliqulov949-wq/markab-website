@@ -18,7 +18,7 @@ export function LessonCard({
   categoryName?: string;
 }) {
   return (
-    <article className="group flex h-full flex-col rounded-xl border border-line bg-surface p-6 shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover">
+    <article className="group relative flex h-full flex-col rounded-xl border border-line bg-surface p-6 shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover">
       <div className="flex flex-wrap items-center gap-2">
         {categoryName ? (
           <span className="rounded-md bg-surface-sunken px-2.5 py-1 text-xs font-medium text-ink-600">
@@ -32,14 +32,22 @@ export function LessonCard({
       </div>
 
       <h3 className="mt-4 text-base font-semibold leading-snug text-ink-900">
-        <Link href={`/academy/${lesson.slug}`} className="hover:text-brand-700">
+        {/*
+          Stretched link: the entire card is the tap target, so the target is
+          never just the 19px-tall title text. The anchor stays in the heading
+          so keyboard order and the accessible name are unchanged.
+        */}
+        <Link
+          href={`/academy/${lesson.slug}`}
+          className="hover:text-brand-700 after:absolute after:inset-0 after:content-['']"
+        >
           {lesson.title}
         </Link>
       </h3>
 
       <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-500">
         {lesson.summary ??
-          'Dars mazmuni rasmiy manba tomonidan to‘ldiriladi. Taxminiy o‘quv matni ko‘rsatilmaydi.'}
+          'Dars mazmuni Markab tomonidan to‘ldiriladi. Taxminiy o‘quv matni ko‘rsatilmaydi.'}
       </p>
 
       <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700">

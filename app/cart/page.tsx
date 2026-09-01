@@ -12,7 +12,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function CartPage() {
   return (
-    <Container className="py-10 sm:py-14">
+    <Container className="section-y-sm">
       <header className="mb-8">
         <h1 className="text-display-sm sm:text-display-md">Savatcha</h1>
         <p className="mt-2 text-sm text-ink-500">

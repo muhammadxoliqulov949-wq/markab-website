@@ -26,7 +26,7 @@ const facts = [
   },
   {
     title: 'Shaffof jarayon',
-    detail: 'Muddat oralig‘i rasmiy manbada e’lon qilinadi',
+    detail: 'Muddat oralig‘i Markabda e’lon qilinadi',
     note: null,
     icon: <path d="M8 3v3M16 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z" />,
   },
@@ -69,7 +69,7 @@ export function TrustLayer() {
                 {fact.icon}
               </svg>
               <div className="min-w-0">
-                <h3 className="text-sm font-semibold text-ink-900">{fact.title}</h3>
+                <h3 className="text-base font-semibold text-ink-900">{fact.title}</h3>
                 <p className="mt-1 text-sm leading-relaxed text-ink-600">{fact.detail}</p>
                 {fact.note ? (
                   <p className="mt-1 text-xs leading-relaxed text-ink-400">{fact.note}</p>

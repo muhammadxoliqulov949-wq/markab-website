@@ -33,7 +33,7 @@ export default async function LoyaltyPage() {
 
   if (result.status !== 'success') {
     return (
-      <section className="bg-surface py-12 sm:py-16">
+      <section className="bg-surface section-y">
         <Container>
           <StateBlock
             variant={result.status === 'unavailable' ? 'unavailable' : 'empty'}
@@ -42,7 +42,7 @@ export default async function LoyaltyPage() {
                 ? 'Sadoqat dasturi ma’lumotlari yuklanmadi'
                 : 'Sadoqat dasturi ma’lumotlari mavjud emas'
             }
-            description="Rasmiy dastur tafsilotlari kutilmoqda. Ma’lumotlar manbasi ulangandan so‘ng dastur holati shu yerda ko‘rsatiladi."
+            description="Rasmiy dastur tafsilotlari kutilmoqda. Katalog ulangandan so‘ng dastur holati shu yerda ko‘rsatiladi."
             actions={
               <ButtonLink href="/contact" variant="secondary" size="sm">
                 Bog‘lanish
@@ -59,7 +59,7 @@ export default async function LoyaltyPage() {
   return (
     <>
       {/* ── Status ─────────────────────────────────────────────────────── */}
-      <section className="border-b border-line bg-surface-muted py-12 sm:py-16">
+      <section className="border-b border-line bg-surface-muted section-y">
         <Container>
           <div className="max-w-3xl">
             <Badge tone="pending" className="mb-4">
@@ -103,7 +103,7 @@ export default async function LoyaltyPage() {
       </section>
 
       {/* ── What works today ───────────────────────────────────────────── */}
-      <section className="bg-surface py-14 sm:py-20">
+      <section className="bg-surface section-y">
         <Container>
           <SectionHeading
             eyebrow="Hozir"
@@ -129,7 +129,7 @@ export default async function LoyaltyPage() {
       </section>
 
       {/* ── Published material ─────────────────────────────────────────── */}
-      <section id="published" className="scroll-mt-24 bg-surface-muted py-14 sm:py-20">
+      <section id="published" className="scroll-mt-24 bg-surface-muted section-y">
         <Container>
           <SectionHeading
             eyebrow="E’lon qilingan"
@@ -236,7 +236,7 @@ export default async function LoyaltyPage() {
       </section>
 
       {/* ── Pending structure ──────────────────────────────────────────── */}
-      <section id="notify" className="scroll-mt-24 bg-surface py-14 sm:py-20">
+      <section id="notify" className="scroll-mt-24 bg-surface section-y">
         <Container>
           <SectionHeading
             eyebrow="Kutilmoqda"
@@ -263,12 +263,11 @@ export default async function LoyaltyPage() {
 
           <div className="mt-10 rounded-xl border border-line bg-surface-muted p-6">
             <h3 className="text-base font-semibold text-ink-900">
-              Yangiliklardan xabardor bo‘lish
+              Dastur yangiliklari
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-ink-500">
-              Dastur ishga tushganda xabar berish uchun real obuna xizmati kerak. Prototipda
-              bunday xizmat ulanmagan, shu sababli bu yerda ro‘yxatdan o‘tish shakli
-              ko‘rsatilmaydi — aks holda u ishlamaydigan va’daga aylanadi.
+              Xabar berish uchun obuna xizmati kerak. U ulanmagani sababli bu yerda ro‘yxatdan
+              o‘tish shakli yo‘q — ishlamaydigan va’dadan ko‘ra, bo‘sh joy yaxshiroq.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <ButtonLink href="/contact" size="sm">

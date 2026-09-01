@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import { useState } from 'react';
+import { CatalogueImage } from '@/components/products/CatalogueImage';
 
 /**
  * Product gallery.
@@ -48,14 +48,14 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
   return (
     <div className="flex flex-col gap-3">
       <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-line bg-surface-muted">
-        <Image
+        <CatalogueImage
           key={current}
           src={current}
           alt={hasGallery ? `${name} — rasm ${active + 1}` : name}
-          fill
           priority
           sizes="(max-width: 1024px) 100vw, 45vw"
           className="animate-fade-in object-contain object-center p-6 sm:p-10"
+          fallbackLabel="Rasm yuklanmadi"
         />
 
         {hasGallery ? (
@@ -81,7 +81,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
                   : 'border-line hover:border-line-strong',
               ].join(' ')}
             >
-              <Image src={src} alt="" fill sizes="80px" className="object-contain p-1.5" />
+              <CatalogueImage src={src} alt="" sizes="80px" className="object-contain p-1.5" fallbackLabel="" />
             </button>
           ))}
         </div>

@@ -38,7 +38,7 @@ const legs = [
 export default function AboutPage() {
   return (
     <>
-      <section className="border-b border-line bg-surface-muted py-12 sm:py-16">
+      <section className="border-b border-line bg-surface-muted section-y">
         <Container>
           <div className="max-w-3xl">
             <Badge tone="brand" className="mb-4">
@@ -54,7 +54,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="bg-surface py-14 sm:py-20">
+      <section className="bg-surface section-y">
         <Container>
           <SectionHeading
             eyebrow="Yo‘nalishlar"
@@ -89,7 +89,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="bg-surface-muted py-14 sm:py-20">
+      <section className="bg-surface-muted section-y">
         <Container>
           <SectionHeading
             eyebrow="Tamoyillar"
@@ -117,12 +117,12 @@ export default function AboutPage() {
       </section>
 
       {/* Transparency: conflicting fields are listed openly instead of being guessed. */}
-      <section className="bg-surface py-14 sm:py-20" id="trust">
+      <section className="bg-surface section-y" id="trust">
         <Container>
           <SectionHeading
             eyebrow="Shaffoflik"
             title="Tekshiruv kutilayotgan maydonlar"
-            description="Quyidagi ma’lumotlar turli rasmiy manbalarda farqli ko‘rsatilgan. Yagona qiymat tasdiqlangunga qadar ular ko‘rsatilmaydi — taxminiy qiymat bilan almashtirilmaydi."
+            description="Bu ma’lumotlar turli hujjatlarda farqli ko‘rsatilgan. Yagona qiymat tasdiqlangunga qadar ular ko‘rsatilmaydi — taxminiy qiymat bilan almashtirilmaydi."
           />
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -172,7 +172,7 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="bg-surface-muted py-14 sm:py-20">
+      <section className="bg-surface-muted section-y">
         <Container className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-center">
           <div>
             <SectionHeading
@@ -203,7 +203,7 @@ export default function AboutPage() {
           <StateBlock
             variant="pending"
             title="Kompaniya hujjatlari"
-            description="Ta’sis hujjatlari, litsenziyalar va shartnoma namunalari rasmiy manba tomonidan taqdim etilgach shu yerda joylashtiriladi."
+            description="Ta’sis hujjatlari, litsenziyalar va shartnoma namunalari Markab tomonidan taqdim etilgach shu yerda joylashtiriladi."
             actions={
               <ButtonLink href="/privacy" variant="secondary" size="sm">
                 Maxfiylik siyosati

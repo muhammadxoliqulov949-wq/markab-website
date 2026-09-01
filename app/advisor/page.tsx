@@ -42,13 +42,13 @@ export default async function AdvisorPage() {
   // rather than rendering an empty questionnaire.
   if (carState.status === 'unavailable' && productState.status === 'unavailable') {
     return (
-      <Container className="py-10 sm:py-14">
+      <Container className="section-y-sm">
         <Header />
         <AdvisorDisclosure />
         <StateBlock
           variant="unavailable"
           title="Katalog ma’lumotlari ulanmagan"
-          description="Tanlov yordamchisi katalog ma’lumotlari bilan ishlaydi. Ma’lumotlar manbasi ulangandan so‘ng ishga tushadi."
+          description="Tanlov yordamchisi katalog bo‘yicha ishlaydi. Katalog ulanmagani uchun hozir javob bera olmaydi."
         />
       </Container>
     );
@@ -56,7 +56,7 @@ export default async function AdvisorPage() {
 
   if (carState.status === 'error' && productState.status === 'error') {
     return (
-      <Container className="py-10 sm:py-14">
+      <Container className="section-y-sm">
         <Header />
         <AdvisorDisclosure />
         <StateBlock
@@ -73,7 +73,7 @@ export default async function AdvisorPage() {
   }
 
   return (
-    <Container className="py-10 sm:py-14">
+    <Container className="section-y-sm">
       <Header />
       <AdvisorDisclosure />
       <AdvisorFlow

@@ -56,7 +56,7 @@ export function FeaturedShowcase({
     <section
       aria-labelledby={headingId}
       className={`${tone === 'muted' ? 'bg-surface-muted' : 'bg-surface'} ${
-        weight === 'high' ? 'py-16 sm:py-20 lg:py-24' : 'py-12 sm:py-14 lg:py-16'
+        weight === 'high' ? 'py-16 sm:py-20 lg:py-24' : 'section-y'
       }`}
     >
       <Container>
@@ -130,7 +130,7 @@ export function FeaturedShowcase({
           ) : (
             <StateBlock
               variant="unavailable"
-              title="Ma’lumotlar manbasi ulanmagan"
+              title="Katalog vaqtincha ulanmagan"
               description="Real API ulanganda bu bo‘lim avtomatik ravishda jonli e’lonlar bilan to‘ladi."
               actions={<ArrowLink href={href}>{cta}</ArrowLink>}
             />

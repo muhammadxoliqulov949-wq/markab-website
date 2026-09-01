@@ -61,6 +61,21 @@
   }
 
   /*
+   * One vertical rhythm for page sections.
+   *
+   * The codebase previously used five different paddings for the same element,
+   * which read as uneven rather than intentional. Two values now cover every
+   * section: standard, and compact for supporting blocks.
+   */
+  .section-y {
+    @apply py-12 sm:py-16;
+  }
+
+  .section-y-sm {
+    @apply py-10 sm:py-14;
+  }
+
+  /*
    * Compact product action bar on a detail page.
    *
    * Sits directly ABOVE the mobile tab bar below md, where both are visible,

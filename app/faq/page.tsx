@@ -19,7 +19,7 @@ export default async function FaqPage() {
   const items = result.status === 'success' ? result.data : [];
 
   return (
-    <Container className="py-10 sm:py-14">
+    <Container className="section-y-sm">
       <header className="mb-8 max-w-2xl">
         <h1 className="text-display-sm sm:text-display-md">Savol-javoblar</h1>
         <p className="mt-3 text-base leading-relaxed text-ink-500">
@@ -58,7 +58,7 @@ export default async function FaqPage() {
           <StateBlock
             variant="empty"
             title="Hozircha savol-javoblar mavjud emas"
-            description="Ma’lumotlar manbasi ulangandan so‘ng savollar shu yerda ko‘rsatiladi."
+            description="Katalog ulangandan so‘ng savollar shu yerda ko‘rsatiladi."
             actions={<ButtonLink href="/contact" variant="secondary">Savol yuborish</ButtonLink>}
           />
         )}

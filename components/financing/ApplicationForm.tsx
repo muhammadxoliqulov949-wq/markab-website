@@ -114,8 +114,8 @@ export function ApplicationForm({
       <div className="rounded-xl border border-line bg-surface p-6 shadow-card sm:p-8">
         <StateBlock
           variant="unavailable"
-          title="Ariza yuborilmadi — tizim integratsiya qilinmagan"
-          description="Ariza yuborish tizimi hali rasmiy backend bilan integratsiya qilinmagan. Ma’lumotlaringiz hech qayerga yuborilmadi va saqlanmadi. Quyida kiritgan ma’lumotlaringiz nusxasi turibdi — xohlasangiz uni ko‘chirib, menejerga yuborishingiz mumkin."
+          title="Ariza yuborilmadi"
+          description="Ariza serverga yuborilmadi va saqlanmadi. Kiritgan ma’lumotlaringiz nusxasi quyida turibdi — uni ko‘chirib, menejerga yuborishingiz mumkin."
         />
 
         <div className="mt-6 rounded-xl border border-line bg-surface-muted p-5">
@@ -326,7 +326,7 @@ export function ApplicationForm({
         </Field>
 
         <div className="rounded-xl border border-line bg-surface-muted p-4 text-xs leading-relaxed text-ink-500">
-          Bu yerda hech qanday oylik to‘lov hisoblanmaydi: hisob-kitob formulasi rasmiy manba
+          Bu yerda hech qanday oylik to‘lov hisoblanmaydi: hisob-kitob formulasi Markab
           tomonidan taqdim etilgach kalkulyatorga ulanadi. Shartlar menejer bilan tasdiqlanadi.
         </div>
 
@@ -361,7 +361,7 @@ export function ApplicationForm({
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
         <p className="text-xs text-ink-400">
-          Yuborish tugmasi arizani serverga jo‘natmaydi — tizim integratsiya qilinmagan.
+          Yuborish tugmasi arizani serverga jo‘natmaydi. Ariza faqat menejer orqali yuboriladi.
         </p>
         <Button type="submit" size="lg">
           Arizani yuborish

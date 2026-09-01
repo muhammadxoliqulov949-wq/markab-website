@@ -1,4 +1,5 @@
 import type {
+  CatalogueSearchResults,
   FaqItem,
   Lesson,
   LessonCategory,
@@ -41,6 +42,15 @@ export interface DataAdapter {
   getProductFacets(): Promise<Result<ProductFacets>>;
 
   getFeatured(): Promise<Result<{ vehicles: Vehicle[]; products: Product[] }>>;
+
+  /**
+   * Global catalogue search across cars and electronics.
+   *
+   * Returns `unavailable` when the data source cannot answer — it must never
+   * fall back to a local list, because a result the catalogue does not contain
+   * is a fabricated product.
+   */
+  searchCatalogue(query: string, limitPerKind?: number): Promise<Result<CatalogueSearchResults>>;
 
   /**
    * Academy listing. `q` and `category` are optional and combinable; results

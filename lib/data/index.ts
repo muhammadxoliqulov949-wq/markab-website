@@ -24,6 +24,8 @@ export const repository = {
   getProductById: (id: string) => getAdapter().getProductById(id),
   getProductFacets: () => getAdapter().getProductFacets(),
   getFeatured: () => getAdapter().getFeatured(),
+  searchCatalogue: (query: string, limitPerKind?: number) =>
+    getAdapter().searchCatalogue(query, limitPerKind),
   listLessons: (query?: LessonQuery) => getAdapter().listLessons(query),
   getLessonBySlug: (slug: string) => getAdapter().getLessonBySlug(slug),
   getLessonCategories: () => getAdapter().getLessonCategories(),

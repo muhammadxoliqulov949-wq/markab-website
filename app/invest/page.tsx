@@ -89,7 +89,7 @@ export default async function InvestPage() {
   return (
     <>
       {/* 1 — Hero ------------------------------------------------------------ */}
-      <Section tone="dark" className="border-b border-white/10 py-14 sm:py-20">
+      <Section tone="dark" className="border-b border-white/10 section-y">
         <Container>
           <div className="max-w-3xl">
             <Badge tone="pending" className="border-white/20 bg-white/5 text-white/70">
@@ -122,7 +122,7 @@ export default async function InvestPage() {
       </Section>
 
       {/* 2 — What the investment product is ---------------------------------- */}
-      <Section id="what" className="py-14 sm:py-20">
+      <Section id="what" className="section-y">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
             <SectionHeading
@@ -145,7 +145,7 @@ export default async function InvestPage() {
               </p>
               <p className="rounded-lg border border-dashed border-line-strong bg-surface-muted px-4 py-3 text-sm text-ink-500">
                 Hech qanday daromad foizi, kafolatlangan foyda, muddat yoki minimal miqdor bu
-                sahifada ko‘rsatilmaydi. Bu ma’lumotlar rasmiy manbada paydo bo‘lgach, shu yerga
+                sahifada ko‘rsatilmaydi. Bu ma’lumotlar Markab e’lon qilgach, shu yerga
                 aynan keltiriladi.
               </p>
             </div>
@@ -154,7 +154,7 @@ export default async function InvestPage() {
       </Section>
 
       {/* 3 — How the published model works ----------------------------------- */}
-      <Section id="model" tone="muted" className="py-14 sm:py-20">
+      <Section id="model" tone="muted" className="section-y">
         <Container>
           <SectionHeading
             id="model-heading"
@@ -189,7 +189,7 @@ export default async function InvestPage() {
       </Section>
 
       {/* 4 — Available official information ---------------------------------- */}
-      <Section id="published" className="py-14 sm:py-20">
+      <Section id="published" className="section-y">
         <Container className="max-w-4xl">
           <SectionHeading
             id="published-heading"
@@ -207,7 +207,7 @@ export default async function InvestPage() {
       </Section>
 
       {/* 5 — Pending information --------------------------------------------- */}
-      <Section id="pending" tone="muted" className="py-14 sm:py-20">
+      <Section id="pending" tone="muted" className="section-y">
         <Container className="max-w-4xl">
           <SectionHeading
             id="pending-heading"
@@ -222,13 +222,13 @@ export default async function InvestPage() {
 
           <p className="mt-4 text-xs leading-relaxed text-ink-400">
             Bu maydonlarning hech biri bo‘yicha taxminiy qiymat ko‘rsatilmaydi — ular faqat
-            rasmiy manbadan olinadi. Bo‘sh qator — ma’lumot yo‘qligi haqidagi aniq ma’lumotdir.
+            Markab tomonidan taqdim etiladi. Bo‘sh qator — ma’lumot yo‘qligi haqidagi aniq ma’lumotdir.
           </p>
         </Container>
       </Section>
 
       {/* 6 — Process / journey ----------------------------------------------- */}
-      <Section id="journey" className="py-14 sm:py-20">
+      <Section id="journey" className="section-y">
         <Container>
           <SectionHeading
             id="journey-heading"
@@ -262,7 +262,7 @@ export default async function InvestPage() {
       </Section>
 
       {/* 7 — Transparency & documents ---------------------------------------- */}
-      <Section id="documents" tone="muted" className="py-14 sm:py-20">
+      <Section id="documents" tone="muted" className="section-y">
         <Container className="max-w-4xl">
           <SectionHeading
             id="documents-heading"
@@ -298,7 +298,7 @@ export default async function InvestPage() {
       </Section>
 
       {/* 8 — Risk disclosure -------------------------------------------------- */}
-      <Section id="risk" className="py-14 sm:py-20">
+      <Section id="risk" className="section-y">
         <Container className="max-w-4xl">
           <div className="rounded-2xl border border-line-strong bg-surface p-6 sm:p-8">
             <div className="flex flex-wrap items-center gap-3">
@@ -315,8 +315,7 @@ export default async function InvestPage() {
               <p>
                 Har qanday sarmoya xavf bilan bog‘liq: mablag‘ning bir qismi yoki to‘liq
                 yo‘qotilishi mumkin. Bu sahifa hech qanday daromad, foiz yoki foyda miqdorini
-                kafolatlamaydi va kafolatlay olmaydi — bunday ma’lumot rasmiy manbada mavjud
-                emas.
+                kafolatlamaydi va kafolatlay olmaydi — bunday ma’lumot e’lon qilinmagan.
               </p>
               <p>
                 Yakuniy shartlar — minimal miqdor, muddat, foyda mexanizmi, to‘lovlar, pul yechish
@@ -335,7 +334,7 @@ export default async function InvestPage() {
               <p className="text-sm text-ink-500">
                 Markabning risklar bo‘yicha rasmiy ogohlantiruvi e’lon qilingach, u shu yerda
                 to‘liq keltiriladi. Rasmiy hujjat mavjud bo‘lmaganda hech qanday xavf darajasi
-                (past / o‘rta / yuqori) ko‘rsatilmaydi — bunday baho faqat rasmiy manbadan
+                (past / o‘rta / yuqori) ko‘rsatilmaydi — bunday baho faqat Markabdan
                 olinadi.
               </p>
             </div>
@@ -344,7 +343,7 @@ export default async function InvestPage() {
       </Section>
 
       {/* 9 — FAQ -------------------------------------------------------------- */}
-      <Section id="faq" tone="muted" className="py-14 sm:py-20">
+      <Section id="faq" tone="muted" className="section-y">
         <Container className="max-w-3xl">
           <SectionHeading
             id="faq-heading"
@@ -378,7 +377,7 @@ export default async function InvestPage() {
                   title: 'Minimal sarmoya miqdori qancha?',
                   content: (
                     <p className="text-sm text-ink-600">
-                      {PENDING_LABEL} Minimal miqdor rasmiy manbada e’lon qilingach shu yerda
+                      {PENDING_LABEL} Minimal miqdor Markab e’lon qilgach shu yerda
                       ko‘rsatiladi.
                     </p>
                   ),
@@ -390,7 +389,7 @@ export default async function InvestPage() {
                     <div className="space-y-3">
                       <p className="text-sm text-ink-600">
                         {PENDING_LABEL} Ilgari bu sahifada muddat oralig‘i ko‘rsatilgan edi,
-                        biroq u rasmiy manba bilan tasdiqlanmadi va olib tashlandi. U boshqa
+                        biroq u Markab tomonidan tasdiqlanmadi va olib tashlandi. U boshqa
                         taxminiy muddat bilan almashtirilmaydi.
                       </p>
                       <p className="text-xs text-ink-400">
@@ -443,7 +442,7 @@ export default async function InvestPage() {
       </Section>
 
       {/* 10 — Contact / interest CTA ------------------------------------------ */}
-      <Section id="contact" tone="dark" className="py-14 sm:py-20">
+      <Section id="contact" tone="dark" className="section-y">
         <Container>
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-12">
             <div className="max-w-2xl">
@@ -468,16 +467,16 @@ export default async function InvestPage() {
           </div>
 
           <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 pt-6 text-xs text-white/50">
-            <Link href="/contact" className="underline underline-offset-4 hover:text-white/80">
+            <Link href="/contact" className="inline-flex min-h-[32px] items-center underline underline-offset-4 hover:text-white/80">
               Aloqa
             </Link>
-            <Link href="/faq" className="underline underline-offset-4 hover:text-white/80">
+            <Link href="/faq" className="inline-flex min-h-[32px] items-center underline underline-offset-4 hover:text-white/80">
               Savol-javoblar
             </Link>
             {legal.documents.terms ? (
               <Link
                 href={legal.documents.terms}
-                className="underline underline-offset-4 hover:text-white/80"
+                className="inline-flex min-h-[32px] items-center underline underline-offset-4 hover:text-white/80"
               >
                 Foydalanish shartlari
               </Link>
@@ -485,7 +484,7 @@ export default async function InvestPage() {
             {legal.documents.privacy ? (
               <Link
                 href={legal.documents.privacy}
-                className="underline underline-offset-4 hover:text-white/80"
+                className="inline-flex min-h-[32px] items-center underline underline-offset-4 hover:text-white/80"
               >
                 Maxfiylik siyosati
               </Link>

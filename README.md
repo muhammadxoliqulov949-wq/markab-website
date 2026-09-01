@@ -14,6 +14,7 @@
 | **6** | My Markab account experience (`/login`, `/profile`, account/dashboard architecture) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **7** | AI Product Advisor (`/advisor`, recommendation engine, guided flow) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **8** | Academy, Loyalty and content experience (`/academy`, `/academy/[slug]`, `/loyalty`, content architecture) | ✅ Implemented — awaiting stakeholder visual sign-off |
+| **9** | UX simplification, visual refinement, mobile and motion (+ global catalogue search) | ✅ Implemented — awaiting stakeholder visual sign-off |
 
 ### Why 0.5 is blocked
 
@@ -239,6 +240,94 @@ pass in production mode · no console or hydration errors · zero horizontal
 overflow across 8 widths (320–1440) on `/academy`, a lesson page and `/loyalty`
 · true 404 preserved for an invalid slug · `MARKAB_DATA_SOURCE=http` degrades all
 three routes to the `unavailable` state · prior phases unregressed.
+
+---
+
+## Phase 9 — Soddalashtirish, vizual sayqal, mobil va harakat
+
+> Production Markab sodadaligi + Markab 2.0 funksionalligi + premium ijro.
+
+Bu bosqich yangi dizayn emas, mavjud tuzilmani sayqallashdir. Hech qanday ishlaydigan
+funksiya olib tashlanmagan.
+
+### Global katalog qidiruvi (`/search`)
+
+Yagona yangi imkoniyat — u mahsulot topishni bevosita yaxshilaydi.
+
+```
+HeaderSearch (client)  →  GET /search?q=…
+   → app/search/page.tsx  (server)
+   → repository.searchCatalogue(query)
+   → DataAdapter  →  mockProvider | httpProvider
+```
+
+| Talab | Amalda |
+| --- | --- |
+| Repository orqali | `searchCatalogue` adapterda; fixture'ga to'g'ridan murojaat yo'q |
+| Haqiqiy maydonlar | avtomobil: nom, brend, model, yil · elektronika: nom, xom sarlavha, brend, kategoriya |
+| Kataloglarni ajratish | natijalar **Avtomobil** va **Elektronika** bo'limlariga bo'lingan |
+| Chuqur havolalar | har bir natija `/cars/<slug>` yoki `/electronics/<id>` sahifasiga olib boradi |
+| Holatlar | loading (Suspense skeleton) · no results · unavailable · error |
+| Uydirma yo'q | `httpProvider` `unavailable` qaytaradi — mahalliy ro'yxatga tushish yo'q |
+| Klaviatura | `/` qidiruvga fokus beradi (boshqa maydonda yozayotganda emas), `Escape` yopadi |
+| Tartib | uch pog'onali, deterministik moslik (prefix → so'z boshi → qismiy), alifbo + id bilan barqarorlashtirilgan. Bu **relevantlik modeli emas** va shunday taqdim etilmaydi |
+
+### Soddalashtirilgan nusxa
+
+Ichki muhandislik lug'ati foydalanuvchi ko'radigan matndan chiqarildi:
+
+| Avval | Hozir |
+| --- | --- |
+| «rasmiy manba bilan to'ldiriladi» (40+ joyda) | «Markab tomonidan to'ldiriladi» |
+| «Ma'lumotlar manbasi ulanmagan» | «Katalog vaqtincha ulanmagan» |
+| «rasmiy hisoblash formulasi integratsiya qilingach» | «hisoblash tartibi tasdiqlangach» |
+| «tizim integratsiya qilinmagan» | «yuborish hali ishlamaydi» |
+| «Markab 2.0 kontsept-prototip · real API ulanmagan · namuna ma'lumotlari» | «Kontsept-prototip · e'lonlar namunaviy» |
+
+Honestlik saqlandi — faqat uzunlik qisqartirildi.
+
+### Shovqinni kamaytirish
+
+* **FAQ**: bir xil «menejerimizdan oling» javobi 5 marta takrorlanardi — endi bo'lim
+  kirishida bir marta.
+* **Bosh sahifa ilova bloki**: 19 ta yorliq → 7 ta; konsept-dashboard'dagi 3 ta
+  skelet qator olib tashlandi.
+* **Savatcha bo'sh holati**: «Savatchangiz bo'sh» + bitta amal.
+* **Kabinet**: 210 belgili himoyaviy matn → 84 belgi.
+* **Loyalty**: 293 belgili holat tavsifi → 153 belgi; takrorlangan sarlavha olib tashlandi.
+
+### Spacing va tipografiya
+
+* Bo'limlar uchun **bitta ritm**: `.section-y` (`py-12 sm:py-16`) va `.section-y-sm`
+  (`py-10 sm:py-14`). Avval bir xil element uchun 5 xil padding ishlatilardi.
+* Sarlavhalar ierarxiyasi: H1 54px · H2 32px · H3 16px. Sahifa sarlavhasi uchun
+  6 xil o'lcham `text-display-sm sm:text-display-md` ga keltirildi; karta sarlavhasi
+  uchun 6 xil o'lcham bitta 16px pog'onaga.
+
+### Harakat
+
+Cheklangan va maqsadli: filter paneli (fade + slide-up), accordion (JS o'lchovisiz
+`grid-rows-[0fr]→[1fr]`), qidiruv paneli (dropdown entrance), mavjud hover/card
+o'tishlari. Halqa animatsiya, parallax va kirish ketma-ketliklari yo'q.
+`prefers-reduced-motion` global qoidasi barchasini ~0ms ga tushiradi.
+
+### Mobil
+
+* **Topilgan va tuzatilgan haqiqiy nuqson**: mobil tab-bar har sahifada footer'ning
+  oxirgi 63px ini berkitardi. `#main` padding'i faqat kontentni himoya qilardi,
+  undan keyin keladigan footer'ni emas.
+* `/search` 320–390px da 408px ga chiqib ketardi — asosiy `grid-cols-1` yo'q edi,
+  shuning uchun elementlar max-content bo'yicha o'lchanardi.
+* Footer havolalari 24px → 40px, dars kategoriya chipi 26px → 40px, invest/contact
+  havolalari 16px → 32px.
+
+### Verification
+
+`npx tsc --noEmit` clean · `npm run build` clean · **305/305** mobil tekshiruv
+(19 route × 8 kenglik: overflow, sticky to'qnashuv, tab-bar, tap target, console) ·
+**27/27** qidiruv + harakat + accessibility · **110/110** Phase 8 regressiya ·
+barcha route'lar 200, noto'g'ri slug'lar 404 · `MARKAB_DATA_SOURCE=http` da qidiruv
+`unavailable` holatiga tushadi va **0 ta** natija ko'rsatadi.
 
 ---
 

@@ -91,7 +91,7 @@ export function FinancingPreview() {
           {/* RIGHT — the calculator interface. */}
           <div className="overflow-hidden rounded-2xl bg-ink-900 p-6 shadow-lift sm:p-7">
             <div className="flex items-center justify-between gap-4">
-              <h3 className="text-[0.9375rem] font-semibold text-white">To‘lov kalkulyatori</h3>
+              <h3 className="text-base font-semibold text-white">To‘lov kalkulyatori</h3>
               <Badge tone="pending" className="border-white/20 bg-white/5 text-white/65">
                 Namuna
               </Badge>

@@ -298,10 +298,10 @@ function FilterSheet({
         type="button"
         aria-label="Filtrlarni yopish"
         onClick={onClose}
-        className="absolute inset-0 h-full w-full cursor-default bg-ink-900/40"
+        className="absolute inset-0 h-full w-full cursor-default bg-ink-900/40 animate-fade-in"
       />
 
-      <div className="absolute inset-x-0 bottom-0 flex max-h-[86vh] flex-col rounded-t-2xl bg-white shadow-lift">
+      <div className="absolute inset-x-0 bottom-0 flex max-h-[86vh] flex-col rounded-t-2xl bg-white shadow-lift animate-sheet-up">
         <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-4">
           <h2 className="text-base font-semibold text-ink-900">
             Filtrlar

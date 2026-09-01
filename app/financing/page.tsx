@@ -66,8 +66,7 @@ const faq = [
           o‘rnida esa aniq kutish holati turadi.
         </p>
         <p className="text-xs text-ink-400">
-          Aniq oylik to‘lov Markabning rasmiy hisoblash formulasi integratsiya qilingach
-          ko‘rsatiladi.
+          Aniq oylik to‘lov hisoblash tartibi tasdiqlangach ko‘rsatiladi.
         </p>
       </div>
     ),
@@ -148,13 +147,13 @@ export default async function FinancingPage() {
   return (
     <>
       {/* 1 — Hero */}
-      <section className="border-b border-line bg-surface-muted py-12 sm:py-16">
+      <section className="border-b border-line bg-surface-muted section-y">
         <Container>
           <div className="max-w-3xl">
             <Badge tone="brand" className="mb-4">
               Moliyalashtirish
             </Badge>
-            <h1 className="text-[1.875rem] font-semibold leading-[1.1] tracking-tight text-ink-900 sm:text-[2.5rem]">
+            <h1 className="text-display-sm sm:text-display-md">
               Muddatli to‘lov qanday ishlaydi
             </h1>
             <p className="mt-4 text-base leading-relaxed text-ink-600 sm:text-lg">
@@ -175,7 +174,7 @@ export default async function FinancingPage() {
       </section>
 
       {/* 2 — Overview */}
-      <section id="overview" className="bg-surface py-14 sm:py-20">
+      <section id="overview" className="bg-surface section-y">
         <Container>
           <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-16">
             <div>
@@ -221,7 +220,7 @@ export default async function FinancingPage() {
               </ul>
               <p className="mt-5 border-t border-line pt-4 text-xs leading-relaxed text-ink-400">
                 Hech qanday foiz stavkasi, ustama foizi, komissiya, tasdiqlash ehtimoli yoki
-                investitsiya daromadi bu sahifada ko‘rsatilmaydi — ular uchun rasmiy manba kerak.
+                investitsiya daromadi bu sahifada ko‘rsatilmaydi — ular uchun Markab tasdiqlashi kerak.
               </p>
             </div>
           </div>
@@ -229,7 +228,7 @@ export default async function FinancingPage() {
       </section>
 
       {/* 3 — How the process works */}
-      <section id="process" className="bg-surface-muted py-14 sm:py-20">
+      <section id="process" className="bg-surface-muted section-y">
         <Container>
           <SectionHeading
             eyebrow="Yo‘l xaritasi"
@@ -280,7 +279,7 @@ export default async function FinancingPage() {
       </section>
 
       {/* 4 — Supported product types */}
-      <section id="product-types" className="bg-surface py-14 sm:py-20">
+      <section id="product-types" className="bg-surface section-y">
         <Container>
           <SectionHeading
             eyebrow="Mahsulotlar"
@@ -345,7 +344,7 @@ export default async function FinancingPage() {
       </section>
 
       {/* 5 — Available verified terms (published vs pending) */}
-      <section id="terms" className="bg-surface-muted py-14 sm:py-20">
+      <section id="terms" className="bg-surface-muted section-y">
         <Container>
           <SectionHeading
             eyebrow="Shartlar"
@@ -389,7 +388,7 @@ export default async function FinancingPage() {
               </ul>
               <p className="border-t border-line px-5 py-4 text-xs leading-relaxed text-ink-400">
                 Bu maydonlarning hech biri bo‘yicha taxminiy qiymat ko‘rsatilmaydi — ular faqat
-                rasmiy manbadan olinadi.
+                Markab tomonidan taqdim etiladi.
               </p>
             </div>
           </div>
@@ -397,7 +396,7 @@ export default async function FinancingPage() {
       </section>
 
       {/* 6 — Calculator CTA */}
-      <section id="calculator" className="bg-surface py-14 sm:py-20">
+      <section id="calculator" className="bg-surface section-y">
         <Container>
           <div className="grid items-center gap-8 rounded-2xl border border-line bg-surface-muted p-6 sm:p-8 lg:grid-cols-[1fr_auto] lg:gap-12">
             <div className="max-w-2xl">
@@ -408,7 +407,7 @@ export default async function FinancingPage() {
               <p className="mt-3 text-sm leading-relaxed text-ink-600">
                 Narx, boshlang‘ich to‘lov va muddatni kiriting: kalkulyator moliyalashtiriladigan
                 qoldiqni (oddiy ayirish) ko‘rsatadi, oylik to‘lov o‘rnida esa rasmiy formula
-                integratsiyasi kutilayotganini bildiradi. Noto‘g‘ri raqam ko‘rsatishdan ko‘ra,
+                hali ishlamasligini bildiradi. Noto‘g‘ri raqam ko‘rsatishdan ko‘ra,
                 hisoblamaslik to‘g‘riroq.
               </p>
             </div>
@@ -420,7 +419,7 @@ export default async function FinancingPage() {
       </section>
 
       {/* 7 — Application CTA */}
-      <section id="apply" className="bg-surface-muted py-14 sm:py-20">
+      <section id="apply" className="bg-surface-muted section-y">
         <Container>
           <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-16">
             <div>
@@ -467,7 +466,7 @@ export default async function FinancingPage() {
               <StateBlock
                 variant="unavailable"
                 title="Ariza rasmiy backendga ulanmagan"
-                description="Bu prototipda ariza hech qurilma yoki serverga yuborilmaydi. Yuborish tugmasi bosilgach, tizim integratsiya qilinmagani aniq ko‘rsatiladi — “yuborildi” degan yolg‘on tasdiq chiqmaydi."
+                description="Bu prototipda ariza hech qurilma yoki serverga yuborilmaydi. Yuborish tugmasi bosilgach, yuborish ishlamasligi aniq ko‘rsatiladi — “yuborildi” degan yolg‘on tasdiq chiqmaydi."
                 actions={
                   <ButtonLink href="/contact" variant="secondary" size="sm">
                     Menejer orqali bog‘lanish
@@ -485,7 +484,7 @@ export default async function FinancingPage() {
       </section>
 
       {/* 8 — Transparency / trust */}
-      <section id="trust" className="bg-surface py-14 sm:py-20">
+      <section id="trust" className="bg-surface section-y">
         <Container>
           <SectionHeading
             eyebrow="Shaffoflik"
@@ -530,7 +529,7 @@ export default async function FinancingPage() {
       </section>
 
       {/* 9 — FAQ */}
-      <section id="faq" className="bg-surface-muted py-14 sm:py-20">
+      <section id="faq" className="bg-surface-muted section-y">
         <Container>
           <SectionHeading
             eyebrow="Savollar"
@@ -544,7 +543,7 @@ export default async function FinancingPage() {
       </section>
 
       {/* 10 — Final CTA */}
-      <section id="final-cta" className="bg-ink-900 py-14 sm:py-20">
+      <section id="final-cta" className="bg-ink-900 section-y">
         <Container>
           <div className="grid items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-12">
             <div className="max-w-2xl">

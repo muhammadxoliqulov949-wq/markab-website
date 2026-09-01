@@ -22,16 +22,9 @@ export function CartView() {
     return (
       <StateBlock
         variant="empty"
-        title="Savatchada mahsulot yo‘q"
-        description="Elektronika mahsulotlarini savatchaga qo‘shib, shu yerda ko‘rib chiqishingiz mumkin. Savatcha faqat shu brauzerda saqlanadi."
-        actions={
-          <>
-            <ButtonLink href="/electronics">Elektronikani ko‘rish</ButtonLink>
-            <ButtonLink href="/cars" variant="secondary">
-              Avtomobillar
-            </ButtonLink>
-          </>
-        }
+        title="Savatchangiz bo‘sh"
+        description="Mahsulot qo‘shib, shu yerda ko‘rib chiqishingiz mumkin."
+        actions={<ButtonLink href="/electronics">Mahsulotlarni ko‘rish</ButtonLink>}
       />
     );
   }

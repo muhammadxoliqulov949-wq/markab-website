@@ -14,7 +14,7 @@ import { valueProps } from '@/lib/data/fixtures/content';
  */
 export function WhyMarkab() {
   return (
-    <section aria-labelledby="why-heading" className="bg-surface-muted py-10 sm:py-12 lg:py-14">
+    <section aria-labelledby="why-heading" className="bg-surface-muted section-y-sm">
       <Container>
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           <SectionHeading
@@ -33,7 +33,7 @@ export function WhyMarkab() {
                       {String(index + 1).padStart(2, '0')}
                     </span>
                     <div className="max-w-lg">
-                      <h3 className="text-lg font-semibold text-ink-900">{prop.title}</h3>
+                      <h3 className="text-base font-semibold text-ink-900">{prop.title}</h3>
                       {prop.description ? (
                         <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-600">
                           {prop.description}

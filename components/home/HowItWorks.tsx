@@ -15,7 +15,7 @@ export function HowItWorks() {
     <section
       id="qanday-ishlaydi"
       aria-labelledby="how-heading"
-      className="scroll-mt-24 bg-surface py-10 sm:py-12 lg:py-14"
+      className="scroll-mt-24 bg-surface section-y-sm"
     >
       <Container>
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">

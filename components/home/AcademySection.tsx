@@ -22,7 +22,7 @@ export async function AcademySection() {
   const categories = categoriesResult.status === 'success' ? categoriesResult.data : [];
 
   return (
-    <section aria-labelledby="academy-heading" className="bg-surface py-12 sm:py-14 lg:py-16">
+    <section aria-labelledby="academy-heading" className="bg-surface section-y">
       <Container>
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
@@ -58,7 +58,7 @@ export async function AcademySection() {
                       {lesson.title}
                     </h3>
                     <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-500">
-                      {category?.description ?? 'Dars tavsifi rasmiy manba bilan to‘ldiriladi.'}
+                      {category?.description ?? 'Dars tavsifi Markab tomonidan to‘ldiriladi.'}
                     </p>
 
                     <div className="mt-5">
@@ -85,7 +85,7 @@ export async function AcademySection() {
           </div>
         ) : (
           <div className="mt-12 rounded-xl border border-dashed border-line-strong bg-surface-muted p-12 text-center text-sm text-ink-500">
-            Darslar rasmiy manba ulangandan so‘ng shu yerda ko‘rsatiladi.
+            Darslar katalog ulangandan so‘ng shu yerda ko‘rsatiladi.
           </div>
         )}
 

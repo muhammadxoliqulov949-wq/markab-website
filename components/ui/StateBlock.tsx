@@ -15,26 +15,26 @@ import type { ReactNode } from 'react';
 export type StateVariant = 'loading' | 'empty' | 'not-found' | 'error' | 'pending' | 'unavailable';
 
 const defaults: Record<StateVariant, { title: string; description: string }> = {
-  loading: { title: 'Yuklanmoqda…', description: 'Ma’lumotlar tayyorlanmoqda.' },
+  loading: { title: 'Yuklanmoqda…', description: 'Bir soniya kuting.' },
   empty: {
-    title: 'Hozircha ma’lumot yo‘q',
+    title: 'Hozircha bo‘sh',
     description: 'Bu bo‘lim tez orada to‘ldiriladi.',
   },
   'not-found': {
-    title: 'Ma’lumot topilmadi',
-    description: 'Siz qidirayotgan ma’lumot mavjud emas yoki o‘chirilgan.',
+    title: 'Topilmadi',
+    description: 'Bu sahifa mavjud emas yoki olib tashlangan.',
   },
   error: {
     title: 'Nimadir xato ketdi',
-    description: 'Ma’lumotlarni yuklashda xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring.',
+    description: 'Ma’lumotlarni yuklab bo‘lmadi. Iltimos, qaytadan urinib ko‘ring.',
   },
   pending: {
     title: 'Ma’lumot tayyorlanmoqda',
-    description: 'Bu ma’lumot rasmiy manba bilan to‘ldiriladi.',
+    description: 'Bu qiymat Markab tomonidan tasdiqlangach ko‘rsatiladi.',
   },
   unavailable: {
-    title: 'Ulanish kutilmoqda',
-    description: 'Ma’lumotlar manbasi ulanmaganda bu bo‘lim shunday ko‘rinadi.',
+    title: 'Ma’lumotlar vaqtincha mavjud emas',
+    description: 'Katalog ulanmaguncha bu bo‘lim bo‘sh turadi.',
   },
 };
 
@@ -133,7 +133,7 @@ export function StateBlock({
  * so a missing value is explicit rather than silently blank.
  */
 export function PendingValue({
-  label = 'Ma’lumot tayyorlanmoqda',
+  label = 'Tasdiqlanishi kutilmoqda',
   className = '',
 }: {
   label?: string;

@@ -94,7 +94,7 @@ export function FinancingPanel({
 
       <p className="mt-4 text-xs leading-relaxed text-ink-400">
         Ko‘rsatilgan oylik to‘lov (agar mavjud bo‘lsa) markab.uz ochiq e’lonidan olingan.
-        Boshlang‘ich to‘lov, muddat va shartnoma turi rasmiy manba ulangandan so‘ng
+        Boshlang‘ich to‘lov, muddat va shartnoma turi katalog ulangandan so‘ng
         ko‘rsatiladi.{' '}
         <Link href="/faq" className="text-brand-700 underline underline-offset-2">
           Savol-javoblar

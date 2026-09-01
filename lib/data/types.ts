@@ -399,3 +399,38 @@ export interface LoyaltyProgram {
   availableNow: LoyaltyFact[];
   pending: LoyaltyPendingItem[];
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Global catalogue search
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+export type SearchHitKind = 'vehicle' | 'product';
+
+/**
+ * One search result.
+ *
+ * A hit carries only fields the catalogue actually publishes, plus the deep
+ * link to the real detail page. Nothing is derived, enriched or guessed —
+ * search cannot manufacture a result the catalogue does not contain.
+ */
+export interface SearchHit {
+  id: string;
+  kind: SearchHitKind;
+  title: string;
+  /** Brand plus the distinguishing attribute: year for a car, storage for a device. */
+  subtitle: string;
+  priceUzs: number;
+  image: string | null;
+  href: string;
+  /** 'in_stock' | 'sold' | 'unknown' — never promoted beyond what is published. */
+  availability: 'in_stock' | 'sold' | 'unknown';
+}
+
+export interface CatalogueSearchResults {
+  query: string;
+  vehicles: SearchHit[];
+  products: SearchHit[];
+  /** Totals before the display cap, so "see all" is honest about how many there are. */
+  vehicleTotal: number;
+  productTotal: number;
+}
