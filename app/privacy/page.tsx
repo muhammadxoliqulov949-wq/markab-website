@@ -90,6 +90,9 @@ export default function PrivacyPage() {
                     className="inline-flex h-9 items-center rounded-lg bg-brand-700 px-3.5 text-sm font-medium text-white transition-colors hover:bg-brand-800"
                   >
                     markab.uz/privacy
+                    {/* Opening a new tab is a change of context — say so for
+                        anyone who cannot see the browser chrome change. */}
+                    <span className="sr-only"> (yangi oynada ochiladi)</span>
                   </a>
                   <ButtonLink href="/contact" variant="secondary" size="sm">
                     Savol yuborish
