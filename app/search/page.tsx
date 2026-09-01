@@ -65,7 +65,7 @@ export default async function SearchPage({
 async function SearchResults({ query }: { query: string }) {
   if (!query) {
     return (
-      <StateBlock
+      <StateBlock headingLevel={2}
         variant="empty"
         title="So‘rov kiriting"
         description="Avtomobil brendi, modeli yoki elektronika nomini yozing."
@@ -87,7 +87,7 @@ async function SearchResults({ query }: { query: string }) {
 
   if (result.status === 'unavailable') {
     return (
-      <StateBlock
+      <StateBlock headingLevel={2}
         variant="unavailable"
         title="Qidiruv ishlamayapti"
         description="Katalog ma’lumotlari ulanmagani uchun qidiruv natija ko‘rsata olmaydi."
@@ -101,12 +101,12 @@ async function SearchResults({ query }: { query: string }) {
   }
 
   if (result.status === 'error') {
-    return <StateBlock variant="error" description={result.error.message} />;
+    return <StateBlock headingLevel={2} variant="error" description={result.error.message} />;
   }
 
   if (result.status !== 'success') {
     return (
-      <StateBlock
+      <StateBlock headingLevel={2}
         variant="empty"
         title="Hech narsa topilmadi"
         description={`“${query}” bo‘yicha katalogda mos e’lon yo‘q.`}
@@ -178,7 +178,7 @@ async function SearchResults({ query }: { query: string }) {
       ) : null}
 
       {vehicles.length === 0 && products.length === 0 ? (
-        <StateBlock
+        <StateBlock headingLevel={2}
           variant="empty"
           title="Hech narsa topilmadi"
           description={`“${query}” bo‘yicha katalogda mos e’lon yo‘q.`}

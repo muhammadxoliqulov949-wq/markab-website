@@ -19,6 +19,7 @@ export function HeaderSearch() {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const params = useSearchParams();
 
@@ -51,6 +52,7 @@ export function HeaderSearch() {
     <div className="relative flex items-center">
       {/* Mobile trigger */}
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
@@ -97,8 +99,10 @@ export function HeaderSearch() {
             onChange={(event) => setValue(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === 'Escape') {
+                // Return focus to the trigger on the way out. Blurring alone
+                // drops a keyboard visitor at the top of the document.
                 setOpen(false);
-                inputRef.current?.blur();
+                triggerRef.current?.focus();
               }
             }}
             placeholder="Avtomobil yoki elektronika"

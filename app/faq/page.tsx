@@ -29,6 +29,9 @@ export default async function FaqPage() {
       </header>
 
       <div className="max-w-3xl">
+        {/* The accordion headings are h3, so the list needs an h2 above them
+            or the outline jumps straight from the page h1. */}
+        <h2 className="sr-only">Savollar ro‘yxati</h2>
         {items.length > 0 ? (
           <Accordion
             items={items.map((item) => ({

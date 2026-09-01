@@ -116,6 +116,10 @@ export default async function AcademyPage({
           />
 
           <div className="mt-8">
+            {/* Lesson cards carry h3 titles; an h2 keeps the outline from
+                jumping h1 → h3. Visually hidden so it does not compete with
+                the hero, but it is real structure for assistive tech. */}
+            <h2 className="sr-only">Darslar ro‘yxati</h2>
             {lessons.length === 0 ? (
               <StateBlock
                 variant="empty"

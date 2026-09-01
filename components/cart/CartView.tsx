@@ -20,7 +20,7 @@ export function CartView() {
 
   if (items.length === 0) {
     return (
-      <StateBlock
+      <StateBlock headingLevel={2}
         variant="empty"
         title="Savatchangiz bo‘sh"
         description="Mahsulot qo‘shib, shu yerda ko‘rib chiqishingiz mumkin."

@@ -160,7 +160,7 @@ export default async function LessonPage({ params }: { params: Params }) {
 
           {/* 5. Main content */}
           <div className="mt-8">
-            <StateBlock
+            <StateBlock headingLevel={2}
               variant="pending"
               title="Dars mazmuni Markab tomonidan to‘ldiriladi"
               description="Ushbu dars matni, misollar va testlar Markab tomonidan tasdiqlangach shu yerda joylashtiriladi. Hech qanday taxminiy yoki yaratilgan o‘quv materiali ko‘rsatilmaydi."

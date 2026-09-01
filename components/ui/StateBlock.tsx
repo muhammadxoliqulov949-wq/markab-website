@@ -89,6 +89,7 @@ export function StateBlock({
   compact = false,
   className = '',
   children,
+  headingLevel = 3,
 }: {
   variant: StateVariant;
   title?: string;
@@ -97,9 +98,17 @@ export function StateBlock({
   compact?: boolean;
   className?: string;
   children?: ReactNode;
+  /**
+   * Heading level for the block's title. Defaults to h3, which is correct
+   * when the block sits inside a section that already has an h2. Set it to
+   * h2 when the block is the page's primary content — otherwise the outline
+   * jumps h1 → h3.
+   */
+  headingLevel?: 2 | 3 | 4;
 }) {
   const copy = defaults[variant];
   const isError = variant === 'error';
+  const Heading = `h${headingLevel}` as 'h2' | 'h3' | 'h4';
 
   return (
     <div
@@ -116,9 +125,9 @@ export function StateBlock({
       <span className={isError ? 'text-rose-500' : 'text-ink-400'}>
         <Icon variant={variant} />
       </span>
-      <h3 className={`font-semibold text-ink-900 ${compact ? 'text-sm' : 'text-base'}`}>
+      <Heading className={`font-semibold text-ink-900 ${compact ? 'text-sm' : 'text-base'}`}>
         {title ?? copy.title}
-      </h3>
+      </Heading>
       <p className={`max-w-md text-sm leading-relaxed text-ink-500 ${compact ? 'text-xs' : ''}`}>
         {description ?? copy.description}
       </p>

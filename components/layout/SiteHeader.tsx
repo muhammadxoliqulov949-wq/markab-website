@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { primaryNav, secondaryNav, site } from '@/lib/site';
 import { HeaderSearch } from '@/components/search/HeaderSearch';
 import { useCart } from '@/components/cart/CartProvider';
@@ -35,6 +35,8 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const { count } = useCart();
   // No auth provider exists, so this is always false — the header therefore
   // always offers 'Kirish', which is the honest state.
@@ -57,6 +59,59 @@ export function SiteHeader() {
       document.body.style.overflow = '';
     };
   }, [open]);
+
+  // Move focus into the drawer when it opens. Without this the visitor is left
+  // tabbing through the page behind a drawer they cannot see past.
+  useEffect(() => {
+    if (!open) return;
+    const first = menuRef.current?.querySelector<HTMLElement>('a[href], button:not([disabled])');
+    (first ?? menuRef.current)?.focus();
+  }, [open]);
+
+  /**
+   * Escape closes the drawer and Tab cycles inside it.
+   *
+   * The trigger stays in the cycle on purpose: while the drawer is open its
+   * label is "Menyuni yopish", so it is the close control, and a keyboard
+   * visitor must be able to reach it. Background scroll is already locked.
+   */
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setOpen(false);
+        toggleRef.current?.focus();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const inside = [...(menuRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [])];
+      const order = toggleRef.current ? [toggleRef.current, ...inside] : inside;
+      if (order.length === 0) return;
+      const first = order[0];
+      const last = order[order.length - 1];
+      const active = document.activeElement;
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      } else if (active instanceof Node && !order.some((el) => el.contains(active))) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
+
+  // Closing for any reason returns focus to the trigger, so keyboard position
+  // is never lost (this also covers closing via route change).
+  const closeMenu = () => {
+    setOpen(false);
+    toggleRef.current?.focus();
+  };
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
@@ -173,8 +228,9 @@ export function SiteHeader() {
           </Link>
 
           <button
+            ref={toggleRef}
             type="button"
-            onClick={() => setOpen((value) => !value)}
+            onClick={() => (open ? closeMenu() : setOpen(true))}
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? 'Menyuni yopish' : 'Menyuni ochish'}
@@ -200,7 +256,12 @@ export function SiteHeader() {
 
       {/* Mobile / tablet: intentionally designed drawer — large targets, grouped. */}
       {open ? (
-        <div id="mobile-menu" className="border-t border-line bg-white nav:hidden">
+        <div
+          ref={menuRef}
+          id="mobile-menu"
+          tabIndex={-1}
+          className="border-t border-line bg-white nav:hidden focus:outline-none"
+        >
           <nav aria-label="Mobil navigatsiya" className="container-page max-h-[70vh] overflow-y-auto py-5">
             <ul className="flex flex-col gap-1">
               {primaryNav.map((item) => (

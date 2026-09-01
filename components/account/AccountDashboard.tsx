@@ -159,7 +159,7 @@ export function AccountDashboard() {
   if (effectiveStatus === 'unavailable') {
     return (
       <div className="space-y-4">
-        <StateBlock
+        <StateBlock headingLevel={2}
           variant="unavailable"
           title="Kirish tizimi ulanmagan"
           description="Kirish hali ishlamaydi. Shaxsiy kabinet real hisob ma’lumotlarisiz ishlay olmaydi, shu sababli bu yerda hech qanday shaxsiy yoki moliyaviy ma’lumot ko‘rsatilmaydi."
