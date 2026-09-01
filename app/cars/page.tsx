@@ -41,6 +41,9 @@ export function generateMetadata({
   });
 }
 
+/** First visible row on desktop, and the whole first screen on mobile. */
+const ABOVE_FOLD_CARDS = 2;
+
 export default async function CarsPage({
   searchParams,
 }: {
@@ -143,9 +146,9 @@ async function VehicleResults({
       </div>
 
       <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {vehicles.map((vehicle) => (
+        {vehicles.map((vehicle, index) => (
           <li key={vehicle.id} className="flex">
-            <VehicleCard vehicle={vehicle} />
+            <VehicleCard vehicle={vehicle} priority={index < ABOVE_FOLD_CARDS} />
           </li>
         ))}
       </ul>

@@ -41,6 +41,9 @@ export function generateMetadata({
   });
 }
 
+/** First visible row on desktop, and the whole first screen on mobile. */
+const ABOVE_FOLD_CARDS = 2;
+
 export default async function ElectronicsPage({
   searchParams,
 }: {
@@ -153,9 +156,9 @@ async function ProductResults({
       </div>
 
       <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {products.map((product) => (
+        {products.map((product, index) => (
           <li key={product.id} className="flex">
-            <ProductCard product={product} />
+            <ProductCard product={product} priority={index < ABOVE_FOLD_CARDS} />
           </li>
         ))}
       </ul>
