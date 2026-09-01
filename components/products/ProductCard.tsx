@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import type { Product } from '@/lib/data/types';
 import { formatUzs } from '@/lib/format';
@@ -28,6 +26,12 @@ import { stockMeta } from '@/lib/products/stock';
  *
  * Every row is fixed-height, so a missing image, a missing spec or a pending
  * monthly payment never shifts the rows below it.
+ *
+ * Server component on purpose. It uses no hooks and no browser APIs — the
+ * interactive parts inside it (CatalogueImage, SaveButton, AddToCartButton)
+ * are client components and hydrate on their own. Marking the card itself
+ * 'use client' would ship this entire card's markup as JavaScript for every
+ * item in the grid, which is the single most repeated component on the site.
  */
 export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
   const image = product.images[0];

@@ -13,7 +13,8 @@ import { VehicleCard } from '@/components/vehicles/VehicleCard';
 import { formatKm, formatUzs, formatViews } from '@/lib/format';
 import { fuelLabel, transmissionLabel } from '@/lib/labels';
 import { repository } from '@/lib/data';
-import { buildMetadata } from '@/lib/seo';
+import { breadcrumbJsonLd, buildMetadata, productJsonLd } from '@/lib/seo';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { relatedReason, selectRelatedVehicles } from '@/lib/vehicles/related';
 import { applyHref, calculatorHref } from '@/lib/financing/handoff';
 
@@ -96,6 +97,33 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
 
   return (
     <Container className="py-8 sm:py-12">
+      {/*
+        Structured data: a BreadcrumbList and a Product whose fields all come
+        from the listing. No aggregateRating or review anywhere — the data
+        source publishes none, and a Product with invented ratings is the exact
+        kind of spam this should never become.
+      */}
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Bosh sahifa', path: '/' },
+          { name: 'Avtomobillar', path: '/cars' },
+          { name: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`, path: `/cars/${vehicle.slug}` },
+        ])}
+      />
+      <JsonLd
+        data={productJsonLd({
+          name: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`,
+          path: `/cars/${vehicle.slug}`,
+          brand: vehicle.brand,
+          sku: vehicle.slug,
+          priceUzs: vehicle.priceUzs,
+          images: vehicle.images,
+          description: vehicle.description,
+          // A vehicle that is listed is available; there is no separate stock
+          // state for cars in the data source, so no availability is claimed.
+          availability: 'unknown',
+        })}
+      />
       {/* 1 — Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-6 text-sm">
         <ol className="flex flex-wrap items-center gap-x-2 text-ink-400">

@@ -34,7 +34,7 @@ export const lessons: Lesson[] = [
     slug: 'ishlatilgan-avtomobil-tanlash',
     title: 'Ishlatilgan avtomobil tanlash',
     category: 'avtomobil',
-    durationLabel: '5–10 daqiqa',
+    durationLabel: null,
     summary: null,
     hasContent: false,
     // No lesson in the public source publishes topic tags. Empty is the truth;
@@ -45,7 +45,7 @@ export const lessons: Lesson[] = [
     slug: 'tolvch-rejangizni-tushunish',
     title: 'To‘lov rejangizni tushunish',
     category: 'moliyalashtirish',
-    durationLabel: '5–10 daqiqa',
+    durationLabel: null,
     summary: null,
     hasContent: false,
     // No lesson in the public source publishes topic tags. Empty is the truth;
@@ -56,7 +56,7 @@ export const lessons: Lesson[] = [
     slug: 'sarmoyadorlar-uchun-asoslar',
     title: 'Sarmoyadorlar uchun asoslar',
     category: 'sarmoya',
-    durationLabel: '5–10 daqiqa',
+    durationLabel: null,
     summary: null,
     hasContent: false,
     // No lesson in the public source publishes topic tags. Empty is the truth;

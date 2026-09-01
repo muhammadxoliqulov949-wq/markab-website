@@ -96,7 +96,16 @@ export interface Lesson {
   slug: string;
   title: string;
   category: string;
-  durationLabel: string;
+  /**
+   * Reading time, only when the source actually publishes one.
+   *
+   * This used to be a required string, and the fixture gave all three lessons
+   * the same "5–10 daqiqa" — an invented estimate presented as fact, on
+   * lessons whose body is still a pending placeholder. There is no author,
+   * publish date or view count for these lessons either, and those are
+   * correctly absent; the duration was the one that slipped through.
+   */
+  durationLabel: string | null;
   summary: string | null;
   /** false → lesson structure only, official content pending. */
   hasContent: boolean;

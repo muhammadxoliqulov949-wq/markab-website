@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { SearchHit } from '@/lib/data/types';
 import { formatUzs } from '@/lib/format';
@@ -17,14 +18,22 @@ export function SearchHitRow({ hit }: { hit: SearchHit }) {
         href={hit.href}
         className="group flex items-center gap-4 rounded-xl border border-line bg-surface p-3 transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover"
       >
+        {/*
+          Decorative: the row already names the item in text, so the thumbnail
+          carries an empty alt rather than repeating it. next/image is used
+          here rather than a catalogue wrapper with a fallback because this is
+          a server component — it gets responsive srcset and the shared
+          optimiser settings without putting a client boundary on every row.
+        */}
         <span className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-sunken sm:h-20 sm:w-28">
           {hit.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={hit.image}
               alt=""
+              fill
               loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-300 ease-smooth group-hover:scale-[1.04]"
+              sizes="(max-width: 640px) 80px, 112px"
+              className="object-cover transition-transform duration-300 ease-smooth group-hover:scale-[1.04]"
             />
           ) : null}
         </span>

@@ -11,9 +11,10 @@ import { ProductGallery } from '@/components/products/ProductGallery';
 import { AddToCartButton } from '@/components/products/AddToCartButton';
 import { ProductCard } from '@/components/products/ProductCard';
 import { FinancingPanel } from '@/components/vehicles/FinancingPanel';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { formatUzs, formatViews } from '@/lib/format';
 import { repository } from '@/lib/data';
-import { buildMetadata } from '@/lib/seo';
+import { breadcrumbJsonLd, buildMetadata, productJsonLd } from '@/lib/seo';
 import { availabilityNote, stockMeta } from '@/lib/products/stock';
 import { relatedProductReason, selectRelatedProducts } from '@/lib/products/related';
 import { applyHref, calculatorHref } from '@/lib/financing/handoff';
@@ -107,6 +108,32 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
 
   return (
     <>
+      {/*
+        Structured data. Availability is mapped from the stock state the source
+        publishes, and omitted entirely when that state is 'unknown' — claiming
+        InStock for an unconfirmed listing would be a false statement dressed up
+        as mark-up.
+      */}
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Bosh sahifa', path: '/' },
+          { name: 'Elektronika', path: '/electronics' },
+          { name: product.name, path: `/electronics/${product.id}` },
+        ])}
+      />
+      <JsonLd
+        data={productJsonLd({
+          name: product.name,
+          path: `/electronics/${product.id}`,
+          brand: product.brand,
+          sku: product.id,
+          priceUzs: product.priceUzs,
+          images: product.images,
+          // The name is the cleaned public one; no separate description field
+          // exists, so none is claimed.
+          availability: product.stockStatus,
+        })}
+      />
       {/*
         Extra bottom padding so the sticky action bar — and, below md, the
         mobile tab bar underneath it — never covers the end of the page.

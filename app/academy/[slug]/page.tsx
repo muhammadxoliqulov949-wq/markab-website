@@ -7,8 +7,9 @@ import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
 import { ButtonLink } from '@/components/ui/Button';
 import { LessonCard } from '@/components/academy/LessonCard';
 import { EducationNotice } from '@/components/academy/EducationNotice';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { repository } from '@/lib/data';
-import { buildMetadata } from '@/lib/seo';
+import { breadcrumbJsonLd, buildMetadata } from '@/lib/seo';
 
 type Params = Promise<{ slug: string }>;
 
@@ -104,6 +105,19 @@ export default async function LessonPage({ params }: { params: Params }) {
 
   return (
     <Container className="section-y-sm">
+      {/*
+        Breadcrumb only. No Article node: a lesson has no author, publish date
+        or body yet — `hasContent` is false for all three — so an Article node
+        would describe content that does not exist. Marking up nothing is the
+        honest result here.
+      */}
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: 'Bosh sahifa', path: '/' },
+          { name: 'Markab Academy', path: '/academy' },
+          { name: lesson.title, path: `/academy/${lesson.slug}` },
+        ])}
+      />
       {/* 1. Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-6 text-sm">
         <ol className="flex flex-wrap items-center gap-2 text-ink-400">
@@ -150,8 +164,9 @@ export default async function LessonPage({ params }: { params: Params }) {
           {/* 2. Title */}
           <h1 className="mt-3 text-display-sm sm:text-display-md">{lesson.title}</h1>
 
-          {/* 4. Reading metadata — only what the source actually publishes.
-              No author, no publish date, no read counter: none exist. */}
+          {/* 4. Reading metadata. Only rendered when the source publishes a
+              duration; no author, publish date or view counter is shown
+              because none exists for these lessons. */}
           {lesson.durationLabel ? (
             <p className="mt-4 text-sm text-ink-400">
               O‘qish vaqti: <span className="text-ink-600">{lesson.durationLabel}</span>

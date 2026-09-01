@@ -7,8 +7,9 @@ import { SavedItemsProvider } from '@/components/account/SavedItemsProvider';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { MobileTabBar } from '@/components/layout/MobileTabBar';
+import { JsonLd } from '@/components/seo/JsonLd';
 import { site } from '@/lib/site';
-import { pageTitle } from '@/lib/seo';
+import { organizationJsonLd, pageTitle } from '@/lib/seo';
 
 const DEFAULT_TITLE = 'Avtomobil, elektronika va moliyalashtirish';
 
@@ -48,6 +49,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="uz">
+      <head>
+        {/* Organization and WebSite only — the two nodes whose fields are all
+            actually published. No logo, contact points or social profiles:
+            none is available, and guessing them would be worse than omitting
+            them. */}
+        <JsonLd data={organizationJsonLd()} />
+      </head>
       <body className="min-h-dvh bg-surface font-sans">
         {/* Scroll-reveal wrappers start hidden; without JS they must not stay hidden. */}
         <noscript>

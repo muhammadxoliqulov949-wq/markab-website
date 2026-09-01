@@ -49,17 +49,21 @@ export default async function AcademyPage({
   const { q, category } = await searchParams;
   const query = (q ?? '').trim();
   const activeCategory = category && category.trim() ? category.trim() : null;
+  const filtered = Boolean(query) || Boolean(activeCategory);
 
+  // The hero needs the unfiltered lesson count even when a filter is applied.
+  // When nothing is filtered that is the same request as the result set, so
+  // asking twice would be one redundant round-trip per page view.
   const [categoriesResult, lessonsResult, allResult] = await Promise.all([
     repository.getLessonCategories(),
     repository.listLessons({ q: query || undefined, category: activeCategory ?? undefined }),
-    repository.listLessons(),
+    filtered ? repository.listLessons() : null,
   ]);
 
   const categories = categoriesResult.status === 'success' ? categoriesResult.data : [];
   const lessons = lessonsResult.status === 'success' ? lessonsResult.data : [];
-  const totalCount = allResult.status === 'success' ? allResult.data.length : 0;
-  const filtered = Boolean(query) || Boolean(activeCategory);
+  const totalResult = filtered ? allResult : lessonsResult;
+  const totalCount = totalResult && totalResult.status === 'success' ? totalResult.data.length : 0;
 
   // Repository down, not merely empty: say so instead of showing a blank grid.
   if (lessonsResult.status === 'unavailable' || categoriesResult.status === 'unavailable') {
