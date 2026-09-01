@@ -759,6 +759,22 @@ single provider call.
 * **A static audit** across all 46 routes at 1440px and 390px reports 0 issues
   for headings, landmarks, labelled controls, accessible names, alt text,
   positive tabindex and focus visibility.
+* **Description lists.** Five `<dl>`s wrapped each row in a `<div>` that also
+  held a status badge, a slider, sample chips or a note. The HTML spec allows a
+  `<div>` inside a `<dl>` to contain only `<dt>`/`<dd>`, so all five were invalid
+  and their pairs orphaned from any list. Where a row is a simple term-over-value
+  stack the supporting text now sits inside the `<dd>`; where the row puts term
+  and value on one line with controls below, each row becomes its own short
+  `<dl>` — same layout, still a real pairing.
+* **Heading order.** `/cars` and `/electronics` skipped `h1 → h3` on a phone: the
+  filter panel's *"Filtrlar"* `h2` is hidden below the desktop breakpoint, and a
+  zero-size heading is not part of the outline. Both listings gained a visually
+  hidden `h2` above the results.
+* **Label in name (WCAG 2.5.3).** The store badge's caption is styled
+  `uppercase`, so it *renders* as "DOWNLOAD ON THE" while its text content is
+  "Download on the" — any `aria-label` is compared against the rendered string
+  and could never contain it. The override is gone; the visible text is the
+  accessible name.
 
 ### Performance
 
@@ -775,6 +791,11 @@ single provider call.
   for the hero count — even when nothing was filtered. Now skipped then.
 * Typography is a system font stack, so there is no web-font download, no FOUT
   and no font-related shift. `prefers-reduced-motion` is honoured globally.
+* `/cars` and `/electronics` emitted **no image preload link at all** — every
+  card was `loading="lazy"`, so the listings had no prioritised LCP candidate.
+  The first two cards (the whole first screen on a phone, the first row on a
+  desktop) now load eagerly; cards below that stay lazy, so nothing extra is
+  fetched for content the visitor cannot see yet.
 
 ### Structured data
 
@@ -798,17 +819,58 @@ duration, so this was an invented reading time. The field is now nullable and
 
 ### Verification
 
+All of the following were measured in this environment, not estimated.
+
 * `npx tsc --noEmit` clean; `npm run build` clean.
-* **0 contrast failures** across 46 routes.
-* **0 static a11y issues** across 46 routes at 1440px and 390px.
-* **17/17** keyboard interaction checks (focus movement, Tab containment,
-  Escape + restore, `/` shortcut, Enter on accordion, inert collapsed panels,
-  skip link, no trap).
-* **0 broken internal links** (45 pages crawled, 43 distinct targets).
-* **0 horizontal overflow** across 320/375/390/430/768/1024/1280/1440 on 23
-  routes.
+* **392/392** assertions across 23 routes for the title system, description
+  length, canonical (including query → clean base), OpenGraph/Twitter,
+  `noindex` on `/profile`, `/cart`, `/login`, `/search` and every `?` route, one
+  `<h1>`, landmarks, heading skips, image `alt` and stable boxes, and JSON-LD
+  parsing with no fabricated rating.
+* **axe-core: 0 violations across 24 routes at 412px** (`wcag2a`, `wcag2aa`,
+  `wcag21a`, `wcag21aa`, `best-practice`).
+* **0 contrast failures below WCAG AA** across 23 routes. The audit composites
+  translucent backgrounds back-to-front and skips visually hidden text; its
+  maths is pinned against known reference values (`#777` on white = 4.48:1,
+  `#595959` on white = 7.0:1).
+* **29/29** keyboard and focus checks: skip link, tab order following DOM order
+  with no positive `tabindex`, a visible focus ring on all 60 stops, drawer focus
+  movement and containment, Escape + focus restore, `Enter` on accordions with
+  `inert` collapsed panels, and a labelled control on every form.
+* **120/120** zero-horizontal-overflow checks — 15 routes ×
+  320/375/390/430/768/1024/1280/1440 — with a clean console (no hydration
+  warnings).
 * True 404 intact for invalid car slug, electronics id, academy slug and unknown
   routes.
+* Sitemap: **41 URLs**, no quarantined or query-string entries. `robots.txt`
+  allows `/` and disallows only `/profile`, `/cart`, `/login`, `/search`.
+
+**Lighthouse 12.8.2**, default mobile emulation, against the production build:
+
+| Route | Perf | A11y | Best practices | SEO | LCP | CLS | TBT |
+|---|---|---|---|---|---|---|---|
+| `/` | 98 | 100 | 96 | 100 | 2.3 s | 0.001 | 90 ms |
+| `/cars` | 99 | 100 | 96 | 92 | 2.0 s | 0.001 | 40 ms |
+| `/cars/chevrolet-cobalt-2023` | 99 | 100 | 96 | 92 | 1.4 s | 0.001 | 100 ms |
+| `/electronics` | 99 | 100 | 96 | 92 | 2.2 s | 0.001 | 60 ms |
+| `/invest` | 99 | 100 | 100 | 100 | 2.0 s | 0.001 | 100 ms |
+| `/academy` | 99 | 100 | 100 | 91 | 1.9 s | 0.001 | 70 ms |
+
+Two caveats on those numbers, both material:
+
+* The SEO score on the four dynamic routes is 91–92 rather than 100 for exactly
+  one reason — Next.js streams those routes' metadata into `<body>`, and the
+  `meta-description` audit reads `<head>` only. See
+  [`docs/PHASE-10-DEPLOYMENT-NOTES.md` §7](docs/PHASE-10-DEPLOYMENT-NOTES.md).
+* `best-practices` loses points to `errors-in-console` because this sandbox
+  cannot reach `api.markab.uz`, so the image optimiser returns 500 and
+  `CatalogueImage` falls back to its placeholder. No catalogue photography loads
+  here, which means **LCP is measured against a text element, not the real hero
+  image** — treat the performance column as a structural check, not a
+  field-accurate measurement.
+
+ESLint has never been configured in this project, so no lint result is reported;
+`npm run typecheck` (tsc) is the static gate that exists.
 
 See [`docs/PHASE-10-DEPLOYMENT-NOTES.md`](docs/PHASE-10-DEPLOYMENT-NOTES.md)
 for the build-time vs request-time data caveat that must be resolved before a

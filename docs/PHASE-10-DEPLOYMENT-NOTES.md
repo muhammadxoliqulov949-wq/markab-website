@@ -124,3 +124,56 @@ preview being indexed as a duplicate), but it means a staging URL must never be
 crawled by anything that could act on those canonicals. If a staging
 environment ever needs its own canonicals, `site.url` has to become
 environment-driven.
+
+---
+
+## 7. Dynamic routes stream their metadata into `<body>`, not `<head>`
+
+Measured on the built app. For every **statically prerendered** route the
+`<title>`, `<meta name="description">` and `<link rel="canonical">` sit inside
+`<head>` where they belong. For every **dynamically rendered** route they do
+not — they are appended deep inside `<body>`:
+
+| Route | `</head>` at byte | `<meta name="description">` at byte | Placement |
+|---|---|---|---|
+| `/invest` (static) | 2 964 | 1 008 | `<head>` |
+| `/cars` (dynamic) | 4 596 | 75 985 | `<body>` |
+| `/cars/chevrolet-cobalt-2023` (dynamic) | 4 596 | 80 609 | `<body>` |
+| `/academy` (dynamic) | 4 596 | 29 199 | `<body>` |
+
+This is Next.js 15's streaming metadata, not a bug in this codebase. Next flushes
+the HTML shell before an async `generateMetadata` resolves and inserts the tags
+wherever the stream has reached. It *does* block the stream for user agents it
+classifies as html-limited, and those get the tags in `<head>`:
+
+| User agent | Placement |
+|---|---|
+| Bingbot, facebookexternalhit, Twitterbot | `<head>` |
+| Googlebot, ordinary Chrome | `<body>` |
+
+Googlebot is excluded from that list on purpose — Next assumes it executes
+JavaScript, and it does, so Google still reads the tags. The practical exposure
+is narrower than the table suggests:
+
+* **Non-executing crawlers that are not on Next's list** see no title,
+  description, canonical or OpenGraph on `/cars`, `/electronics`, `/academy`
+  and the three detail-page types — the pages that matter most for indexing.
+* **Lighthouse's `meta-description` audit reads `<head>` only**, so it scores 0
+  on those routes and drags the SEO category to 91–92 instead of 100. The
+  metadata is present; the audit is looking in the wrong place.
+
+**Deliberately not changed.** The only levers are widening
+`experimental.htmlLimitedBots` (a regex over user-agent strings) or forcing
+these routes to render statically, which is not possible for `/cars`,
+`/electronics` and `/academy` — they read `searchParams`. Widening the regex
+until it also matches ordinary browsers would disable streaming for everyone to
+raise a lab score, which is tuning the application to a measurement tool rather
+than fixing a defect. It is recorded here instead.
+
+**What to decide before launch.** Confirm that every crawler the business cares
+about either executes JavaScript or matches `htmlLimitedBots`. If a specific
+partner crawler needs `<head>` metadata and does not run JS, extend
+`experimental.htmlLimitedBots` in `next.config.ts` for that user agent and
+re-check placement with the byte-offset check above. Verify against the real
+deployment, not this prototype: a CDN that rewrites or buffers the response can
+change where the tags land.
