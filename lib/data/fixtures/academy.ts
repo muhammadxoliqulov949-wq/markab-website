@@ -37,6 +37,9 @@ export const lessons: Lesson[] = [
     durationLabel: '5–10 daqiqa',
     summary: null,
     hasContent: false,
+    // No lesson in the public source publishes topic tags. Empty is the truth;
+    // related-lesson ranking falls back to category proximity.
+    topics: [],
   },
   {
     slug: 'tolvch-rejangizni-tushunish',
@@ -45,6 +48,9 @@ export const lessons: Lesson[] = [
     durationLabel: '5–10 daqiqa',
     summary: null,
     hasContent: false,
+    // No lesson in the public source publishes topic tags. Empty is the truth;
+    // related-lesson ranking falls back to category proximity.
+    topics: [],
   },
   {
     slug: 'sarmoyadorlar-uchun-asoslar',
@@ -53,6 +59,9 @@ export const lessons: Lesson[] = [
     durationLabel: '5–10 daqiqa',
     summary: null,
     hasContent: false,
+    // No lesson in the public source publishes topic tags. Empty is the truth;
+    // related-lesson ranking falls back to category proximity.
+    topics: [],
   },
 ];
 

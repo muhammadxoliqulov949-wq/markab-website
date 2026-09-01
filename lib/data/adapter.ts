@@ -1,6 +1,9 @@
 import type {
   FaqItem,
   Lesson,
+  LessonCategory,
+  LessonQuery,
+  LoyaltyProgram,
   Paginated,
   Product,
   ProductFacets,
@@ -39,8 +42,22 @@ export interface DataAdapter {
 
   getFeatured(): Promise<Result<{ vehicles: Vehicle[]; products: Product[] }>>;
 
-  listLessons(category?: string): Promise<Result<Lesson[]>>;
+  /**
+   * Academy listing. `q` and `category` are optional and combinable; results
+   * are deterministic so the same URL always yields the same list.
+   */
+  listLessons(query?: LessonQuery): Promise<Result<Lesson[]>>;
   getLessonBySlug(slug: string): Promise<Result<Lesson>>;
+  /**
+   * Categories counted against real lessons, so the Academy never offers a
+   * filter that returns nothing.
+   */
+  getLessonCategories(): Promise<Result<LessonCategory[]>>;
+  /**
+   * Deterministic related lessons — same category first, then shared topics,
+   * then title order. Never labelled a recommendation or an AI suggestion.
+   */
+  listRelatedLessons(slug: string, limit?: number): Promise<Result<Lesson[]>>;
 
   listFaq(): Promise<Result<FaqItem[]>>;
 
@@ -61,4 +78,10 @@ export interface DataAdapter {
    * a real account service can be dropped in without touching a component.
    */
   getAccountSnapshot(): Promise<Result<AccountSnapshot>>;
+
+  /**
+   * The loyalty program: published material, what works today, and what needs
+   * a backend — kept as three separate things on purpose.
+   */
+  getLoyaltyProgram(): Promise<Result<LoyaltyProgram>>;
 }

@@ -13,6 +13,7 @@
 | **5** | Investment experience (`/invest` + investment truth states) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **6** | My Markab account experience (`/login`, `/profile`, account/dashboard architecture) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **7** | AI Product Advisor (`/advisor`, recommendation engine, guided flow) | ✅ Implemented — awaiting stakeholder visual sign-off |
+| **8** | Academy, Loyalty and content experience (`/academy`, `/academy/[slug]`, `/loyalty`, content architecture) | ✅ Implemented — awaiting stakeholder visual sign-off |
 
 ### Why 0.5 is blocked
 
@@ -168,6 +169,76 @@ the UI degrades to rule-based reasons.
 errors · zero horizontal overflow on 16 routes × 8 widths (320–1440) · contrast
 clean in all four advisor states · no mobile tab-bar occlusion · true 404
 preserved · prior phases unregressed.
+
+---
+
+## Phase 8 — Academy, Loyalty va kontent tajribasi
+
+### Academy arxitekturasi
+
+```
+Academy UI (components/academy)
+   → app/academy/page.tsx  ·  app/academy/[slug]/page.tsx   (server; repository only)
+   → repository.listLessons / getLessonCategories / getLessonBySlug / listRelatedLessons
+   → DataAdapter  →  mockProvider | httpProvider
+   → lib/data/fixtures/academy.ts
+```
+
+Pages never import fixtures — `components/home/AcademySection.tsx` was also
+moved onto the repository so the homepage preview and the hub share one source.
+
+| Rule | Implementation |
+| --- | --- |
+| No invented articles | the repository publishes **3 lessons**; the hub renders 3 cards and states the count |
+| No empty filters | categories are counted against real lessons, so a category with no lesson is never offered |
+| No fabricated metadata | no author, publish date, read counter or source list exists in the data, so none is rendered |
+| Deterministic related lessons | shared category → shared topics → title order; never called a "recommendation" and never called AI |
+| Content pending, not generated | `hasContent: false` renders a pending block plus a labelled "Dars tuzilishi" outline |
+| URL state | `?q=` and `?category=` — a plain GET form, so filtering works without JavaScript and survives reload |
+
+### Dars sahifasi
+
+Nine-part structure: breadcrumb → title → category → reading metadata (duration
+only, when published) → main content → key takeaways → related lessons → useful
+next action → support CTA. The next action is a fixed per-category map
+(automobil → `/cars`, moliyalashtirish → `/financing/calculator`, sarmoya →
+`/invest`), so the same lesson always offers the same follow-up.
+
+### Ta'lim xavfsizligi
+
+`components/academy/EducationNotice.tsx` appears on the hub and on every lesson.
+It keeps three things visibly separate: **general educational information**,
+**personalised financial advice** (never given) and **official Markab
+contract/process terms**. It also refuses to present an independent
+Islamic-legal ruling or a certification Markab has not published.
+
+### Sadoqat dasturi (`/loyalty`)
+
+The page is a status page, not a rewards page. Three things stay separate:
+
+| Layer | Treatment |
+| --- | --- |
+| Bugun nima ishlaydi | `availableNow` facts; anything without a backend renders "Ishlamaydi — ma'lumot kutilmoqda" |
+| E'lon qilingan ma'lumotlar | the published tiers / earning / rewards, kept **with their source** (`markab.uz /loyalty sahifasi`) and labelled "amalda ishlashi tasdiqlanmagan" |
+| Kutilmoqda | four structural placeholders (membership, history, benefits, notifications) with no values inside |
+
+Nothing was authored to fill a table. The homepage says the program is "ishlab
+chiqilmoqda" while `/loyalty` publishes full terms — that conflict is recorded
+on the page, not resolved by engineering. Status badge: **Holat:
+tasdiqlanmagan**, headline **"Rasmiy dastur tafsilotlari kutilmoqda."**
+
+CTAs are limited to `Batafsil ma'lumot`, `Yangiliklardan xabardor bo'lish` and
+`Bog'lanish`. There is **no enrollment button** and **no signup form**: no
+notification service exists, so `#notify` explains the pending integration
+instead of showing a form that cannot work.
+
+### Verification
+
+`npx tsc --noEmit` clean · `npm run build` clean · 110/110 browser assertions
+pass in production mode · no console or hydration errors · zero horizontal
+overflow across 8 widths (320–1440) on `/academy`, a lesson page and `/loyalty`
+· true 404 preserved for an invalid slug · `MARKAB_DATA_SOURCE=http` degrades all
+three routes to the `unavailable` state · prior phases unregressed.
 
 ---
 

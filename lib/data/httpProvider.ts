@@ -1,5 +1,13 @@
 import { unavailable } from './types';
 import type { DataAdapter } from './adapter';
+import type {
+  FaqItem,
+  Lesson,
+  LessonCategory,
+  LessonQuery,
+  LoyaltyProgram,
+  Result,
+} from './types';
 
 /**
  * HTTP provider — REAL MARKAB API (not enabled).
@@ -53,7 +61,19 @@ export const httpProvider: DataAdapter = {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/featured/
     return unavailable();
   },
-  async listLessons() {
+  async getLessonCategories(): Promise<Result<LessonCategory[]>> {
+    return unavailable();
+  },
+
+  async listRelatedLessons(): Promise<Result<Lesson[]>> {
+    return unavailable();
+  },
+
+  async getLoyaltyProgram(): Promise<Result<LoyaltyProgram>> {
+    return unavailable();
+  },
+
+  async listLessons(_query?: LessonQuery): Promise<Result<Lesson[]>> {
     // TODO(api): GET  {MARKAB_API_BASE_URL}/lessons/
     return unavailable();
   },

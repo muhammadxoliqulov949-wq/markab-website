@@ -4,7 +4,6 @@ import { Reveal } from '@/components/ui/Reveal';
 import { ArrowLink } from '@/components/ui/ArrowLink';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { repository } from '@/lib/data';
-import { academyCategories } from '@/lib/data/fixtures/academy';
 
 /**
  * Academy preview — editorial, not another product grid.
@@ -15,8 +14,12 @@ import { academyCategories } from '@/lib/data/fixtures/academy';
  * certificate or qualification claim appears anywhere.
  */
 export async function AcademySection() {
-  const result = await repository.listLessons();
+  const [result, categoriesResult] = await Promise.all([
+    repository.listLessons(),
+    repository.getLessonCategories(),
+  ]);
   const items = result.status === 'success' ? result.data : [];
+  const categories = categoriesResult.status === 'success' ? categoriesResult.data : [];
 
   return (
     <section aria-labelledby="academy-heading" className="bg-surface py-12 sm:py-14 lg:py-16">
@@ -37,7 +40,7 @@ export async function AcademySection() {
         {items.length > 0 ? (
           <div className="mt-12 grid gap-10 lg:grid-cols-3 lg:gap-8">
             {items.map((lesson, index) => {
-              const category = academyCategories.find((item) => item.id === lesson.category);
+              const category = categories.find((item) => item.id === lesson.category);
               return (
                 <Reveal key={lesson.slug} delay={index * 70}>
                   <Link

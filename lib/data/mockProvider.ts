@@ -1,12 +1,16 @@
 import { productCategories, products } from './fixtures/products';
 import { vehicles } from './fixtures/vehicles';
-import { faqItems, lessons } from './fixtures/academy';
+import { academyCategories, faqItems, lessons } from './fixtures/academy';
 import { investorFlow } from './fixtures/content';
+import { loyaltyProgram } from './fixtures/loyalty';
 import { investmentProfile } from './fixtures/investment';
 import { empty, notFound, success, unavailable } from './types';
 import type {
   FaqItem,
   Lesson,
+  LessonCategory,
+  LessonQuery,
+  LoyaltyProgram,
   Paginated,
   Product,
   ProductFacets,
@@ -260,14 +264,86 @@ export const mockProvider: DataAdapter = {
     });
   },
 
-  async listLessons(category?: string): Promise<Result<Lesson[]>> {
-    const items = category ? lessons.filter((l) => l.category === category) : lessons;
+  async listLessons(query?: LessonQuery): Promise<Result<Lesson[]>> {
+    let items = [...lessons];
+
+    if (query?.category) {
+      items = items.filter((lesson) => lesson.category === query.category);
+    }
+
+    if (query?.q) {
+      const needle = query.q.trim().toLowerCase();
+      if (needle) {
+        items = items.filter((lesson) =>
+          // Searched against fields that actually exist. Category is matched by
+          // its display name too, so "moliya" finds the financing lessons.
+          [lesson.title, lesson.category, categoryName(lesson.category)]
+            .join(' ')
+            .toLowerCase()
+            .includes(needle),
+        );
+      }
+    }
+
+    // Deterministic order: category, then title. Never "relevance" — there is
+    // no ranking model behind this and the prototype will not imply one.
+    items.sort(
+      (a, b) => a.category.localeCompare(b.category) || a.title.localeCompare(b.title),
+    );
+
     return items.length ? success(items) : empty<Lesson[]>();
   },
 
   async getLessonBySlug(slug: string): Promise<Result<Lesson>> {
     const lesson = lessons.find((l) => l.slug === slug);
     return lesson ? success(lesson) : notFound<Lesson>();
+  },
+
+  async getLessonCategories(): Promise<Result<LessonCategory[]>> {
+    // Derived from the lessons that exist, so a category with no lessons is
+    // never offered as a filter.
+    const counts = new Map<string, number>();
+    for (const lesson of lessons) {
+      counts.set(lesson.category, (counts.get(lesson.category) ?? 0) + 1);
+    }
+
+    const items: LessonCategory[] = academyCategories
+      .filter((category) => counts.has(category.id))
+      .map((category) => ({
+        id: category.id,
+        name: category.name,
+        description: category.description ?? null,
+        count: counts.get(category.id) ?? 0,
+      }))
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+
+    return items.length ? success(items) : empty<LessonCategory[]>();
+  },
+
+  async listRelatedLessons(slug: string, limit = 3): Promise<Result<Lesson[]>> {
+    const current = lessons.find((lesson) => lesson.slug === slug);
+    if (!current) return notFound<Lesson[]>();
+
+    const others = lessons.filter((lesson) => lesson.slug !== slug);
+
+    // Deterministic scoring from real metadata only: shared category first,
+    // then shared topic tags, then alphabetical. No randomness, no model, and
+    // the UI must not call the output a recommendation.
+    const scored = others
+      .map((lesson) => {
+        let score = 0;
+        if (lesson.category === current.category) score += 10;
+        const shared = lesson.topics.filter((topic) => current.topics.includes(topic)).length;
+        score += shared * 5;
+        return { lesson, score };
+      })
+      .sort(
+        (a, b) => b.score - a.score || a.lesson.title.localeCompare(b.lesson.title),
+      )
+      .slice(0, limit)
+      .map((entry) => entry.lesson);
+
+    return scored.length ? success(scored) : empty<Lesson[]>();
   },
 
   async listFaq(): Promise<Result<FaqItem[]>> {
@@ -290,6 +366,10 @@ export const mockProvider: DataAdapter = {
    * inventing one would put fake private data on screen. Demo rows live in
    * `lib/account/demo.ts`, behind an explicit, labelled demo mode.
    */
+  async getLoyaltyProgram(): Promise<Result<LoyaltyProgram>> {
+    return success(loyaltyProgram);
+  },
+
   async getAccountSnapshot(): Promise<Result<AccountSnapshot>> {
     return unavailable();
   },
@@ -303,3 +383,8 @@ export const mockProvider: DataAdapter = {
     });
   },
 };
+
+/** Category display name, used by lesson search so it matches what users see. */
+function categoryName(id: string): string {
+  return academyCategories.find((category) => category.id === id)?.name ?? '';
+}

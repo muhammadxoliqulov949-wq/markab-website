@@ -1,162 +1,222 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { Badge } from '@/components/ui/Badge';
 import { StateBlock } from '@/components/ui/StateBlock';
 import { ButtonLink } from '@/components/ui/Button';
-import { Tabs } from '@/components/ui/Tabs';
-import { academyCategories, lessons } from '@/lib/data/fixtures/academy';
+import { LessonCard } from '@/components/academy/LessonCard';
+import { AcademyFilters } from '@/components/academy/AcademyFilters';
+import { EducationNotice } from '@/components/academy/EducationNotice';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Markab Academy',
   description:
-    'Moliyaviy savodxonlik bo‘limi: avtomobil tanlash, moliyalashtirish, murabaha va sarmoya asoslari bo‘yicha darslar.',
+    'Moliyaviy savodxonlik: avtomobil tanlash, moliyalashtirish va sarmoya asoslari bo‘yicha qisqa darslar. Darslar mazmuni rasmiy manba bilan to‘ldiriladi.',
   path: '/academy',
 });
 
-export default async function AcademyPage() {
-  const result = await repository.listLessons();
-  const items = result.status === 'success' ? result.data : [];
+/**
+ * Academy hub.
+ *
+ * Content comes from the repository, never from fixtures directly. Search and
+ * category filters live in the URL, so every view is shareable, reloadable and
+ * resolved server-side.
+ *
+ * There is no "featured" curation: the data source publishes no ranking, and
+ * picking favourites to fill a row would be an invented editorial signal.
+ */
+export default async function AcademyPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; category?: string }>;
+}) {
+  const { q, category } = await searchParams;
+  const query = (q ?? '').trim();
+  const activeCategory = category && category.trim() ? category.trim() : null;
 
-  const tabItems = [
-    {
-      id: 'all',
-      label: 'Barchasi',
-      content: <LessonGrid lessons={items} />,
-    },
-    ...academyCategories.map((category) => ({
-      id: category.id,
-      label: category.name,
-      content: <LessonGrid lessons={items.filter((lesson) => lesson.category === category.id)} categoryName={category.name} />,
-    })),
-  ];
+  const [categoriesResult, lessonsResult, allResult] = await Promise.all([
+    repository.getLessonCategories(),
+    repository.listLessons({ q: query || undefined, category: activeCategory ?? undefined }),
+    repository.listLessons(),
+  ]);
 
-  return (
-    <>
-      <section className="border-b border-line bg-surface-muted py-12 sm:py-16">
-        <Container>
-          <div className="max-w-3xl">
-            <Badge tone="brand" className="mb-4">
-              Markab Academy
-            </Badge>
-            <h1 className="text-display-sm sm:text-display-md">Moliyaviy savodxonlik</h1>
-            <p className="mt-4 text-base leading-relaxed text-ink-500 sm:text-lg">
-              Muddatli to‘lov, murabaha va sarmoya asoslari bo‘yicha qisqa darslar. Darslar
-              mazmuni rasmiy manba tomonidan to‘ldiriladi.
-            </p>
-          </div>
-        </Container>
-      </section>
+  const categories = categoriesResult.status === 'success' ? categoriesResult.data : [];
+  const lessons = lessonsResult.status === 'success' ? lessonsResult.data : [];
+  const totalCount = allResult.status === 'success' ? allResult.data.length : 0;
+  const filtered = Boolean(query) || Boolean(activeCategory);
 
-      <section className="bg-surface py-10 sm:py-14">
-        <Container>
-          {items.length > 0 ? (
-            <Tabs items={tabItems} initialId="all" />
-          ) : (
+  // Repository down, not merely empty: say so instead of showing a blank grid.
+  if (lessonsResult.status === 'unavailable' || categoriesResult.status === 'unavailable') {
+    return (
+      <>
+        <Hero total={null} />
+        <section className="bg-surface py-10 sm:py-14">
+          <Container>
             <StateBlock
               variant="unavailable"
               title="Darslar yuklanmadi"
-              description="Ma’lumotlar manbasi ulanmaganda bu bo‘lim shunday ko‘rinadi."
+              description="Academy ma’lumotlari rasmiy manba bilan to‘ldiriladi. Ma’lumotlar manbasi ulangandan so‘ng darslar shu yerda ko‘rsatiladi."
             />
-          )}
+            <div className="mt-8">
+              <EducationNotice />
+            </div>
+          </Container>
+        </section>
+      </>
+    );
+  }
 
-          <div className="mt-14">
-            <SectionHeading
-              eyebrow="Kategoriyalar"
-              title="Yo‘nalishlar"
-              description="Har bir yo‘nalish bo‘yicha darslar kengaytiriladi."
+  if (lessonsResult.status === 'error') {
+    return (
+      <>
+        <Hero total={null} />
+        <section className="bg-surface py-10 sm:py-14">
+          <Container>
+            <StateBlock
+              variant="error"
+              title="Darslarni o‘qib bo‘lmadi"
+              description={lessonsResult.error.message}
             />
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {academyCategories.map((category) => {
-                const count = items.filter((lesson) => lesson.category === category.id).length;
-                return (
+          </Container>
+        </section>
+      </>
+    );
+  }
+
+  const categoryName = (id: string) =>
+    categories.find((item) => item.id === id)?.name ?? undefined;
+
+  return (
+    <>
+      <Hero total={totalCount} />
+
+      <section className="bg-surface py-10 sm:py-14">
+        <Container>
+          <AcademyFilters
+            categories={categories}
+            activeCategory={activeCategory}
+            query={query}
+            totalCount={totalCount}
+          />
+
+          <div className="mt-8">
+            {lessons.length === 0 ? (
+              <StateBlock
+                variant="empty"
+                title={
+                  filtered
+                    ? 'Qidiruv bo‘yicha hech narsa topilmadi'
+                    : 'Darslar hozircha mavjud emas'
+                }
+                description={
+                  filtered
+                    ? 'Bu filter bo‘yicha dars topilmadi. Boshqa so‘z yoki yo‘nalishni sinab ko‘ring.'
+                    : 'Darslar rasmiy manba tomonidan qo‘shiladi.'
+                }
+                actions={
+                  filtered ? (
+                    <ButtonLink href="/academy" variant="secondary" size="sm">
+                      Barcha darslar
+                    </ButtonLink>
+                  ) : (
+                    <ButtonLink href="/financing" variant="secondary" size="sm">
+                      Moliyalashtirish bo‘limi
+                    </ButtonLink>
+                  )
+                }
+              />
+            ) : (
+              <>
+                <p className="mb-4 text-sm text-ink-500">
+                  {filtered ? `${lessons.length} dars topildi` : `${lessons.length} dars`}
+                </p>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {lessons.map((lesson) => (
+                    <LessonCard
+                      key={lesson.slug}
+                      lesson={lesson}
+                      categoryName={categoryName(lesson.category)}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {categories.length > 0 ? (
+            <div className="mt-16">
+              <SectionHeading
+                eyebrow="Yo‘nalishlar"
+                title="Kategoriyalar"
+                description="Faqat darslari mavjud yo‘nalishlar ko‘rsatiladi — bo‘sh bo‘limlar ro‘yxatga qo‘shilmaydi."
+              />
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {categories.map((item) => (
                   <div
-                    key={category.id}
+                    key={item.id}
                     className="rounded-xl border border-line bg-surface p-6 transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:shadow-card-hover"
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <h3 className="text-base font-semibold text-ink-900">{category.name}</h3>
+                      <h3 className="text-base font-semibold text-ink-900">{item.name}</h3>
                       <span className="rounded-md bg-surface-sunken px-2 py-1 text-xs text-ink-600">
-                        {count} dars
+                        {item.count} dars
                       </span>
                     </div>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-500">
-                      {category.description}
-                    </p>
+                    {item.description ? (
+                      <p className="mt-2 text-sm leading-relaxed text-ink-500">
+                        {item.description}
+                      </p>
+                    ) : null}
                   </div>
-                );
-              })}
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <div className="mt-12 space-y-4">
+            <EducationNotice />
+
+            <div className="flex flex-wrap gap-3">
+              <ButtonLink href="/faq" variant="secondary" size="sm">
+                Savol-javoblar
+              </ButtonLink>
+              <ButtonLink href="/financing" variant="secondary" size="sm">
+                Moliyalashtirish
+              </ButtonLink>
+              <ButtonLink href="/contact" variant="ghost" size="sm">
+                Savol yuborish
+              </ButtonLink>
             </div>
           </div>
-
-          <p className="mt-10 text-xs leading-relaxed text-ink-400">
-            Academy bo‘limida sertifikat, rasmiy malaka yoki ta’lim litsenziyasi haqida
-            ma’lumot ko‘rsatilmaydi — ular tasdiqlanmagan.
-          </p>
         </Container>
       </section>
     </>
   );
 }
 
-function LessonGrid({
-  lessons: items,
-  categoryName,
-}: {
-  lessons: typeof lessons;
-  categoryName?: string;
-}) {
-  if (items.length === 0) {
-    return (
-      <StateBlock
-        variant="empty"
-        title={categoryName ? `${categoryName}: darslar tayyorlanmoqda` : 'Darslar mavjud emas'}
-        description="Bu yo‘nalishdagi darslar rasmiy manba tomonidan qo‘shiladi. Boshqa yo‘nalishlarni ko‘rib chiqishingiz mumkin."
-        actions={
-          <ButtonLink href="/financing" variant="secondary" size="sm">
-            Moliyalashtirish bo‘limi
-          </ButtonLink>
-        }
-      />
-    );
-  }
-
+function Hero({ total }: { total: number | null }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((lesson) => (
-        <Link
-          key={lesson.slug}
-          href={`/academy/${lesson.slug}`}
-          className="group flex h-full flex-col rounded-xl border border-line bg-surface p-6 shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-card-hover"
-        >
-          <div className="flex items-center justify-between gap-3">
-            <span className="rounded-md bg-surface-sunken px-2.5 py-1 text-xs font-medium text-ink-600">
-              {academyCategories.find((category) => category.id === lesson.category)?.name ??
-                'Umumiy'}
-            </span>
-            <span className="text-xs text-ink-400">{lesson.durationLabel}</span>
-          </div>
-          <h3 className="mt-4 text-base font-semibold text-ink-900">{lesson.title}</h3>
-          <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-500">
-            Dars mazmuni rasmiy manba bilan to‘ldiriladi.
+    <section className="border-b border-line bg-surface-muted py-12 sm:py-16">
+      <Container>
+        <div className="max-w-3xl">
+          <Badge tone="brand" className="mb-4">
+            Markab Academy
+          </Badge>
+          <h1 className="text-display-sm sm:text-display-md">Moliyaviy savodxonlik</h1>
+          <p className="mt-4 text-base leading-relaxed text-ink-500 sm:text-lg">
+            Muddatli to‘lov, moliyalashtirish va sarmoya asoslari bo‘yicha qisqa darslar. Bu
+            umumiy o‘quv ma’lumoti — shaxsiy moliyaviy maslahat emas.
           </p>
-          <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700">
-            Darsni ochish
-            <svg
-              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </span>
-        </Link>
-      ))}
-    </div>
+          {total !== null ? (
+            <p className="mt-5 text-sm text-ink-500">
+              Hozirda katalogda <span className="font-semibold text-ink-900">{total} dars</span>{' '}
+              mavjud. Darslar soni sun’iy ko‘paytirilmaydi — faqat rasmiy manbada mavjudlari
+              ko‘rsatiladi.
+            </p>
+          ) : null}
+        </div>
+      </Container>
+    </section>
   );
 }

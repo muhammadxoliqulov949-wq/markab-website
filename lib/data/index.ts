@@ -3,7 +3,7 @@ import { mockProvider } from './mockProvider';
 import type { DataAdapter } from './adapter';
 import { vehicleBrands } from './fixtures/vehicles';
 import { productCategories } from './fixtures/products';
-import type { ProductQuery, VehicleQuery } from './types';
+import type { LessonQuery, ProductQuery, VehicleQuery } from './types';
 
 /**
  * Repository — the single entry point the UI talks to.
@@ -24,11 +24,15 @@ export const repository = {
   getProductById: (id: string) => getAdapter().getProductById(id),
   getProductFacets: () => getAdapter().getProductFacets(),
   getFeatured: () => getAdapter().getFeatured(),
-  listLessons: (category?: string) => getAdapter().listLessons(category),
+  listLessons: (query?: LessonQuery) => getAdapter().listLessons(query),
   getLessonBySlug: (slug: string) => getAdapter().getLessonBySlug(slug),
+  getLessonCategories: () => getAdapter().getLessonCategories(),
+  listRelatedLessons: (slug: string, limit?: number) =>
+    getAdapter().listRelatedLessons(slug, limit),
   listFaq: () => getAdapter().listFaq(),
   getInvestmentProfile: () => getAdapter().getInvestmentProfile(),
   getAccountSnapshot: () => getAdapter().getAccountSnapshot(),
+  getLoyaltyProgram: () => getAdapter().getLoyaltyProgram(),
 };
 
 export const activeDataSourceName = getAdapter().name;

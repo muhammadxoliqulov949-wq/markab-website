@@ -100,6 +100,35 @@ export interface Lesson {
   summary: string | null;
   /** false → lesson structure only, official content pending. */
   hasContent: boolean;
+  /**
+   * Topic tags used for deterministic related-lesson ranking.
+   *
+   * No lesson in the current data source publishes topics, so this is empty
+   * everywhere today and related lessons fall back to category proximity. The
+   * field exists so the ranking has somewhere to go when a real CMS supplies
+   * tags — nothing here invents them.
+   */
+  topics: string[];
+}
+
+/** Query for the Academy listing. Both fields are optional and combinable. */
+export interface LessonQuery {
+  category?: string;
+  /** Free text matched against title and category name. */
+  q?: string;
+}
+
+/**
+ * A lesson category as the data source can actually support it.
+ *
+ * `count` is computed from real lessons, so the Academy never offers a filter
+ * that returns nothing (Phase 8: "do not create useless filters").
+ */
+export interface LessonCategory {
+  id: string;
+  name: string;
+  description: string | null;
+  count: number;
 }
 
 export interface FaqItem {
@@ -290,4 +319,83 @@ export interface InvestmentProfile {
   documents: InvestmentDocument[];
   /** The journey, with unconfirmed steps flagged rather than smoothed over. */
   journey: InvestmentJourneyStep[];
+}
+
+/* ------------------------------------------------------------------ */
+/* Loyalty                                                             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Loyalty program status.
+ *
+ * 'unconfirmed' means public material describes the program but nothing
+ * confirms it is live — no backend, no enrollment, no balance. The UI must say
+ * so plainly rather than presenting reward mechanics as operational.
+ */
+export type LoyaltyStatus = 'active' | 'unconfirmed';
+
+/**
+ * A published loyalty value. `value` is null when the public source says
+ * nothing, which renders as a pending marker rather than a guessed number.
+ */
+export interface LoyaltyFact {
+  id: string;
+  label: string;
+  value: string | null;
+  /** Where the published value comes from, so it can be attributed. */
+  source: string | null;
+}
+
+/** One published membership tier. Every numeric field is nullable. */
+export interface LoyaltyTier {
+  id: string;
+  name: string;
+  threshold: string | null;
+  bonus: string | null;
+  perks: string[];
+}
+
+/** A published way of earning. `reward` is null when unpublished. */
+export interface LoyaltyEarning {
+  id: string;
+  action: string;
+  reward: string | null;
+}
+
+/** A published reward. `cost` is null when unpublished. */
+export interface LoyaltyReward {
+  id: string;
+  title: string;
+  description: string | null;
+  cost: string | null;
+}
+
+/** A section of the program that only makes sense once a backend exists. */
+export interface LoyaltyPendingItem {
+  id: string;
+  title: string;
+  description: string;
+}
+
+/**
+ * The loyalty program as the source can actually support it.
+ *
+ * `published` holds what Markab's public page states, kept separate from
+ * `availableNow` (what a visitor can genuinely do today) and `pending` (what
+ * needs a backend). Mixing those three is how a concept page starts reading as
+ * a live rewards program that people try to join.
+ */
+export interface LoyaltyProgram {
+  status: LoyaltyStatus;
+  statusTitle: string;
+  statusDescription: string;
+  /** Attribution for the published half. */
+  source: string | null;
+  /** The conflict between public pages, surfaced rather than resolved. */
+  conflictNote: string | null;
+  tiers: LoyaltyTier[];
+  earning: LoyaltyEarning[];
+  rewards: LoyaltyReward[];
+  availableNow: LoyaltyFact[];
+  pending: LoyaltyPendingItem[];
 }
