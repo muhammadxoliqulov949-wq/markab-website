@@ -15,6 +15,7 @@
 | **7** | AI Product Advisor (`/advisor`, recommendation engine, guided flow) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **8** | Academy, Loyalty and content experience (`/academy`, `/academy/[slug]`, `/loyalty`, content architecture) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **9** | UX simplification, visual refinement, mobile and motion (+ global catalogue search) | ✅ Implemented — awaiting stakeholder visual sign-off |
+| **10** | SEO, performance, accessibility and technical cleanup | ✅ Implemented — awaiting stakeholder sign-off |
 
 ### Why 0.5 is blocked
 
@@ -693,3 +694,122 @@ overflow across 320 / 375 / 390 / 430 / 768 / 1024 / 1280 / 1440 on `/invest`
 and the investment contact handoffs; 192 text samples on `/invest` with 0
 contrast failures; no console or hydration errors; real 404s intact (including
 `/invest/nope`); 47 internal links across seven pages all resolve.
+
+---
+
+## Phase 10 — SEO, performance, accessibility and technical cleanup
+
+No new product features. This phase was a correctness pass over what already
+existed: metadata, crawl directives, the data layer, accessibility and payload.
+
+### Metadata and crawl strategy
+
+Every route now carries a title, description, canonical, OpenGraph and Twitter
+card through a single `buildMetadata` helper in `lib/seo.ts`. Titles are
+uniformly `Page | Markab`; the helper emits **absolute** titles so the root
+layout's `%s` template cannot double the suffix into `Page | Markab | Markab`.
+
+Canonical strategy: filtered and searched views (`/cars?q=`,
+`/electronics?brand=`, `/academy?q=`) canonicalise to the clean route. Those
+views also carry `noindex, follow`, which is the directive Google actually
+honours — they are deliberately **not** listed in `robots.txt`, because a
+`Disallow` stops the crawler fetching the URL, which means it never sees the
+canonical or the `noindex` and the URL can still be indexed by URL alone.
+
+`/login`, `/profile`, `/cart` and `/search` are `noindex` and disallowed.
+`/search` is disallowed because its results are generated from the query: there
+is nothing stable to index and infinite permutations to crawl.
+
+### Sitemap
+
+`sitemap.ts` now resolves vehicles, products and lessons through
+`sitemap → repository → adapter → provider`. It imports no catalogue or lesson
+fixtures. Each section is guarded by result status, so an unavailable provider
+yields an empty section rather than fabricated URLs. Output at the time of
+writing: **41 URLs** — 16 static pages, 11 car detail pages, 11 electronics
+detail pages, 3 academy lessons.
+
+Marketing content (value propositions, the instalment journey, trust badges,
+app features, the investor diagram) used to be imported straight from
+`lib/data/fixtures/content` by pages and home sections. It now travels through
+`repository.getSiteContent()`. The worst case was `investorFlow`, which had two
+access paths — the provider on `/invest` and a direct fixture import on the
+homepage — which is exactly how content drifts. The repository call is wrapped
+in React `cache()` so the several blocks that read it in one render still cost a
+single provider call.
+
+**Result: zero fixture imports remain outside `lib/`.**
+
+### Accessibility
+
+* **Contrast.** Four patterns on dark surfaces failed 4.5:1 where
+  `text-white` was used at low alpha. Raised per-pattern rather than defaulting
+  everything to full white, so the hierarchy inside the dashboard tiles is
+  preserved (label brighter than the pending placeholder, placeholder still
+  legible). Measured: **0 failures across all 46 routes**.
+* **Keyboard.** The mobile menu locked body scroll but had no Escape handler,
+  did not move focus when opened and did not restore it when closed. Escape now
+  closes it, focus moves to the first link, and Tab cycles inside. The trigger
+  stays in the cycle deliberately: while open its label is *"Menyuni yopish"*,
+  so it is the close control and must stay reachable. Global search's Escape
+  previously just blurred the input; it now returns focus to the trigger.
+* **Headings.** Six routes jumped `h1 → h3`. `StateBlock` now takes a
+  `headingLevel` prop, and `/faq` and `/academy` gained a visually hidden `h2`
+  above their `h3` item lists.
+* **A static audit** across all 46 routes at 1440px and 390px reports 0 issues
+  for headings, landmarks, labelled controls, accessible names, alt text,
+  positive tabindex and focus visibility.
+
+### Performance
+
+* `next/image` optimisation was **disabled globally**. That is not cosmetic: it
+  makes `next/image` emit a plain `<img>` pointing at the original file, so a
+  phone downloads full-resolution originals and every `sizes` prop in the
+  codebase is inert. Re-enabled. Offline behaviour is unchanged because
+  `CatalogueImage`'s `onError` already swaps in the neutral placeholder.
+* `ProductCard` was marked `'use client'` without using a hook or browser API.
+  Making it a server component stops shipping the card's markup as JavaScript
+  once per grid item: **−2 kB First Load JS** on `/`, `/electronics` and
+  `/electronics/[id]`.
+* `/academy` asked for the lesson list twice — once filtered, once unfiltered
+  for the hero count — even when nothing was filtered. Now skipped then.
+* Typography is a system font stack, so there is no web-font download, no FOUT
+  and no font-related shift. `prefers-reduced-motion` is honoured globally.
+
+### Structured data
+
+Emitted only where the data supports it: `Organization` and `WebSite` site-wide
+(contact phone and email omitted on purpose — they are not published on
+markab.uz), `BreadcrumbList` on the three detail page types, and `Product` on
+car and electronics detail pages. No `aggregateRating`, `review`, `author`,
+`datePublished` or discount is emitted anywhere, because none exists in the data
+layer. Availability is mapped from the published stock state and **omitted
+entirely** when that state is `unknown` — 10 of 11 products omit it, 1 emits
+`OutOfStock`. There is deliberately **no `Article` node for lessons**: all three
+have `hasContent: false`, so an Article would describe content that does not
+exist.
+
+### Data-layer inconsistency fixed
+
+`Lesson.durationLabel` was required, and all three lessons carried the same
+*"5–10 daqiqa"*, published as **"O‘qish vaqti"**. No lesson publishes a
+duration, so this was an invented reading time. The field is now nullable and
+`null` in the fixtures.
+
+### Verification
+
+* `npx tsc --noEmit` clean; `npm run build` clean.
+* **0 contrast failures** across 46 routes.
+* **0 static a11y issues** across 46 routes at 1440px and 390px.
+* **17/17** keyboard interaction checks (focus movement, Tab containment,
+  Escape + restore, `/` shortcut, Enter on accordion, inert collapsed panels,
+  skip link, no trap).
+* **0 broken internal links** (45 pages crawled, 43 distinct targets).
+* **0 horizontal overflow** across 320/375/390/430/768/1024/1280/1440 on 23
+  routes.
+* True 404 intact for invalid car slug, electronics id, academy slug and unknown
+  routes.
+
+See [`docs/PHASE-10-DEPLOYMENT-NOTES.md`](docs/PHASE-10-DEPLOYMENT-NOTES.md)
+for the build-time vs request-time data caveat that must be resolved before a
+real API is connected.
