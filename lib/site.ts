@@ -113,7 +113,9 @@ export const footerNav: { title: string; items: NavItem[] }[] = [
     items: [
       { href: '/about', label: 'Biz haqimizda' },
       { href: '/academy', label: 'Academy' },
-      { href: '/advisor', label: 'AI maslahatchi' },
+      // Phase 7: no language model is connected, so the label must not market
+      // the feature as AI-powered. "Tanlov yordamchisi" is what it actually is.
+      { href: '/advisor', label: 'Tanlov yordamchisi' },
       { href: '/loyalty', label: 'Bonus dasturi' },
     ],
   },

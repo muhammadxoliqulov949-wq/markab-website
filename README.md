@@ -12,6 +12,7 @@
 | **4** | Financing & calculator (`/financing`, `/financing/calculator`, `/financing/apply`) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **5** | Investment experience (`/invest` + investment truth states) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **6** | My Markab account experience (`/login`, `/profile`, account/dashboard architecture) | ✅ Implemented — awaiting stakeholder visual sign-off |
+| **7** | AI Product Advisor (`/advisor`, recommendation engine, guided flow) | ✅ Implemented — awaiting stakeholder visual sign-off |
 
 ### Why 0.5 is blocked
 
@@ -95,6 +96,78 @@ started, for which product, and when. Privacy-minimal by construction.
 `npx tsc --noEmit` clean · `npm run build` clean · no console or hydration errors · zero horizontal
 overflow at 320/375/390/430/768/1024/1280/1440 · contrast clean on `/login` and `/profile` ·
 no collision with the mobile tab bar · true 404s preserved under `/login/*` and `/profile/*`.
+
+
+---
+
+## Phase 7 — Tanlov yordamchisi (`/advisor`)
+
+Guided product discovery over the real catalogue. **No language model is
+connected**, so the feature is labelled "Tanlov yordamchisi / Qoidalar asosidagi
+tavsiya" and never marketed as AI-powered.
+
+### Architecture
+
+```
+Advisor UI (components/advisor)
+   → app/advisor/page.tsx  (server; loads via repository)
+   → repository.listVehicles / listProducts / getVehicleFacets / getProductFacets
+   → DataAdapter  →  mockProvider | httpProvider
+   → lib/advisor/engine.ts      (pure, deterministic ranking)
+   → lib/advisor/explanation.ts (provider seam; today rule-based)
+```
+
+The UI never touches fixtures. The engine is a pure function, so it can be
+unit-tested and reused unchanged when a real API is connected.
+
+### Recommendation logic
+
+1. **Hard constraints.** Every preference the visitor states must match. A
+   record failing one is never shown as a match — it can only appear as a
+   labelled "nearest alternative" that says exactly which requirement it failed.
+   Nothing is silently relaxed (the previous prototype concept multiplied the
+   budget by 1.6 behind the visitor's back; that is gone).
+2. **Scoring** reorders survivors only: price distance to budget (50), year
+   recency (30), mileage (20) for cars; price distance (50), storage (25),
+   battery health (25) for electronics. Deterministic, ties break on id.
+3. **Explanations** are assembled only from fields that were both requested and
+   verified — e.g. "Byudjetingizga mos, Avtomat uzatma va siz tanlagan
+   yoqilg‘i turi: Benzin."
+
+Questions are built from repository facets, so an option is never offered for a
+value the catalogue cannot return, and each choice shows how many listings it
+leads to.
+
+### No exact match
+
+"Aniq mos variant topilmadi." followed by **Eng yaqin variantlar** — records
+missing the fewest requirements, each stating what it failed, plus a count of
+which requirement blocked the most listings.
+
+### Safety
+
+The advisor never recommends investment products, predicts returns, calculates
+unofficial financing, judges affordability or promises approval. For financing
+it only links to `/financing/calculator` and shows values the listing itself
+publishes. Unknown availability stays "Holati aniqlanmoqda" — it is never
+promoted to "Mavjud".
+
+### Honest labelling
+
+> Hozirgi prototip mavjud katalog ma'lumotlari va qoidalar asosida tavsiya
+> beradi. AI modeli integratsiyasi keyingi bosqichda ulanishi mumkin.
+
+`lib/advisor/explanation.ts` defines an `ExplanationProvider` seam.
+`MARKAB_ADVISOR_EXPLAINER=ai` selects the AI path, which today resolves to
+`unavailableAiProvider` — it returns `null` rather than fabricating text, and
+the UI degrades to rule-based reasons.
+
+### Verification
+
+`npx tsc --noEmit` clean · `npm run build` clean · no console or hydration
+errors · zero horizontal overflow on 16 routes × 8 widths (320–1440) · contrast
+clean in all four advisor states · no mobile tab-bar occlusion · true 404
+preserved · prior phases unregressed.
 
 ---
 
