@@ -4,6 +4,7 @@ import { SellWizard } from '@/components/sell/SellWizard';
 import { StateBlock } from '@/components/ui/StateBlock';
 import { ButtonLink } from '@/components/ui/Button';
 import { buildMetadata } from '@/lib/seo';
+import { vehicleBrands } from '@/lib/data';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Avtomobil sotish',
@@ -36,7 +37,7 @@ export default function SellPage() {
 
       <section className="bg-surface section-y-sm">
         <Container className="grid gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
-          <SellWizard />
+          <SellWizard brands={vehicleBrands} />
 
           <aside className="space-y-6">
             <div className="rounded-xl border border-line bg-surface p-5">

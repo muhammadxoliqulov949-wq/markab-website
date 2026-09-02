@@ -4,7 +4,16 @@ import { useState } from 'react';
 import { Field, Select, TextInput, Textarea } from '@/components/ui/Field';
 import { Button } from '@/components/ui/Button';
 import { StateBlock } from '@/components/ui/StateBlock';
-import { vehicleBrands } from '@/lib/data';
+
+/**
+ * Brand list is passed in, not imported.
+ *
+ * The wizard is a client component; `@/lib/data` is server-only (it selects a
+ * data provider and, in production, would read API credentials). Importing it
+ * here pulled the whole provider graph — adapters, providers, every fixture —
+ * into the browser bundle for this route. The server page already has the
+ * brands, so it hands them over as a plain string array.
+ */
 
 const steps = [
   { id: 1, title: 'Avtomobil ma’lumotlari' },
@@ -21,7 +30,7 @@ const steps = [
  * visible progress. Submission has no backend, so it ends in an explicit
  * "integration pending" state rather than a fake success.
  */
-export function SellWizard() {
+export function SellWizard({ brands }: { brands: string[] }) {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
 
@@ -90,7 +99,7 @@ export function SellWizard() {
                   <option value="" disabled>
                     Tanlang
                   </option>
-                  {vehicleBrands.map((brand) => (
+                  {brands.map((brand) => (
                     <option key={brand} value={brand}>
                       {brand}
                     </option>

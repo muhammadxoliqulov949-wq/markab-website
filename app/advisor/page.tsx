@@ -6,6 +6,7 @@ import { AdvisorDisclosure } from '@/components/advisor/AdvisorDisclosure';
 import { repository } from '@/lib/data';
 import type { Result } from '@/lib/data/types';
 import { buildMetadata } from '@/lib/seo';
+import { reportServerError } from '@/lib/errors';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Tanlov yordamchisi',
@@ -64,7 +65,7 @@ export default async function AdvisorPage() {
           title="Katalogni o‘qib bo‘lmadi"
           description={
             vehiclesResult.status === 'error'
-              ? vehiclesResult.error.message
+              ? reportServerError('advisor:listVehicles', vehiclesResult.error)
               : 'Ma’lumotlarni yuklashda xatolik yuz berdi.'
           }
         />
@@ -98,7 +99,7 @@ function toCategoryState<T>(result: Result<T>, itemCount: number): CategoryState
     case 'not_found':
       return { status: 'empty' };
     case 'error':
-      return { status: 'error', message: result.error.message };
+      return { status: 'error', message: reportServerError('advisor:toCategoryState', result.error) };
     default:
       return { status: 'unavailable' };
   }

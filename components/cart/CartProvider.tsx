@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { isAllowedImageUrl, isBoundedText, isSafeInternalHref, isSaneAmount } from '@/lib/security/url';
 
 export type CartItem = {
   id: string;
@@ -17,6 +18,35 @@ export type CartItem = {
   image: string | null;
   href: string;
 };
+
+/**
+ * What a stored cart line is allowed to be.
+ *
+ * This list is rehydrated from `localStorage`, which is writable by anything
+ * else running on the origin — another script, an extension, dev-tools. The
+ * values are rendered into `<Link href>` and `<Image src>`, and neither React
+ * nor `next/image` sanitises those: React escapes text, but an `href` is not
+ * text. `javascript:` in a stored `href` would execute on click, and a remote
+ * `src` on a host outside `remotePatterns` makes `next/image` throw at render
+ * time, taking the cart page down with it.
+ *
+ * So every field is checked on the way in, and a line that fails is dropped
+ * rather than repaired — a missing row is a puzzle, a hostile row is a bug.
+ */
+function isCartItem(value: unknown): value is CartItem {
+  if (!value || typeof value !== 'object') return false;
+  const v = value as Record<string, unknown>;
+  return (
+    isBoundedText(v.id, 120) &&
+    isBoundedText(v.name, 200) &&
+    isSaneAmount(v.priceUzs) &&
+    (v.image === null || isAllowedImageUrl(v.image)) &&
+    isSafeInternalHref(v.href)
+  );
+}
+
+/** Upper bound on rehydrated lines: storage is untrusted input, not a database. */
+const MAX_ITEMS = 50;
 
 type CartContextValue = {
   items: CartItem[];
@@ -55,8 +85,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw) as CartItem[];
-        if (Array.isArray(parsed)) setItems(parsed);
+        const parsed: unknown = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          // Validate before the values can reach an href or an image src.
+          setItems(parsed.filter(isCartItem).slice(0, MAX_ITEMS));
+        }
       }
     } catch {
       // Unreadable or disabled storage simply starts from an empty cart.

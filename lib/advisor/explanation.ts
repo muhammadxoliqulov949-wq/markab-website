@@ -77,6 +77,11 @@ export const unavailableAiProvider: ExplanationProvider = {
  * rather than inventing something.
  */
 export function getExplanationProvider(): ExplanationProvider {
+  // NOTE: this module reaches the browser (the advisor flow is a client
+  // component), so whatever is read here must never be a secret. Next only
+  // inlines `NEXT_PUBLIC_*` variables into client bundles, so a real API key
+  // placed in this variable would simply be `undefined` in the browser — a
+  // silent failure, which is why secrets live in `lib/env/server.ts` instead.
   const configured = process.env.MARKAB_ADVISOR_EXPLAINER;
   return configured === 'ai' ? unavailableAiProvider : deterministicProvider;
 }

@@ -18,8 +18,22 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    // In production this would be sent to the error-monitoring service.
-    console.error('[markab] route error', { digest: error.digest, message: error.message });
+    /**
+     * The digest is always safe to log: it is an opaque correlation id, and the
+     * matching detail stays on the server.
+     *
+     * The message is a different matter. In production React replaces it with a
+     * generic string, but a boundary can still hand us a real one — and in
+     * development it always does — so it is logged only where that is useful
+     * and harmless, i.e. locally. Shipping internal exception text to every
+     * visitor's console is free reconnaissance for anyone who opens devtools.
+     */
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[markab] route error', { digest: error.digest, message: error.message });
+    } else {
+      // Production: this is where the error-monitoring service would go.
+      console.error('[markab] route error', { digest: error.digest });
+    }
   }, [error]);
 
   return (

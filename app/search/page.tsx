@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { SearchHitRow } from '@/components/search/SearchResults';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
+import { reportServerError } from '@/lib/errors';
 
 export const metadata: Metadata = buildMetadata({
   title: 'Qidirish',
@@ -101,7 +102,16 @@ async function SearchResults({ query }: { query: string }) {
   }
 
   if (result.status === 'error') {
-    return <StateBlock headingLevel={2} variant="error" description={result.error.message} />;
+    // The real error goes to the server log; the visitor gets a fixed sentence.
+    // See lib/errors.ts — a message that varies with the failure is a channel
+    // for internal detail.
+    return (
+      <StateBlock
+        headingLevel={2}
+        variant="error"
+        description={reportServerError('search:searchCatalogue', result.error)}
+      />
+    );
   }
 
   if (result.status !== 'success') {

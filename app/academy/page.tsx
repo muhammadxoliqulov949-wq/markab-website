@@ -8,6 +8,7 @@ import { AcademyFilters } from '@/components/academy/AcademyFilters';
 import { EducationNotice } from '@/components/academy/EducationNotice';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
+import { reportServerError } from '@/lib/errors';
 
 /**
  * The clean /academy hub is the indexable URL. Search and category views are
@@ -95,7 +96,7 @@ export default async function AcademyPage({
             <StateBlock
               variant="error"
               title="Darslarni o‘qib bo‘lmadi"
-              description={lessonsResult.error.message}
+              description={reportServerError('academy:listLessons', lessonsResult.error)}
             />
           </Container>
         </section>

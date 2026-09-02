@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import type { SavedItem } from '@/lib/account/types';
+import { isAllowedImageUrl, isBoundedText, isSafeInternalHref, isSaneAmount } from '@/lib/security/url';
 
 /**
  * Saved products — browser-local prototype state.
@@ -38,15 +39,30 @@ type SavedContextValue = {
 
 const SavedContext = createContext<SavedContextValue | null>(null);
 
+/**
+ * What a stored saved-item is allowed to be.
+ *
+ * Rehydrated from `localStorage`, i.e. from data anything else on the origin
+ * can write. The previous check only asked whether the fields were the right
+ * *type*, which is exactly the check a hostile value passes: a well-typed
+ * `href` of `javascript:alert(1)` renders as a working link, and an `image`
+ * pointing at an arbitrary host either leaks a referrer or makes `next/image`
+ * throw. Type is not trust — every field is now checked for shape, range and,
+ * where it is used as a URL, for scheme and host.
+ */
 function isSavedItem(value: unknown): value is SavedItem {
   if (!value || typeof value !== 'object') return false;
   const v = value as Record<string, unknown>;
   return (
-    typeof v.ref === 'string' &&
-    typeof v.title === 'string' &&
-    typeof v.href === 'string' &&
-    typeof v.priceUzs === 'number' &&
-    (v.kind === 'car' || v.kind === 'electronics')
+    isBoundedText(v.ref, 200) &&
+    isBoundedText(v.title, 200) &&
+    isSafeInternalHref(v.href) &&
+    isSaneAmount(v.priceUzs) &&
+    (v.kind === 'car' || v.kind === 'electronics') &&
+    // `image` is optional in the stored shape but still constrained when set.
+    (v.image === undefined || v.image === null || isAllowedImageUrl(v.image)) &&
+    // A timestamp is either a plausible ISO date or it is not shown at all.
+    (v.savedAt === undefined || typeof v.savedAt === 'string')
   );
 }
 

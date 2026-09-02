@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { unavailable } from './types';
 import type { DataAdapter } from './adapter';
 import type {
@@ -27,6 +29,12 @@ import type {
  * Every method resolves to `unavailable`, which the UI renders as an explicit
  * "pending integration" state. To enable, supply the token through the
  * platform secret store and implement the endpoints below — the UI needs no change.
+ *
+ * CREDENTIAL BOUNDARY: this module is server-only, and any token it uses comes
+ * from `lib/env/server.ts`, never from a `NEXT_PUBLIC_*` variable (which would
+ * publish it to every visitor) and never from a committed file. It must also
+ * refuse to call the API without a token: an unauthenticated request against a
+ * protected service is not a fallback, it is the incident.
  */
 export const httpProvider: DataAdapter = {
   name: 'http',

@@ -16,6 +16,8 @@
 | **8** | Academy, Loyalty and content experience (`/academy`, `/academy/[slug]`, `/loyalty`, content architecture) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **9** | UX simplification, visual refinement, mobile and motion (+ global catalogue search) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **10** | SEO, performance, accessibility and technical cleanup | ✅ Implemented — awaiting stakeholder sign-off |
+| **11** | Threat model and security hardening | ✅ Implemented — awaiting stakeholder sign-off |
+| **12** | Deployment security | ⬜ Documented, not started — [`docs/PHASE-12-DEPLOYMENT-SECURITY.md`](docs/PHASE-12-DEPLOYMENT-SECURITY.md) |
 
 ### Why 0.5 is blocked
 
@@ -879,3 +881,59 @@ ESLint has never been configured in this project, so no lint result is reported;
 See [`docs/PHASE-10-DEPLOYMENT-NOTES.md`](docs/PHASE-10-DEPLOYMENT-NOTES.md)
 for the build-time vs request-time data caveat that must be resolved before a
 real API is connected.
+
+## Phase 11 — Threat model and security hardening
+
+No product features. A security pass over what already exists, and a threat
+model to give Phase 12 something concrete to work from.
+
+Full record: [`docs/PHASE-11-SECURITY.md`](docs/PHASE-11-SECURITY.md). Phase 12
+requirements (documented, **not** implemented):
+[`docs/PHASE-12-DEPLOYMENT-SECURITY.md`](docs/PHASE-12-DEPLOYMENT-SECURITY.md).
+
+### What changed
+
+* **Security headers on every route** — CSP, HSTS, `nosniff`, `Referrer-Policy`,
+  `Permissions-Policy`, COOP, CORP and `X-Frame-Options`. Two of them are
+  deployment properties with production-correct defaults:
+  `frame-ancestors 'none'` and `includeSubDomains` HSTS, relaxed only where
+  `MARKAB_ALLOW_PREVIEW_FRAME=true` is set explicitly (the Arena preview is
+  served in an iframe).
+* **Untrusted-state validation** (`lib/security/url.ts`) — the cart, saved
+  items and application drafts are rehydrated from `localStorage`, which is
+  attacker-writable. `href` values must be same-origin paths, `src` values must
+  be on the allow-listed media host, text is length-capped. Previously the
+  check was "is it a string", which a `javascript:` href passes.
+* **Server–client credential boundary** (`lib/env/server.ts`, `server-only`
+  fences) — `components/sell/SellWizard.tsx` used to import `@/lib/data` from
+  the browser, pulling the whole provider graph with it. It now takes the brand
+  list as a prop. `/sell`'s client chunk went from 39.5 kB to 12.6 kB and no
+  environment variable or provider string remains in any client bundle.
+* **Error reporting split** (`lib/errors.ts`) — three pages rendered
+  `result.error.message` into the HTML. The real error now goes to the server
+  log and the visitor gets one fixed sentence; a message that varies with the
+  failure is a channel for internal detail.
+
+### The one thing that is weaker than intended
+
+`script-src` allows inline scripts. The strict nonce policy was implemented
+first and measured: Next.js only stamps nonces on responses it renders per
+request, and sixteen routes are prerendered, so those pages loaded with every
+script refused and no hydration. The measured consequences are recorded in
+§6.1 of the Phase 11 doc — foreign-origin scripts and frames are blocked, but
+inline script and `eval` are not. Removing the allowance is Phase 12 item C1.
+
+### Verification
+
+`tsc --noEmit` clean · production build clean · Chromium 131, 11 routes ×
+1440 and 390 viewports · **0 CSP violations** · hydration successful on all 22
+page loads · no horizontal overflow · true 404 on four unknown routes ·
+hostile `localStorage` payload rendered 0 hostile hrefs · no secret, token or
+provider string in `.next/static` · Phase 10 image behaviour unchanged.
+
+`npm audit` reports 1 moderate and 1 high, both the same `postcss` inside
+`next@15.5.24`; the fix is a semver-major `next@16` upgrade, which was
+deliberately **not** taken inside a security phase. Recorded as Phase 12 D1.
+
+ESLint remains unconfigured in this repository, as it was before Phase 11 —
+`npm run typecheck` is the static gate that exists.
