@@ -8,6 +8,10 @@ import type { Result } from '@/lib/data/types';
 import { buildMetadata } from '@/lib/seo';
 import { reportServerError } from '@/lib/errors';
 
+/** Rendered per request so Next.js can stamp the CSP nonce on its scripts (C1). */
+export const dynamic = 'force-dynamic';
+
+
 export const metadata: Metadata = buildMetadata({
   title: 'Tanlov yordamchisi',
   description:

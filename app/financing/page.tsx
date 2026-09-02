@@ -9,6 +9,10 @@ import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
 
+/** Rendered per request so Next.js can stamp the CSP nonce on its scripts (C1). */
+export const dynamic = 'force-dynamic';
+
+
 export const metadata: Metadata = buildMetadata({
   title: 'Moliyalashtirish',
   description:

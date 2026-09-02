@@ -77,7 +77,7 @@ or implements authentication, payments or sessions.
 | T7 | Open redirect | Attacker-controlled navigation target | Low | Not present — no redirect handler and no `window.location` assignment anywhere |
 | T8 | MIME sniffing | `text/plain` re-read as HTML | Low | **Mitigated** — `X-Content-Type-Options: nosniff` |
 | T9 | Version / stack disclosure | `X-Powered-By` | Low | Already absent (`poweredByHeader: false`) |
-| T10 | Untrusted script execution | Any injected script | High | **Partially mitigated** — foreign origins and frames blocked; inline remains (§6.1) |
+| T10 | Untrusted script execution | Any injected script | High | **Mitigated** — Phase 12 C1 replaced the inline allowance with a per-response nonce (§6.1) |
 | T11 | Dependency vulnerability | Known CVE in a transitive package | Medium | **Accepted with a decision** — §5 |
 | T12 | Media-host SSRF via the optimiser | `/_next/image?url=` | Low | Not exploitable — `remotePatterns` enforced (verified: non-allow-listed host → 400) |
 
@@ -221,35 +221,21 @@ attacker-controlled CSS or source map is processed. It is recorded as Phase
 
 ## 6. Residual risks
 
-### 6.1 Inline script is permitted by the CSP (accepted, documented)
+### 6.1 Inline script was permitted by the CSP — resolved in Phase 12
 
-The policy is `script-src 'self' 'unsafe-inline'`, not the stricter
-`'self' 'nonce-…' 'strict-dynamic'`. The strict version was implemented first,
-measured, and rejected — see the comment block in `next.config.mjs` for the full
-reasoning. In short: Next.js only derives a nonce for responses it renders per
-request, and sixteen routes here are prerendered at build time, so their inline
-bootstrap scripts can never carry one. Those pages loaded with every script
-refused and no hydration.
+At the end of Phase 11 the policy was `script-src 'self' 'unsafe-inline'`,
+because Next.js only derives a nonce for responses it renders per request and
+sixteen routes were prerendered. Measured consequences: foreign-origin scripts
+and frames blocked, inline script allowed, and — because Chromium treats
+`unsafe-inline` as also unlocking string compilation — `eval` allowed.
 
-Consequences measured in Chromium 131:
-
-| Probe | Result |
-| --- | --- |
-| Script from a foreign origin | **Blocked** |
-| `<iframe>` from a foreign origin | **Blocked** (`frame-src 'none'`) |
-| Inline `<script>` without a nonce | **Executed** (allowed by design) |
-| `eval('1+1')` | **Executed** — `unsafe-inline` re-enables string compilation in Chromium |
-
-The fourth row is the honest cost. It is mitigate-able without nonces by
-splitting the policy into `script-src-elem` (inline allowed) and `script-src`
-(no `unsafe-eval`), but browsers without `script-src-elem` support — Safari
-before 15.4, Firefox before 105 — would then fall back to `script-src` and
-refuse every inline script, i.e. ship a site with no working JavaScript. That
-trade was not worth making here. It is Phase 12 item **C1**.
-
-Defence in depth that remains: the application has no HTML-injection sink, no
-`eval`/`new Function`, and no `innerHTML`; all user input is rendered as React
-text nodes; the single `dangerouslySetInnerHTML` escapes `<`.
+**Resolved.** Phase 12 (item C1) measured the cost of rendering every route per
+request, found no systematic difference, and shipped the strict policy:
+`script-src 'self' 'nonce-…' 'strict-dynamic'`. Injected inline scripts,
+injected `eval`, and foreign-origin scripts are now all refused while the
+application's own nonce-stamped scripts run. See
+[`docs/PHASE-12-DEPLOYMENT-SECURITY.md`](PHASE-12-DEPLOYMENT-SECURITY.md) §C1
+for the A/B numbers and the evidence.
 
 ### 6.2 Other residual risks
 

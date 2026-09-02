@@ -53,6 +53,12 @@ export default function GlobalError({
           <Button onClick={reset} size="lg">
             Qayta urinish
           </Button>
+          {/* A router-boundary escape hatch: after a route error the router may
+              be unusable, so this stays a plain anchor and forces a real
+              document load rather than a client navigation that could fail the
+              same way again. The lint rule is disabled for this one link with
+              the reason recorded, not silenced globally. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/"
             className="inline-flex h-12 items-center justify-center rounded-lg border border-line-strong bg-white px-6 text-base font-medium text-ink-900 transition-colors hover:bg-surface-muted"

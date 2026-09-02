@@ -44,7 +44,19 @@ export function reportServerError(context: string, error: unknown): string {
       : { message: String(error) };
 
   // Server log only. Never rendered, never serialised into the RSC payload.
-  console.error(`[markab] ${context}`, detail);
+  //
+  // Structured, one line per event: a log aggregator can index `event` and
+  // alert on the rate, which a human-readable sentence cannot. The stack is
+  // included because this is the operator's copy and the operator needs it.
+  console.error(
+    JSON.stringify({
+      ts: new Date().toISOString(),
+      level: 'error',
+      event: 'server.data-error',
+      context,
+      ...detail,
+    }),
+  );
 
   return PUBLIC_ERROR_MESSAGE;
 }

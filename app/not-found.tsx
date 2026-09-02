@@ -3,6 +3,10 @@ import { ButtonLink } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Section';
 import { primaryNav, site } from '@/lib/site';
 
+/** Rendered per request so Next.js can stamp the CSP nonce on its scripts (C1). */
+export const dynamic = 'force-dynamic';
+
+
 /**
  * Custom 404.
  *

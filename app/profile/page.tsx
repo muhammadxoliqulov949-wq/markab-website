@@ -4,6 +4,10 @@ import { Container } from '@/components/ui/Section';
 import { AccountDashboard } from '@/components/account/AccountDashboard';
 import { buildMetadata } from '@/lib/seo';
 
+/** Rendered per request so Next.js can stamp the CSP nonce on its scripts (C1). */
+export const dynamic = 'force-dynamic';
+
+
 export const metadata: Metadata = buildMetadata({
   title: 'Mening Markabim',
   description:

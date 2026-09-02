@@ -17,7 +17,7 @@
 | **9** | UX simplification, visual refinement, mobile and motion (+ global catalogue search) | ✅ Implemented — awaiting stakeholder visual sign-off |
 | **10** | SEO, performance, accessibility and technical cleanup | ✅ Implemented — awaiting stakeholder sign-off |
 | **11** | Threat model and security hardening | ✅ Implemented — awaiting stakeholder sign-off |
-| **12** | Deployment security | ⬜ Documented, not started — [`docs/PHASE-12-DEPLOYMENT-SECURITY.md`](docs/PHASE-12-DEPLOYMENT-SECURITY.md) |
+| **12** | Deployment security | 🟡 In progress — in-repo items done ([`docs/PHASE-12-DEPLOYMENT-SECURITY.md`](docs/PHASE-12-DEPLOYMENT-SECURITY.md)); edge, secret store and monitoring remain |
 
 ### Why 0.5 is blocked
 
@@ -937,3 +937,82 @@ deliberately **not** taken inside a security phase. Recorded as Phase 12 D1.
 
 ESLint remains unconfigured in this repository, as it was before Phase 11 —
 `npm run typecheck` is the static gate that exists.
+
+## Phase 12 — Deployment security
+
+Implementing the items from `docs/PHASE-12-DEPLOYMENT-SECURITY.md` that this
+repository can own. Items that need infrastructure — TLS termination, WAF and
+rate limiting, the secret store, log aggregation, the penetration test — are
+marked *environment* in that document and cannot be delivered from here.
+
+### The inline-script allowance is gone (C1)
+
+Phase 11 shipped `script-src 'self' 'unsafe-inline'` because Next.js only
+derives a CSP nonce for responses it renders *per request*, and sixteen routes
+were prerendered at build time. Phase 12 paid the price instead of accepting
+the weakness: every document route now renders per request and carries a
+per-response nonce with `'strict-dynamic'`.
+
+The price was measured before it was paid, by interleaving the two builds on
+one machine so sandbox drift could not be mistaken for a difference:
+
+| Mode | perf | LCP | TBT | TTFB |
+|---|---|---|---|---|
+| prerendered | 97 | 2537–2818 ms | 136–168 ms | 32–34 ms |
+| per request | 96–97 | 2541–2584 ms | 103–176 ms | 24–39 ms |
+
+No systematic difference, and smaller than the run-to-run variance — these
+pages render from in-memory fixtures, so prerendering caches nothing
+expensive. (LCP here is measured against the image placeholder, since this
+sandbox cannot reach `api.markab.uz`; read the comparison, not the absolute
+values.)
+
+Evidence, from injecting into the served HTML: an inline `<script>` with no
+nonce is **refused**, `eval()` inside a legitimately nonce-stamped script is
+**refused**, a foreign-origin script is **refused**, and the 65–68 scripts the
+application legitimately stamps still run and hydrate the page.
+
+### Also in this phase
+
+* **CSP reporting (C3)** — `report-uri` is emitted only when
+  `MARKAB_CSP_REPORT_ENDPOINT` is set (a report endpoint is a decision about
+  who receives visitor data, so it defaults to nobody), plus a hardened
+  in-app receiver at `/api/csp-report`: POST only, content-type allow-list,
+  8 KB cap, nothing echoed, four truncated fields logged.
+* **Start-up posture log** — `instrumentation.ts` writes one JSON line with the
+  CSP mode, framing policy, HSTS lifetime and whether an API token is present
+  (presence only, never the value), at `warn` level when a relaxed preview
+  flag is set — so a production server started with `MARKAB_ALLOW_PREVIEW_FRAME`
+  is visible in the log instead of hidden in a config file.
+* **Structured error logs (E4)** — `lib/errors.ts` and the report route emit
+  single-line JSON, indexable by `event`.
+* **CI (D2, F2)** — the workflow is at [`docs/ci/security.yml`](docs/ci/security.yml)
+  and it is **not installed yet**: the GitHub App used on this branch does not
+  hold the `workflows` scope, and GitHub rejects writes to
+  `.github/workflows/` without it. Install with
+  `mkdir -p .github/workflows && cp docs/ci/security.yml .github/workflows/security.yml`.
+  It runs types, lint, `npm audit --audit-level=critical`, the allow-list
+  check, a build and `npm run security:headers` against the running server,
+  plus a weekly cron so advisories that arrive without a commit are seen.
+* **Two repeatable gates** — `npm run security:allowlists` (14 assertions: the
+  image host appears in all three places, the CSP shape has not regressed, no
+  `server-only` fence removed) and `npm run security:headers` (22 assertions
+  against a running server, including that the nonce rotates and that
+  `script-src` contains neither `unsafe-inline` nor `unsafe-eval`).
+* **ESLint (F3)** — configured for the first time in this repository:
+  `next/core-web-vitals` plus `no-eval`, `no-implied-eval`, `no-new-func` and
+  `no-script-url` as errors. Clean at 0 errors / 0 warnings; the one finding
+  (a plain `<a href="/">` in the error boundary) is a deliberate exception with
+  the reason recorded inline.
+
+### Not done, and why
+
+* **`security.txt` (A4)** — blocked on purpose. RFC 9116 requires a `Contact:`,
+  and Markab publishes no security contact: `site.contacts.email` is `null`
+  deliberately. Inventing an address would break the no-fabrication rule and
+  route real reports into a void. Supply a monitored address and the file
+  follows.
+* **`next@16` / `postcss` (D1)** — still a semver-major migration, still
+  deliberately separate from a security phase.
+* **Anything needing an edge, a secret store or a log pipeline (A1–A3, B1–B3,
+  E1–E3, E5, F1)** — environment work, specified in the doc.

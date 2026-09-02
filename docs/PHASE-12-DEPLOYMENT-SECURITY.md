@@ -1,8 +1,12 @@
-# Phase 12 — Deployment security requirements
+# Phase 12 — Deployment security
 
-Status: **DOCUMENTATION ONLY — nothing here is implemented.**
+Status: **in progress.** The items this repository can implement are done; the
+rest need infrastructure that does not exist in the repo (edge, WAF, secret
+store, monitoring) and are marked *environment* below.
+
 Phase 11 wrote this list so that deployment has a specification to work from.
-Each item states what is required, why, and what Phase 11 left behind.
+Each item states what is required, why, and what the previous phase left
+behind. Implemented items carry a **DONE** marker and the evidence for it.
 
 Items are graded: **M** must be in place before real user data flows,
 **S** should be in place at launch, **C** can follow.
@@ -16,8 +20,8 @@ Items are graded: **M** must be in place before real user data flows,
 | A1 | TLS 1.2 minimum, TLS 1.3 preferred, HSTS `max-age=63072000; includeSubDomains; preload` once the canonical host is confirmed | **M** | Phase 11 already sends HSTS, but without `preload` and only with `includeSubDomains` outside preview mode. `preload` must not be requested until every subdomain is HTTPS — it is effectively irreversible for months. |
 | A2 | HTTP → HTTPS redirect at the edge, no mixed content anywhere | **M** | `upgrade-insecure-requests` was considered and omitted from the shipped CSP: it is only meaningful on the canonical host, and Phase 11 had no way to verify it there. |
 | A3 | Rate limiting and bot filtering on `/login`, `/financing/apply`, `/contact`, `/search` | **M** | No rate limiting exists anywhere. When OTP is real, `/login` is the first endpoint an attacker will hammer. |
-| A4 | Security.txt (`/.well-known/security.txt`) with a disclosure address | **S** | Nothing exists today. |
-| A5 | Confirm `Cross-Origin-Resource-Policy: same-origin` does not break legitimate embeds (e.g. an app-store badge or a partner widget) | **S** | Phase 11 added it. It constrains who may embed *our* responses, not what we load, but it is unverified against real marketing embeds. |
+| A4 | Security.txt (`/.well-known/security.txt`) with a disclosure address | **S** | **BLOCKED, and deliberately left blocked.** RFC 9116 requires a `Contact:` field, and Markab publishes no security contact — `site.contacts.email` is `null` on purpose (`docs/LEGAL-TRUST-REGISTER.md` §3–4), because inventing an address would both violate the no-fabrication rule and route real reports into a void. Unblock by supplying a monitored address, then add the file with `Expires` and `Preferred-Languages`. |
+| A5 | Confirm `Cross-Origin-Resource-Policy: same-origin` does not break legitimate embeds | **S** | **Checked:** the application contains no iframe, embed, object or third-party widget — every external destination is an `<a>` with `rel="noopener noreferrer"` (app stores, Google Maps, markab.uz/privacy). CORP constrains who may embed *our* responses, not what we load, so catalogue photography is unaffected. Re-check if a marketing tag or badge is ever added. |
 
 ## B. Secrets and configuration
 
@@ -33,9 +37,9 @@ Items are graded: **M** must be in place before real user data flows,
 
 | # | Requirement | Grade | Why / Phase 11 context |
 | --- | --- | --- | --- |
-| C1 | Remove the `script-src 'unsafe-inline'` allowance | **S** | Phase 11 measured that with it present, Chromium also permits `eval`. Two routes to removal: (a) render the affected routes per request so Next.js can stamp nonces — it only does so for dynamic responses, which is why prerendered pages broke; or (b) add a build step that injects nonces into prerendered HTML and serves it through a layer that can rewrite the body. Route (a) costs the prerendering that Phase 10 measured; route (b) costs infrastructure. Decide with measurements, not preference. |
-| C2 | If C1 is deferred, at minimum split `script-src-elem` (inline allowed) from `script-src` (no `unsafe-eval`) — **only after** deciding the old-browser trade | **C** | Blocks `eval` on browsers with `script-src-elem` support (Chrome 75+, Firefox 105+, Safari 15.4+) but breaks hydration entirely on older ones, because `script-src` then refuses every inline script. |
-| C3 | Add `report-to` / `report-uri` and monitor violations | **S** | Without reporting, a policy that silently blocks something is invisible. |
+| C1 | Remove the `script-src 'unsafe-inline'` allowance | **S** | **DONE.** Route (a) was taken, on measurement. All 14 document routes now render per request (`export const dynamic = 'force-dynamic'`) and carry a per-response nonce with `'strict-dynamic'`. Cost, measured by interleaved A/B: LCP 2537–2818 ms prerendered vs 2541–2584 ms dynamic; TBT 136/168 vs 103/176 ms; TTFB 32/34 vs 24/39 ms — no systematic difference, and smaller than the run-to-run variance. Evidence: injected inline scripts, injected `eval`, and foreign-origin scripts are all refused while 65–68 nonce-stamped scripts run and the page hydrates. `npm run security:headers` asserts the policy on every build. |
+| C2 | ~~Split `script-src-elem` from `script-src`~~ | — | **Obsolete.** C1 removed the inline allowance outright, so `eval` is refused everywhere and no browser-support trade remains. |
+| C3 | Add `report-to` / `report-uri` and monitor violations | **S** | **Partly done.** `lib/security/csp.ts` emits `report-uri` when `MARKAB_CSP_REPORT_ENDPOINT` is set, and defaults to off — a report endpoint is a choice about who receives visitor data, so it must not default to anyone. `app/api/csp-report/route.ts` is a hardened in-app receiver (POST-only, content-type allow-list, 8 KB cap, nothing echoed, four truncated fields logged). *Environment:* aggregation and alerting on those log lines. |
 | C4 | Re-check `connect-src 'self'` when the real API is wired up | **M** | Deliberate: adding `https://api.markab.uz` should be a decision, not a side effect. |
 
 ## D. Dependencies and supply chain
@@ -43,9 +47,9 @@ Items are graded: **M** must be in place before real user data flows,
 | # | Requirement | Grade | Why / Phase 11 context |
 | --- | --- | --- | --- |
 | D1 | Upgrade `next` past the `postcss <=8.5.22` advisories (audit suggests 16.3.4, a semver-major) | **S** | Phase 11 deliberately did not take a major upgrade inside a security phase. Verify against the Phase 9 and Phase 10 regression suites, not just a green build. |
-| D2 | `npm audit` in CI, failing on new high/critical findings | **S** | |
+| D2 | `npm audit` in CI, failing on new high/critical findings | **S** | **DONE (template, not installed)** — `docs/ci/security.yml` runs `npm audit --audit-level=critical` as a gate, prints all advisories informationally, and adds a weekly cron so advisories that arrive without a commit are seen. It is **not** under `.github/workflows/` because the GitHub App used on this branch lacks the `workflows` scope and GitHub rejects those writes; install it with `mkdir -p .github/workflows && cp docs/ci/security.yml .github/workflows/security.yml`. |
 | D3 | Lockfile integrity: `npm ci` only, `--ignore-scripts` where possible, provenance review on new dependencies | **S** | |
-| D4 | Pin and periodically re-verify the image host allow-list in three places | **S** | `lib/security/url.ts` (`ALLOWED_IMAGE_HOSTS`), `next.config.mjs` (`remotePatterns`), and the CSP `img-src`. Three lists, one decision — they must move together. |
+| D4 | Pin and periodically re-verify the image host allow-list in three places | **S** | **DONE** — `npm run security:allowlists` (14 assertions) parses `lib/security/url.ts`, `next.config.mjs` and `lib/security/csp.ts` and fails if the host sets disagree, if the CSP shape regresses, or if any `server-only` fence is removed. Runs in CI. |
 
 ## E. Application and data
 
@@ -54,7 +58,7 @@ Items are graded: **M** must be in place before real user data flows,
 | E1 | Server-side validation mirroring every client-side rule | **M** | The prototype's validation is a UX affordance. Forms are intercepted in JS and never reach a server; the moment they do, client checks are advisory only. |
 | E2 | CSRF protection on every state-changing endpoint, plus `SameSite=Lax` or stricter on any session cookie | **M** | No cookies exist today. |
 | E3 | OTP hardening: rate limit per number and per IP, attempt counter, expiry, no enumeration difference between "number unknown" and "code wrong" | **M** | `lib/auth/service.ts` refuses everything today, so none of this exists. |
-| E4 | Structured server-side logging with correlation ids, and alerting on error-rate spikes | **S** | `lib/errors.ts` logs to stdout and returns a constant message. Something must consume those logs. |
+| E4 | Structured server-side logging with correlation ids, and alerting on error-rate spikes | **S** | **Partly done.** `lib/errors.ts` and `app/api/csp-report/route.ts` emit single-line JSON (`ts`, `level`, `event`, plus context or violation fields), and `instrumentation.ts` logs the security posture the process started with — including a `warn` level when a relaxed preview flag is set, so a production server started with `MARKAB_ALLOW_PREVIEW_FRAME` is visible in the log rather than invisible in a config file. *Environment:* ship those lines somewhere and alert on them. |
 | E5 | Decide retention and residency for contact, application and sell submissions | **M** | Uzbekistan data-residency rules apply to personal data. The UI already states that drafts keep no name, phone or message — keep that promise at the backend. |
 | E6 | Re-audit `localStorage` when real account state arrives | **M** | Cart, saved items and drafts are browser-local and attacker-writable; Phase 11 validates them on read. A real account must not trust them as input. |
 
@@ -63,6 +67,6 @@ Items are graded: **M** must be in place before real user data flows,
 | # | Requirement | Grade | Why / Phase 11 context |
 | --- | --- | --- | --- |
 | F1 | Independent penetration test before launch | **M** | Phase 11 is a self-assessment. |
-| F2 | Automated header/CSP regression check in CI | **S** | Phase 11 verified headers by hand against a running build; that check should be repeatable. |
-| F3 | ESLint (with a security plugin) — still not configured in this repository | **C** | True before Phase 11 and unchanged by it; `tsc` remains the only static gate. |
+| F2 | Automated header/CSP regression check in CI | **S** | **DONE** — `npm run security:headers` (22 assertions) against a running server: nonce present and rotating, `strict-dynamic`, no `unsafe-inline`/`unsafe-eval` in `script-src`, `object-src`/`base-uri`/`form-action`/`frame-src`, framing policy matching the deployment mode, the other six headers, `X-Powered-By` absent, and a true 404 that still carries the CSP. |
+| F3 | ESLint (with a security plugin) | **C** | **DONE** — `eslint` + `eslint-config-next`, `npm run lint`, clean at 0 errors and 0 warnings. `no-eval`, `no-implied-eval`, `no-new-func` and `no-script-url` are errors on top of `next/core-web-vitals`, so the string-execution sinks the CSP also forbids cannot be reintroduced in code. Runs in CI. |
 | F4 | Re-run the accessibility and performance suites after any security change | **S** | The CSP and header changes were re-verified in Phase 11 for hydration, overflow and console errors; keep doing that. |

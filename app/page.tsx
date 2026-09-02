@@ -15,6 +15,30 @@ import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
 
+/**
+ * Rendered per request, not prerendered.
+ *
+ * This is the cost of the nonce-based Content-Security-Policy: Next.js can
+ * only stamp a nonce onto the scripts it injects while it is rendering a
+ * response, and a prerendered page is HTML written to disk at build time with
+ * no request and no render. It was measured before it was paid — an
+ * interleaved A/B on this build showed no systematic difference in LCP, TBT or
+ * TTFB, because these pages render from in-memory fixtures and prerendering
+ * caches nothing expensive. See docs/PHASE-12-DEPLOYMENT-SECURITY.md §C1.
+ */
+export const dynamic = 'force-dynamic';
+
+/**
+ * Rendered per request, not prerendered.
+ *
+ * This is the cost of the nonce-based Content-Security-Policy: Next.js can
+ * only stamp a nonce onto the scripts it injects while it is rendering a
+ * response, and a prerendered page is HTML written to disk at build time with
+ * no request and no render. Removing it means giving up prerendering on every
+ * route, which is why the cost was measured before it was paid — see
+ * docs/PHASE-12-DEPLOYMENT-SECURITY.md §C1.
+ */
+
 export const metadata: Metadata = buildMetadata({
   fullTitle: 'Qadriyatlarga asoslangan xotirjamlik! | Markab',
   title: 'Markab',

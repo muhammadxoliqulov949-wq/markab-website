@@ -13,6 +13,10 @@ import { investmentContactHref, PENDING_LABEL, PUBLISHED_LABEL } from '@/lib/inv
 import { legal } from '@/lib/legal';
 import { buildMetadata } from '@/lib/seo';
 
+/** Rendered per request so Next.js can stamp the CSP nonce on its scripts (C1). */
+export const dynamic = 'force-dynamic';
+
+
 export const metadata: Metadata = buildMetadata({
   title: 'Sarmoya',
   description:

@@ -7,6 +7,10 @@ import { ButtonLink } from '@/components/ui/Button';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 
+/** Rendered per request so Next.js can stamp the CSP nonce on its scripts (C1). */
+export const dynamic = 'force-dynamic';
+
+
 export const metadata: Metadata = buildMetadata({
   title: 'Savol-javoblar',
   description:

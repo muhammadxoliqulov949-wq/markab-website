@@ -6,6 +6,10 @@ import { ButtonLink } from '@/components/ui/Button';
 import { buildMetadata } from '@/lib/seo';
 import { vehicleBrands } from '@/lib/data';
 
+/** Rendered per request so Next.js can stamp the CSP nonce on its scripts (C1). */
+export const dynamic = 'force-dynamic';
+
+
 export const metadata: Metadata = buildMetadata({
   title: 'Avtomobil sotish',
   description:
