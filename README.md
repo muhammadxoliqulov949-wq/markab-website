@@ -1005,6 +1005,31 @@ application legitimately stamps still run and hydrate the page.
   (a plain `<a href="/">` in the error boundary) is a deliberate exception with
   the reason recorded inline.
 
+### Regression sweep after the change
+
+Rendering every route per request is an architectural change, so it was swept
+against the Phase 9 and Phase 10 acceptance criteria rather than assumed safe:
+
+| Route | Phase 10 recorded | After Phase 12 |
+|---|---|---|
+| `/` | 99 · LCP 1.8 s · CLS 0.001 | 97 · LCP 2.54 s · CLS 0.0005 |
+| `/cars` | 97 · 1.5 s | 99 · 2.22 s |
+| `/cars/chevrolet-cobalt-2023` | 99 · 1.9 s | 100 · 2.45 s |
+| `/electronics` | 95 · 2.0 s | 99 · 2.38 s |
+| `/invest` | 98 · 2.1 s | 99 · 2.08 s |
+| `/academy` | 99 · 2.1 s | 99 · 1.99 s |
+
+Scores are equal or better on five of six routes and CLS is unchanged at
+0.0005. The LCP column is not comparable across sessions on this sandbox —
+Phase 10 documented a 95–99 band with TBT between 40 and 230 ms, and the
+prerendered configuration measured 2.46–2.82 s on `/` earlier the same day the
+per-request configuration measured 2.54 s. The only trustworthy comparison is
+the interleaved A/B above, and it showed no difference.
+
+Also re-run: **0 serious/critical axe-core violations** across six routes at
+1440 and 390, and **no horizontal overflow** at 320, 375, 390, 430, 768, 1024,
+1280 or 1440.
+
 ### Not done, and why
 
 * **`security.txt` (A4)** — blocked on purpose. RFC 9116 requires a `Contact:`,
