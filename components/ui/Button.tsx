@@ -44,6 +44,27 @@ function classes({ variant = 'primary', size = 'md', fullWidth, className }: Com
     .join(' ');
 }
 
+/**
+ * Detect external / non-route URLs (absolute http(s), mailto, tel, sms,
+ * protocol-relative). For these we must render a native <a> rather than
+ * next/link, because next/link wraps navigation in router handlers that can
+ * swallow or misroute external navigations when the page runs inside a
+ * sandboxed cross-origin iframe (e.g. Arena preview). Native anchors are the
+ * only reliable way to let the browser honor target/_blank/external
+ * navigation per HTML spec.
+ */
+function isExternalHref(href: unknown): href is string {
+  if (typeof href !== 'string') return false;
+  return (
+    href.startsWith('http://') ||
+    href.startsWith('https://') ||
+    href.startsWith('mailto:') ||
+    href.startsWith('tel:') ||
+    href.startsWith('sms:') ||
+    href.startsWith('//')
+  );
+}
+
 export function Button({
   variant,
   size,
@@ -68,12 +89,19 @@ export function ButtonLink({
   href,
   ...props
 }: CommonProps & Omit<ComponentProps<typeof Link>, 'className' | 'children'>) {
+  const cls = classes({ variant, size, fullWidth, className, children });
+  if (isExternalHref(href)) {
+    // Native anchor for external URLs — no router interception, no Link
+    // wrapping, so target="_blank" / rel / download all work per HTML spec
+    // even inside sandboxed preview iframes.
+    return (
+      <a href={href} className={cls} {...(props as Omit<ComponentProps<'a'>, 'className' | 'children' | 'href'>)}>
+        {children}
+      </a>
+    );
+  }
   return (
-    <Link
-      href={href}
-      className={classes({ variant, size, fullWidth, className, children })}
-      {...props}
-    >
+    <Link href={href} className={cls} {...props}>
       {children}
     </Link>
   );

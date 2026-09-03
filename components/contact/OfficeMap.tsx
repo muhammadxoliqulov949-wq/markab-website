@@ -27,6 +27,17 @@ import { site } from '@/lib/site';
  *     'error' on cross-origin network failures; this guarantees the UI never
  *     shows a permanent spinner even when the third-party cannot be reached)
  *   • Once a terminal state (ready/failed) is reached it never regresses.
+ *
+ * WHY A NATIVE <a> FOR "XARITADA OCHISH"
+ *
+ * The deep link is an external https:// URL pointing at Google Maps. ButtonLink
+ * detects external hrefs (http(s)/mailto/tel/sms) and renders a native <a>
+ * instead of next/link, so the browser handles navigation per HTML spec.
+ * target="_blank" + rel="noopener noreferrer" open Google Maps in a new tab in
+ * normal browsers. For sandboxed preview iframes (Arena/review environments)
+ * that block new-tab/popup navigation, a small "Manzilni nusxalash" secondary
+ * action lets reviewers copy the verified Google Maps URL to their clipboard
+ * and paste it into a real browser tab to verify the location.
  */
 
 // Verified office coordinates from lib/site.ts mapUrl (markab.uz public map).
@@ -41,6 +52,7 @@ type MapState = 'loading' | 'ready' | 'failed';
 export function OfficeMap() {
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const [state, setState] = useState<MapState>('loading');
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const node = iframeRef.current;
@@ -71,6 +83,33 @@ export function OfficeMap() {
       node.removeEventListener('error', handleError);
     };
   }, []);
+
+  const copyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(site.office.mapUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback: legacy textarea selection for environments without
+      // async-clipboard (e.g. older iframes without permission).
+      const ta = document.createElement('textarea');
+      ta.value = site.office.mapUrl;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 2000);
+      } catch {
+        // Clipboard unavailable — nothing to do; the href remains visible
+        // in the DOM and in the anchor's tooltip (title).
+      }
+      document.body.removeChild(ta);
+    }
+  };
 
   return (
     <div className="space-y-3">
@@ -132,9 +171,18 @@ export function OfficeMap() {
           size="sm"
           target="_blank"
           rel="noopener noreferrer"
+          title={site.office.mapUrl}
         >
           Xaritada ochish
         </ButtonLink>
+        <button
+          type="button"
+          onClick={copyUrl}
+          className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-line bg-white px-3.5 text-xs font-medium text-ink-600 transition-all duration-200 hover:border-ink-300 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+          aria-label="Google Maps manzil URLini nusxalash"
+        >
+          {copied ? 'Nusxalandi!' : 'Manzilni nusxalash'}
+        </button>
         <p className="text-xs text-ink-400">
           Xarita OpenStreetMap ma&rsquo;lumotlari asosida ko&lsquo;rsatilmoqda.
         </p>
