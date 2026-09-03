@@ -25,16 +25,16 @@ function StoreBadge({
       target="_blank"
       rel="noopener noreferrer"
       title={href}
-      className="inline-flex h-[52px] items-center justify-start gap-3 rounded-xl border border-line bg-surface px-5 text-ink-900 shadow-card transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
+      className="inline-flex min-h-[48px] flex-1 items-center justify-start gap-2.5 rounded-xl border border-line bg-surface px-4 py-2 text-ink-900 shadow-card transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 sm:h-[52px] sm:flex-none sm:gap-3 sm:px-5"
     >
-      <span className="text-ink-900" aria-hidden="true">
+      <span className="shrink-0 text-ink-900" aria-hidden="true">
         {icon}
       </span>
-      <span className="flex flex-col items-start leading-tight">
-        <span className="text-[10px] font-medium uppercase tracking-wide text-ink-400">
+      <span className="flex min-w-0 flex-col items-start leading-tight">
+        <span className="text-[9px] font-medium uppercase tracking-wide text-ink-400 sm:text-[10px]">
           {label}
         </span>
-        <span className="text-[0.95rem] font-semibold text-ink-900">{store}</span>
+        <span className="text-sm font-semibold text-ink-900 sm:text-[0.95rem]">{store}</span>
       </span>
     </a>
   );
@@ -78,9 +78,9 @@ export function AppDownloadSection() {
       />
 
       <Container className="relative">
-        <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
-          {/* LEFT: content */}
-          <div className="order-2 lg:order-1">
+        <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+          {/* LEFT: content — appears FIRST on mobile, sits left on desktop. */}
+          <div className="order-1">
             <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-muted px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
               Mobil ilova
@@ -103,7 +103,7 @@ export function AppDownloadSection() {
                 href={site.apps.appStore}
                 label="Download on the"
                 icon={
-                  <svg className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <svg className="h-6 w-6 sm:h-7 sm:w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M16.4 12.7c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.6-1.7-3.2-1.7-1.3-.1-2.6.8-3.3.8-.7 0-1.7-.8-2.8-.8-1.4 0-2.8.9-3.5 2.2-1.5 2.6-.4 6.5 1.1 8.6.7 1 1.6 2.2 2.7 2.1 1.1 0 1.5-.7 2.8-.7 1.3 0 1.6.7 2.7.7 1.1 0 1.9-1.1 2.6-2.1.8-1.2 1.1-2.3 1.1-2.4-.1 0-2.1-.8-2.1-3.3ZM14.3 5.9c.6-.7 1-1.7.9-2.7-.9 0-1.9.6-2.5 1.3-.5.6-1 1.7-.9 2.6 1 .1 2-.5 2.5-1.2Z" />
                   </svg>
                 }
@@ -113,7 +113,7 @@ export function AppDownloadSection() {
                 href={site.apps.googlePlay}
                 label="Get it on"
                 icon={
-                  <svg className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <svg className="h-6 w-6 sm:h-7 sm:w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M3.6 2.5c-.3.3-.5.8-.5 1.4v16.2c0 .6.2 1.1.5 1.4l.1.1 9-9v-.2l-9.1-8.9Zm12 6.3L6.9 2.2l8 8 1.3-1.3 1.4.8-2 2 2 2-1.4.8-1.3-1.3-8 8 8.7-6.6 2.4 1.4c.7.4 1.3.2 1.3-.6V3.8c0-.8-.6-1-1.3-.6l-2.4 1.4-.3.1-.2.1Z" />
                   </svg>
                 }
@@ -155,8 +155,8 @@ export function AppDownloadSection() {
             </div>
           </div>
 
-          {/* RIGHT: phone */}
-          <div className="order-1 lg:order-2">
+          {/* RIGHT: phone — appears second on mobile, right on desktop. */}
+          <div className="order-2">
             <InteractivePhone />
           </div>
         </div>

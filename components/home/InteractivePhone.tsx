@@ -203,7 +203,7 @@ export function InteractivePhone() {
   return (
     <div
       ref={stageRef}
-      className="relative mx-auto flex h-[480px] w-full max-w-[340px] items-center justify-center sm:h-[540px] sm:max-w-[380px] lg:h-[600px] lg:max-w-[440px]"
+      className="relative mx-auto flex h-[460px] w-full max-w-[320px] items-center justify-center overflow-x-visible overflow-y-visible sm:h-[540px] sm:max-w-[380px] lg:h-[600px] lg:max-w-[440px]"
       style={{ perspective: `${PERSPECTIVE_PX}px`, perspectiveOrigin: '50% 50%' }}
       aria-hidden="true"
     >
@@ -439,19 +439,21 @@ export function InteractivePhone() {
           </div>
         </div>
 
-        {/* Layer 3 — floating decorative card (mini notification), opposite parallax */}
+        {/* Layer 3 — floating decorative card (mini notification), opposite parallax.
+            Positioned closer to the phone body on small screens so it never
+            bleeds outside the viewport; pulls outward on sm+. */}
         <div
           ref={floatRef}
-          className="pointer-events-none absolute -right-4 -top-6 z-20 w-44 rounded-2xl border border-white/20 bg-white/95 p-3 shadow-lift backdrop-blur sm:-right-8 sm:-top-8 sm:w-48"
+          className="pointer-events-none absolute -right-1 -top-5 z-20 w-36 rounded-2xl border border-white/20 bg-white/95 p-2.5 shadow-lift backdrop-blur sm:-right-6 sm:-top-7 sm:w-44 lg:-right-8 lg:-top-8 lg:w-48 lg:p-3"
           style={{
             transform: 'translate3d(0,-4px,40px)',
             willChange: 'transform',
           }}
         >
           <div className="flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
+            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-brand-50 text-brand-700 sm:h-7 sm:w-7">
               <svg
-                className="h-3.5 w-3.5"
+                className="h-3 w-3 sm:h-3.5 sm:w-3.5"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -462,12 +464,12 @@ export function InteractivePhone() {
               </svg>
             </span>
             <div className="leading-tight">
-              <p className="text-[10px] font-semibold text-ink-900">To‘lov muvaffaqiyatli</p>
-              <p className="text-[9px] text-ink-500">2 daqiqa oldin</p>
+              <p className="text-[9px] font-semibold text-ink-900 sm:text-[10px]">To‘lov muvaffaqiyatli</p>
+              <p className="text-[8px] text-ink-500 sm:text-[9px]">2 daqiqa oldin</p>
             </div>
           </div>
-          <p className="mt-2 text-[10px] text-ink-500">
-            Navbatdagi to‘lov muvaffaqiyatli amalga oshirildi.
+          <p className="mt-1.5 text-[9px] leading-snug text-ink-500 sm:mt-2 sm:text-[10px]">
+            Navbatdagi to‘lov amalga oshirildi.
           </p>
         </div>
       </div>

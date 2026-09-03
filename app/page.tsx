@@ -8,7 +8,6 @@ import { WhyMarkab } from '@/components/home/WhyMarkab';
 import { HowItWorks } from '@/components/home/HowItWorks';
 import { InvestSection } from '@/components/home/InvestSection';
 import { AcademySection } from '@/components/home/AcademySection';
-import { AppSection } from '@/components/home/AppSection';
 import { AppDownloadSection } from '@/components/home/AppDownloadSection';
 import { FaqSection } from '@/components/home/FaqSection';
 import { HomepageContactSection } from '@/components/home/HomepageContactSection';
@@ -121,8 +120,6 @@ export default async function HomePage() {
       <InvestSection />
 
       <AcademySection />
-
-      <AppSection />
 
       <FaqSection items={faqItems} />
 
