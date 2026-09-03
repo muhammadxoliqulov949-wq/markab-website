@@ -393,3 +393,35 @@ schema are supplied:
       other hosts do not render.
 - [ ] Response headers include nonce-CSP with `strict-dynamic`; no
       `script-src 'unsafe-inline'`.
+
+---
+
+## 20. Stage 1 addendum — contact page map
+
+The `/contact` page now embeds an **OpenStreetMap** iframe
+(`https://www.openstreetmap.org/export/embed.html`) pinned at the verified
+office coordinates (41.331985, 69.223558), re-used from the existing
+`site.office.mapUrl` Google Maps link on markab.uz. This is the only
+third-party iframe permitted.
+
+CSP changes (narrow, deliberate — no wildcards, no `unsafe-inline`/`unsafe-eval`):
+
+* `frame-src: 'self' https://www.openstreetmap.org` (was `'none'`)
+* `img-src` additionally allows `https://tile.openstreetmap.org` for map tiles
+* `frame-ancestors`, `script-src` (nonce + strict-dynamic), and every other
+  directive are unchanged.
+
+Third parties contacted when the map renders:
+
+* `www.openstreetmap.org` — embed HTML/JS (served inside the iframe)
+* `tile.openstreetmap.org` — map tile images, fetched by the visitor's browser
+  from inside the iframe
+
+OSM's embed does not set cookies in third-party context (per OSM's privacy
+policy), and the iframe is loaded with `loading="lazy"`, `sandbox="allow-scripts
+allow-pointer-lock"` (no `allow-same-origin`, no `allow-top-navigation`),
+`referrerPolicy="no-referrer-when-downgrade"`, and an explicit accessible title.
+
+A 10-second load/failure guard replaces the iframe with a compact unavailable
+state if the embed cannot load; the verified address, the "Xaritada ochish"
+deep-link to Google Maps and the contact form remain usable regardless.

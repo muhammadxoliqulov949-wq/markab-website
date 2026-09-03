@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import { Container, SectionHeading } from '@/components/ui/Section';
-import { ContactForm } from '@/components/contact/ContactForm';
-import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
+import { Container } from '@/components/ui/Section';
 import { ButtonLink } from '@/components/ui/Button';
+import { OfficeInfo } from '@/components/contact/OfficeInfo';
+import { OfficeMap } from '@/components/contact/OfficeMap';
+import { ContactForm } from '@/components/contact/ContactForm';
 import { site } from '@/lib/site';
 import { buildMetadata } from '@/lib/seo';
 import { describeSubject } from '@/lib/financing/subject';
@@ -11,10 +12,14 @@ import {
   isInvestmentEnquiry,
 } from '@/lib/investment/status';
 
+// Contact renders per request (nonce CSP; pre-filled subject can depend on
+// searchParams). It does not need ISR — form landing is cheap and personal.
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = buildMetadata({
   title: 'Aloqa',
   description:
-    'Markab bilan bog‘lanish: ofis manzili, ish vaqti va so‘rov yuborish formasi. Toshkent shahri, Kukcha Aryk, Yunusobod tumani.',
+    'Markab ofisi manzili, ish vaqti va bog‘lanish formasi. Toshkent shahri, Kukcha Aryk, Yunusobod tumani.',
   path: '/contact',
 });
 
@@ -28,16 +33,11 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
   const sp = await searchParams;
 
   // Arriving from "Mavjudligini aniqlash": resolve the item through the
-  // repository so the message names it, and fall back silently if the id is
-  // unknown — a bad handoff must never break the page.
+  // repository so the message names it.
   const ref = first(sp.ref);
   const type = first(sp.type);
   const subject = await describeSubject(type, ref);
 
-  // Investment interest from /invest. Every investment CTA ends here — there is
-  // no invest-now flow, no balance and no deposit anywhere in the prototype.
-  // An unrecognised `about` value falls back to the general enquiry, so a
-  // hand-typed URL can never produce a broken or empty form.
   const enquiry = first(sp.about);
   const investmentEnquiry = type === 'sarmoya';
 
@@ -56,112 +56,72 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
 
   return (
     <Container className="section-y-sm">
-      <header className="mb-10 max-w-2xl">
+      {/* ------ Page header ------ */}
+      <header className="mb-8 max-w-2xl md:mb-10">
+        <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-brand-700">
+          Aloqa
+        </p>
         <h1 className="text-display-sm sm:text-display-md">Biz bilan bog‘laning</h1>
         <p className="mt-3 text-base leading-relaxed text-ink-500">
-          Savolingizni qoldiring yoki ofisga tashrif buyuring. Javob rasmiy ish vaqtida taqdim
-          etiladi.
+          Ofisga tashrif buyuring yoki quyidagi forma orqali savol qoldiring.
+          Javob rasmiy ish vaqtida taqdim etiladi.
         </p>
       </header>
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-12">
-        <div className="rounded-xl border border-line bg-surface p-6 sm:p-8">
-          <ContactForm initialMessage={initialMessage} initialTopic={initialTopic} />
-        </div>
-
-        <div className="space-y-6">
-          <div className="rounded-xl border border-line bg-surface p-6">
-            <h2 className="text-base font-semibold text-ink-900">Ofis</h2>
-            <dl className="mt-4 space-y-3 text-sm">
-              <div>
-                <dt className="text-xs uppercase tracking-wide text-ink-400">Manzil</dt>
-                <dd className="mt-1 text-ink-700">{site.office.address}</dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-wide text-ink-400">Ish vaqti</dt>
-                <dd className="mt-1 text-ink-700">{site.office.hours}</dd>
-              </div>
-            </dl>
-            <div className="mt-5">
-              <ButtonLink href={site.office.mapUrl} variant="secondary" size="sm">
-                Xaritada ochish
-              </ButtonLink>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-line bg-surface p-6">
-            <h2 className="text-base font-semibold text-ink-900">Aloqa kanallari</h2>
-            <dl className="mt-4 space-y-3 text-sm">
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-ink-500">Telefon</dt>
-                <dd>{site.contacts.phone ?? <PendingValue label="saytda e’lon qilinmagan" />}</dd>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-ink-500">Email</dt>
-                <dd>{site.contacts.email ?? <PendingValue label="saytda e’lon qilinmagan" />}</dd>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-ink-500">Ilova</dt>
-                <dd className="text-right">
-                  <a
-                    href={site.apps.googlePlay}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-[32px] items-center text-brand-700 underline underline-offset-2"
-                  >
-                    Google Play
-                  </a>
-                  {' · '}
-                  <a
-                    href={site.apps.appStore}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-[32px] items-center text-brand-700 underline underline-offset-2"
-                  >
-                    App Store
-                  </a>
-                </dd>
-              </div>
-            </dl>
-            <p className="mt-4 text-xs leading-relaxed text-ink-400">
-              Telefon va email manbalarda farqli ko‘rsatilganligi sababli bu yerda
-              ko‘rsatilmagan — rasmiy tasdiqdan so‘ng qo‘shiladi.
+      {/* ------ Two-column composition ------ */}
+      <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+        {/* LEFT: Bizning ofis — map + information */}
+        <section aria-labelledby="office-heading" className="space-y-5">
+          <div>
+            <h2 id="office-heading" className="text-lg font-semibold text-ink-900">
+              Bizning ofis
+            </h2>
+            <p className="mt-1 text-sm text-ink-500">
+              Belgilangan manzilga ish vaqti davomida tashrif buyurishingiz mumkin.
             </p>
           </div>
 
-          <StateBlock
-            variant="pending"
-            title="Qo‘llab-quvvatlash vaqti"
-            description="Javob berish muddati rasmiy jarayon tasdiqlangach ko‘rsatiladi."
-            actions={
-              <ButtonLink href="/faq" variant="secondary" size="sm">
-                Savol-javoblar
-              </ButtonLink>
-            }
-          />
-        </div>
-      </div>
+          <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-card">
+            <div className="p-4 sm:p-5">
+              <OfficeMap />
+            </div>
+            <div className="px-4 pb-5 sm:px-5">
+              <OfficeInfo />
+            </div>
+          </div>
 
-      <div className="mt-12">
-        <SectionHeading
-          eyebrow="Muqobil"
-          title="O‘zingizga mos bo‘limni tanlang"
-          description="Ko‘p hollarda savolga tegishli bo‘limda javob topish tezroq."
-        />
-        <div className="mt-6 flex flex-wrap gap-3">
-          <ButtonLink href="/financing" variant="secondary">
-            Moliyalashtirish shartlari
-          </ButtonLink>
-          <ButtonLink href="/academy" variant="secondary">
-            Academy
-          </ButtonLink>
-          <ButtonLink href="/invest" variant="secondary">
-            Sarmoya
-          </ButtonLink>
-          <ButtonLink href="/sell" variant="secondary">
-            Avtomobil sotish
-          </ButtonLink>
-        </div>
+          <p className="text-xs leading-relaxed text-ink-400">
+            Xarita uchinchi tomon xizmati (OpenStreetMap) orqali ko‘rsatilmoqda.
+            Ushbu xizmat faqat joylashuvni ko‘rsatish uchun ishlatiladi va shaxsiy
+            ma’lumotlaringiz yuborilmaydi.
+          </p>
+        </section>
+
+        {/* RIGHT: Biz bilan bog'laning — form */}
+        <section aria-labelledby="form-heading" className="space-y-5">
+          <div>
+            <h2 id="form-heading" className="text-lg font-semibold text-ink-900">
+              Biz bilan bog‘laning
+            </h2>
+            <p className="mt-1 text-sm text-ink-500">
+              Shaklni to‘ldiring — rasmiy aloqa kanali ulangach so‘rovlar qabul
+              qilinadi. Hozircha forma ma’lumotlari serverga yuborilmaydi.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-7">
+            <ContactForm initialMessage={initialMessage} initialTopic={initialTopic} />
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink href="/faq" variant="secondary" size="sm">
+              Savol-javoblar
+            </ButtonLink>
+            <ButtonLink href={site.office.mapUrl} variant="ghost" size="sm" target="_blank" rel="noopener noreferrer">
+              Yo‘nalish olish →
+            </ButtonLink>
+          </div>
+        </section>
       </div>
     </Container>
   );

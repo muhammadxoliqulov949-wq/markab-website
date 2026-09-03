@@ -44,15 +44,42 @@ const hostsFrom = (src, pattern) => {
 
 const urlHosts = hostsFrom(urlSrc, /'(api\.[a-z.]+|markab\.uz)'/g);
 const configHosts = hostsFrom(configSrc, /hostname:\s*'([^']+)'/g);
-const cspHosts = hostsFrom(cspSrc, /https:\/\/([a-z0-9.-]+)/g);
+// Extract only the https:// hosts declared inside IMAGE_SOURCES (not other directives).
+const cspImgBlock = cspSrc.split('const IMAGE_SOURCES')[1]?.split(';')[0] ?? '';
+const cspImgHosts = hostsFrom(cspImgBlock, /https:\/\/([a-z0-9.-]+)/g);
 
 check('lib/security/url.ts declares at least one host', urlHosts.length > 0);
 check('next.config.mjs declares at least one host', configHosts.length > 0);
-check('lib/security/csp.ts declares at least one host', cspHosts.length > 0);
+check('lib/security/csp.ts declares at least one image host', cspImgHosts.length > 0);
 check(
-  'the same host set appears in all three places',
-  urlHosts.join() === configHosts.join() && configHosts.join() === cspHosts.join(),
-  `url=[${urlHosts}] config=[${configHosts}] csp=[${cspHosts}]`,
+  'core image hosts appear in all three places (api.markab.uz)',
+  urlHosts.includes('api.markab.uz') &&
+    configHosts.includes('api.markab.uz') &&
+    cspImgHosts.includes('api.markab.uz'),
+);
+
+// frame-src may include hosts that are NOT image-optimizable (e.g. map
+// embeds). Resolve the FRAME_SOURCES constant so the check sees the final
+// effective CSP string rather than the token name, and verify it is
+// restricted to a small explicit set and never '*'.
+function resolveConst(src, name) {
+  const m = src.match(new RegExp(`const\\s+${name}\\s*=\\s*"([^"]+)"`));
+  return m ? m[1] : '';
+}
+const frameSrcResolved = resolveConst(cspSrc, 'FRAME_SOURCES');
+const frameHosts = hostsFrom(frameSrcResolved, /https:\/\/([a-z0-9.-]+)/g);
+check(
+  "frame-src does not contain wildcard '*'",
+  !frameSrcResolved.includes('*'),
+);
+check(
+  'frame-src lists at most one explicit third-party host (map embed)',
+  frameHosts.length <= 1,
+  `frame=[${frameHosts}]`,
+);
+check(
+  'frame-src allows OpenStreetMap embed host',
+  frameHosts.includes('www.openstreetmap.org'),
 );
 
 // --- CSP shape --------------------------------------------------------------

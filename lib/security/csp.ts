@@ -55,7 +55,17 @@ export type CspOptions = {
  * three lists, one decision. Move them together or the mismatch surfaces as
  * either a blocked image or a render error.
  */
-const IMAGE_SOURCES = "'self' data: https://api.markab.uz";
+// api.markab.uz covers catalogue media; tile.openstreetmap.org is required by
+// the contact-page OSM embed only when rendered. Both are HTTPS and pinned to
+// specific hosts — no wildcard.
+const IMAGE_SOURCES = "'self' data: https://api.markab.uz https://tile.openstreetmap.org";
+
+// Only origins needed for the contact-page map embed. No other iframes are
+// allowed; this is deliberately NOT '*' and does NOT include arbitrary
+// third-party map providers. frame-ancestors is controlled separately and
+// stays 'none' (or preview origins) — frame-src governs what *we* embed, not
+// who may embed us.
+const FRAME_SOURCES = "'self' https://www.openstreetmap.org";
 
 export function buildCsp({ nonce, frameAncestors, upgradeInsecure }: CspOptions): string {
   const directives: [string, string][] = [
@@ -64,13 +74,15 @@ export function buildCsp({ nonce, frameAncestors, upgradeInsecure }: CspOptions)
     ['style-src', "'self' 'unsafe-inline'"],
     ['img-src', IMAGE_SOURCES],
     ['font-src', "'self'"],
-    // No fetch calls exist today. When the real API is wired up this is the
-    // directive that has to gain https://api.markab.uz — deliberately, not as
-    // a side effect of something else.
+    // connect-src governs fetches made by our own scripts. Our server-side
+    // fetch() calls don't pass through CSP, and we have no client-side
+    // fetches today. The OSM embed runs inside its own iframe and doesn't
+    // request data through our page context, so it does not need an entry
+    // here.
     ['connect-src', "'self'"],
     ['media-src', "'self'"],
     ['manifest-src', "'self'"],
-    ['frame-src', "'none'"],
+    ['frame-src', FRAME_SOURCES],
     ['object-src', "'none'"],
     // Stops a <base> injection from repointing every relative URL.
     ['base-uri', "'self'"],
