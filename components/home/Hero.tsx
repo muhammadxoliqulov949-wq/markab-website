@@ -37,7 +37,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
         <div className="grid items-center gap-10 md:grid-cols-2 md:gap-8 lg:grid-cols-[1.02fr_1fr] lg:gap-14">
           {/* LEFT — content first, in DOM order and in reading order. */}
           <div className="md:max-w-none lg:max-w-xl">
-            <p className="animate-rise-1 inline-flex items-center gap-2 rounded-full border border-line bg-surface-muted px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700">
+            <p className="animate-rise-1 inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
               {site.positioning}
             </p>
@@ -54,7 +54,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
             <div className="animate-rise-4 mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
               <Link
                 href="/cars"
-                className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl bg-brand-700 px-7 text-[0.9375rem] font-semibold text-white transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:bg-brand-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
+                className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl bg-brand-500 px-7 text-[0.9375rem] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(0,184,120,0.45)] transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:bg-brand-600 hover:shadow-[0_8px_20px_-6px_rgba(0,184,120,0.5)] active:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
               >
                 Avtomobillarni ko‘rish
                 <svg
@@ -70,7 +70,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
               </Link>
               <Link
                 href="/invest"
-                className="inline-flex h-[52px] items-center justify-center rounded-xl border border-line-strong bg-surface px-7 text-[0.9375rem] font-semibold text-ink-900 transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-ink-300 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
+                className="inline-flex h-[52px] items-center justify-center rounded-xl border border-line bg-white px-7 text-[0.9375rem] font-semibold text-ink-900 shadow-card transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
               >
                 Sarmoya imkoniyatlari
               </Link>
@@ -163,7 +163,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                       </div>
                       <div className="flex items-center justify-between gap-4 border-t border-line pt-2.5">
                         <dt className="text-sm text-ink-500">Oylik to‘lov</dt>
-                        <dd className="text-[0.9375rem] font-semibold text-brand-700">
+                        <dd className="text-[0.9375rem] font-semibold text-brand-600">
                           {vehicle.financing.monthlyPaymentUzs ? (
                             formatUzs(vehicle.financing.monthlyPaymentUzs)
                           ) : (

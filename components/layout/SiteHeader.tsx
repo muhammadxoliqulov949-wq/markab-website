@@ -124,20 +124,26 @@ export function SiteHeader() {
           : 'border-transparent bg-white/80 backdrop-blur-xl',
       ].join(' ')}
     >
-      {/* Honest, short disclosure — condenses away once the page scrolls.
-          No internal vocabulary: it says what the visitor needs to know and
-          nothing about how the site is built. */}
+      {/* Top announcement bar — short value message, collapses on scroll. */}
       <div
         className={[
-          'overflow-hidden bg-brand-700 text-white/90 transition-[max-height,opacity] duration-300 ease-smooth',
+          'overflow-hidden bg-brand-500 text-white/95 transition-[max-height,opacity] duration-300 ease-smooth',
           scrolled || open ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100',
         ].join(' ')}
       >
-        <div className="container-page flex items-center justify-between py-1.5 text-[11px]">
+        <div className="container-page flex items-center justify-between gap-3 py-1.5 text-[11px]">
           <span className="truncate">
-            Kontsept-prototip · e’lonlar namunaviy
+            <strong className="font-semibold">Yangi:</strong> Muddatli to‘lov shartlari endi onlayn tarzda mavjud
           </span>
-          <span className="hidden sm:inline">{site.positioning}</span>
+          <Link
+            href="/financing"
+            className="hidden shrink-0 items-center gap-1 text-white/90 underline-offset-2 transition-colors hover:text-white hover:underline sm:inline-flex"
+          >
+            Batafsil
+            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </Link>
         </div>
       </div>
 
@@ -212,7 +218,7 @@ export function SiteHeader() {
               <circle cx="18" cy="20" r="1.4" />
             </svg>
             {count > 0 ? (
-              <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-600 px-1 text-[11px] font-semibold text-white">
+              <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-500 px-1 text-[11px] font-semibold text-white">
                 {count}
               </span>
             ) : null}
@@ -222,7 +228,7 @@ export function SiteHeader() {
 
           <Link
             href={isAuthenticated ? '/profile' : '/login'}
-            className="hidden h-10 shrink-0 items-center rounded-lg bg-ink-900 px-3 text-[0.8125rem] font-medium text-white transition-colors duration-200 hover:bg-ink-800 sm:inline-flex sm:h-11 sm:px-5 sm:text-sm"
+            className="hidden h-10 shrink-0 items-center rounded-lg bg-black px-3 text-[0.8125rem] font-medium text-white transition-colors duration-200 hover:bg-ink-900 sm:inline-flex sm:h-11 sm:px-5 sm:text-sm"
           >
             {isAuthenticated ? 'Kabinet' : 'Kirish'}
           </Link>
@@ -305,7 +311,7 @@ export function SiteHeader() {
 
             <Link
               href={isAuthenticated ? '/profile' : '/login'}
-              className="mt-4 flex h-12 items-center justify-center rounded-xl bg-ink-900 text-sm font-semibold text-white transition-colors hover:bg-ink-800"
+              className="mt-4 flex h-12 items-center justify-center rounded-xl bg-brand-500 text-sm font-semibold text-white shadow-[0_6px_16px_-6px_rgba(0,184,120,0.45)] transition-colors hover:bg-brand-600"
             >
               {isAuthenticated ? 'Kabinet' : 'Kirish'}
             </Link>

@@ -85,13 +85,9 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col gap-4 border-t border-line pt-8 text-xs text-ink-400 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {new Date().getFullYear()} Markab. Kontsept-prototip — markab.uz ochiq ma’lumotlari
-            asosida tayyorlangan.
-          </p>
+          <p>© {new Date().getFullYear()} Markab. Barcha huquqlar himoyalangan.</p>
           <p className="max-w-md sm:text-right">
-            Ushbu prototip moliyaviy, huquqiy yoki investitsiya tavsiyasi emas. Narxlar va shartlar
-            Markab tomonidan tasdiqlanadi.
+            Narxlar va shartlar oldindan ogohlantirmasdan o‘zgartirilishi mumkin. Moliyaviy xizmatlar litsenziya asosida taqdim etiladi.
           </p>
         </div>
       </div>
