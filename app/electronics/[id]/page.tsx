@@ -19,6 +19,12 @@ import { availabilityNote, stockMeta } from '@/lib/products/stock';
 import { relatedProductReason, selectRelatedProducts } from '@/lib/products/related';
 import { applyHref, calculatorHref } from '@/lib/financing/handoff';
 
+// Catalogue pages are rendered per request:
+//  (1) nonce-based CSP stamps scripts at render time (see docs/PHASE-12-DEPLOYMENT-SECURITY.md);
+//  (2) prices / stock / availability can change at any time in HTTP mode;
+//  (3) searchParams must be resolved server-side.
+export const dynamic = 'force-dynamic';
+
 type Params = Promise<{ id: string }>;
 
 async function loadProduct(id: string) {

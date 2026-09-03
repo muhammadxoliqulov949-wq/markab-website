@@ -110,7 +110,7 @@ export function FeaturedShowcase({
               )}
 
               <p className="mt-7 text-xs leading-relaxed text-ink-400">
-                {dataSourceNote ? `${dataSourceNote} ` : ''}
+                {dataSourceNote() ? `${dataSourceNote()} ` : ''}
                 {publicTotal
                   ? `Ochiq e’lonlar soni: ${publicTotal} ta (markab.uz bo‘yicha).`
                   : null}

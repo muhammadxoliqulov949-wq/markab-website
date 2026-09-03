@@ -11,6 +11,12 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { repository } from '@/lib/data';
 import { breadcrumbJsonLd, buildMetadata } from '@/lib/seo';
 
+// Catalogue pages are rendered per request:
+//  (1) nonce-based CSP stamps scripts at render time (see docs/PHASE-12-DEPLOYMENT-SECURITY.md);
+//  (2) prices / stock / availability can change at any time in HTTP mode;
+//  (3) searchParams must be resolved server-side.
+export const dynamic = 'force-dynamic';
+
 type Params = Promise<{ slug: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
