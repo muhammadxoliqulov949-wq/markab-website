@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Container } from '@/components/ui/Section';
 import { PendingValue } from '@/components/ui/StateBlock';
+import { RemoteImage } from '@/components/ui/RemoteImage';
 import { formatUzs } from '@/lib/format';
 import { site } from '@/lib/site';
 import type { Product, Vehicle } from '@/lib/data/types';
@@ -106,13 +106,14 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                     page on a phone; 4:3 on desktop, inside the two-column grid.
                   */}
                   <div className="relative h-[210px] sm:h-[260px] md:aspect-[4/3] md:h-auto">
-                    <Image
+                    <RemoteImage
                       src={image}
                       alt={vehicle ? vehicle.title : ''}
                       fill
                       priority
                       sizes="(max-width: 1024px) 100vw, 48vw"
                       className="object-cover object-center"
+                      fallbackLabel=""
                     />
                   </div>
                 </div>

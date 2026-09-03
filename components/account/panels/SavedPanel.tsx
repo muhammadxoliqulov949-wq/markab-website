@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
+import { RemoteImage } from '@/components/ui/RemoteImage';
 import { Panel } from './Panel';
 import { useSavedItems } from '@/components/account/SavedItemsProvider';
 import { formatUzs } from '@/lib/format';
@@ -79,19 +79,14 @@ export function SavedPanel() {
                 href={item.href}
                 className="relative h-20 w-24 shrink-0 overflow-hidden rounded-md bg-surface-muted"
               >
-                {item.image ? (
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="96px"
-                    className="object-cover object-center"
-                  />
-                ) : (
-                  <span className="flex h-full w-full items-center justify-center text-[10px] text-ink-400">
-                    Rasm yo‘q
-                  </span>
-                )}
+                <RemoteImage
+                  src={item.image ?? null}
+                  alt={item.title}
+                  fill
+                  sizes="96px"
+                  className="object-cover object-center"
+                  fallbackLabel="Rasm yo‘q"
+                />
               </Link>
               <div className="flex min-w-0 flex-1 flex-col">
                 <div className="flex items-start justify-between gap-2">

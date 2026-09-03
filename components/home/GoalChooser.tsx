@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { Reveal } from '@/components/ui/Reveal';
+import { RemoteImage } from '@/components/ui/RemoteImage';
 import { homepageGoals } from '@/lib/site';
 
 /**
@@ -94,12 +94,13 @@ export function GoalChooser({
                     <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
                       {card.image ? (
                         <>
-                          <Image
+                          <RemoteImage
                             src={card.image}
                             alt={card.alt}
                             fill
                             sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 24vw"
                             className="object-cover object-center transition-transform duration-[900ms] ease-smooth group-hover:scale-[1.04]"
+                            fallbackLabel=""
                           />
                           <div
                             className="absolute inset-0 bg-gradient-to-t from-ink-900/20 to-transparent"
