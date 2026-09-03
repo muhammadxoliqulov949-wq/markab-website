@@ -35,33 +35,68 @@ export function OfficeMap() {
   // the empty array, so if React is alive on the client it WILL fire. If it
   // doesn't, JS is not executing at all.
   useEffect(() => {
-    try {
-      setMountPhase('mounted');
-      const flags: string[] = [];
-      flags.push(`inIframe=${window.top !== window.self}`);
-      flags.push(`location=${window.location.href.slice(0, 80)}`);
+    const probe = async () => {
       try {
-        const fe = window.frameElement as HTMLIFrameElement | null;
-        if (fe) {
-          flags.push(`framed=yes`);
-          const sb = fe.sandbox;
-          flags.push(`frame-sandbox="${sb ? sb.toString() : 'no-sandbox-attr'}"`);
-        } else {
-          flags.push(`framed=no`);
+        setMountPhase('mounted');
+        const flags: string[] = [];
+        flags.push(`inIframe=${window.top !== window.self}`);
+        flags.push(`location=${window.location.href.slice(0, 100)}`);
+        try {
+          const fe = window.frameElement as HTMLIFrameElement | null;
+          if (fe) {
+            flags.push(`framed=yes`);
+            const sb = fe.sandbox;
+            flags.push(`frame-sandbox="${sb ? sb.toString() : 'no-sandbox-attr'}"`);
+          } else {
+            flags.push(`framed=no`);
+          }
+        } catch (e) {
+          flags.push(`frameElement-denied:${(e as Error).message.slice(0, 40)}`);
         }
+        try {
+          flags.push(`window.open=${typeof window.open}`);
+        } catch (e) {
+          flags.push(`window.open-threw:${(e as Error).message.slice(0, 40)}`);
+        }
+        // Self-fetch the page chunk that contains OfficeMap, to surface any
+        // 403/CSP/network failure the browser actually encounters. We can't
+        // introspect the blocked script from JS because blocked scripts don't
+        // execute, but a fetch() of the same URL from within the executing
+        // bundle will tell us whether static assets are reachable.
+        try {
+          const pageScript = Array.from(document.querySelectorAll('script[src]')).find(
+            (s) => /\/_next\/static\/chunks\/app\/(contact\/)?page(\.|$)/.test(s.getAttribute('src') || ''),
+          );
+          const src = pageScript?.getAttribute('src') || '/_next/static/chunks/app/contact/page.js';
+          flags.push(`probe-chunk=${src.split('/').pop()}`);
+          const r = await fetch(src, { credentials: 'same-origin' });
+          flags.push(`chunk-fetch=${r.status} ${r.statusText}`);
+          // Echo back the x-debug-req-* headers the middleware attached so we
+          // can see exactly what Origin/Referer/Host the browser sent for a
+          // same-origin static chunk request.
+          const reqOrigin = r.headers.get('x-debug-req-origin');
+          const reqReferer = r.headers.get('x-debug-req-referer');
+          const reqHost = r.headers.get('x-debug-req-host');
+          if (reqOrigin) flags.push(`hdr-origin=${reqOrigin}`);
+          if (reqReferer) flags.push(`hdr-referer=${reqReferer.slice(0, 80)}`);
+          if (reqHost) flags.push(`hdr-host=${reqHost}`);
+        } catch (e) {
+          flags.push(`chunk-fetch-threw:${(e as Error).message.slice(0, 80)}`);
+        }
+        // Detect websocket HMR availability (dev-only): if HMR is connected
+        // window.__nextDevClientErrors is defined and/or there is a WS to _next/webpack-hmr.
+        try {
+          flags.push(`hmr-ws=${(window as unknown as { __nextDevClientErrors?: unknown }).__nextDevClientErrors !== undefined ? 'registered' : 'absent'}`);
+        } catch {
+          flags.push(`hmr-ws=probe-failed`);
+        }
+        setEnvInfo(flags.join(' | '));
       } catch (e) {
-        flags.push(`frameElement-denied:${(e as Error).message.slice(0, 40)}`);
+        setMountPhase('effect-errored');
+        setEnvInfo(`effect-threw:${(e as Error).message}`);
       }
-      try {
-        flags.push(`window.open=${typeof window.open}`);
-      } catch (e) {
-        flags.push(`window.open-threw:${(e as Error).message.slice(0, 40)}`);
-      }
-      setEnvInfo(flags.join(' | '));
-    } catch (e) {
-      setMountPhase('effect-errored');
-      setEnvInfo(`effect-threw:${(e as Error).message}`);
-    }
+    };
+    void probe();
   }, []);
 
   useEffect(() => {
