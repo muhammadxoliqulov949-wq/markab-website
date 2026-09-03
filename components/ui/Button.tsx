@@ -9,11 +9,11 @@ const base =
 
 const variants: Record<Variant, string> = {
   primary:
-    'bg-brand-700 text-white shadow-card hover:bg-brand-800 hover:shadow-card-hover active:translate-y-[0.5px]',
+    'bg-brand-500 text-white shadow-[0_6px_16px_-6px_rgba(0,184,120,0.45)] hover:bg-brand-600 hover:shadow-[0_8px_20px_-6px_rgba(0,184,120,0.5)] active:translate-y-[0.5px] active:bg-brand-700',
   secondary:
-    'bg-white text-ink-900 border border-line-strong hover:border-ink-300 hover:bg-surface-muted',
+    'bg-white text-ink-900 border border-line hover:border-brand-200 hover:bg-brand-50',
   ghost: 'text-ink-700 hover:bg-surface-sunken hover:text-ink-900',
-  subtle: 'bg-brand-50 text-brand-800 hover:bg-brand-100',
+  subtle: 'bg-brand-50 text-brand-700 hover:bg-brand-100',
   /**
    * For dark grounds. These exist as variants rather than className overrides
    * on purpose: Tailwind resolves conflicting utilities by stylesheet order,

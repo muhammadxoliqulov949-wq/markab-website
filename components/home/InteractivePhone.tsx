@@ -207,13 +207,13 @@ export function InteractivePhone() {
       style={{ perspective: `${PERSPECTIVE_PX}px`, perspectiveOrigin: '50% 50%' }}
       aria-hidden="true"
     >
-      {/* Layer 4 — soft radial glow, follows cursor subtly */}
+      {/* Layer 4 — soft radial glow, follows cursor subtly. Official Markab green. */}
       <div
         ref={glowRef}
         className="pointer-events-none absolute inset-0 -z-0"
         style={{
           background:
-            'radial-gradient(60% 55% at 50% 50%, rgba(30,122,97,0.28) 0%, rgba(30,122,97,0.12) 38%, rgba(30,122,97,0) 70%)',
+            'radial-gradient(60% 55% at 50% 50%, rgba(0,184,120,0.35) 0%, rgba(0,184,120,0.14) 38%, rgba(0,184,120,0) 70%)',
           transform: 'translate(0,0)',
           willChange: 'transform, opacity',
           opacity: 0.7,
@@ -227,7 +227,7 @@ export function InteractivePhone() {
         className="pointer-events-none absolute inset-0 -z-0"
         style={{
           background:
-            'radial-gradient(70% 60% at 50% 55%, rgba(20,101,80,0.10) 0%, rgba(20,101,80,0) 70%)',
+            'radial-gradient(70% 60% at 50% 55%, rgba(0,163,106,0.12) 0%, rgba(0,163,106,0) 70%)',
         }}
         aria-hidden="true"
       />
@@ -276,33 +276,33 @@ export function InteractivePhone() {
               aria-hidden="true"
             />
 
-            {/* Layer 2 — screen / UI, floating slightly above the body (Z 24px) */}
+            {/* Layer 2 — screen / UI: bright white Markab app with green accents */}
             <div
               ref={screenRef}
-              className="absolute inset-[5px] overflow-hidden rounded-[2.35rem] bg-gradient-to-b from-[#0F2A22] via-[#0B1E19] to-[#091713]"
+              className="absolute inset-[5px] overflow-hidden rounded-[2.35rem] bg-white"
               style={{
                 transformStyle: 'preserve-3d',
                 willChange: 'transform',
-                boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.04)',
+                boxShadow: 'inset 0 0 0 1px rgba(15,23,42,0.06)',
               }}
             >
-              {/* Glass highlight — diagonal sheen */}
+              {/* Subtle top glass highlight — keeps the screen looking like glass */}
               <div
                 className="pointer-events-none absolute inset-0"
                 style={{
                   background:
-                    'linear-gradient(125deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 26%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.04) 100%)',
-                  mixBlendMode: 'screen',
+                    'linear-gradient(160deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 22%, rgba(255,255,255,0) 80%, rgba(15,23,42,0.03) 100%)',
+                  mixBlendMode: 'normal',
                 }}
                 aria-hidden="true"
               />
 
               {/* Status bar */}
-              <div className="flex items-center justify-between px-6 pt-4 text-[10px] font-medium text-white/80">
+              <div className="flex items-center justify-between px-6 pt-4 text-[10px] font-medium text-ink-700">
                 <span>9:41</span>
                 <div className="flex items-center gap-1">
-                  <span className="inline-block h-2 w-3.5 rounded-[2px] border border-white/40">
-                    <span className="block h-full w-[78%] rounded-[1px] bg-white/80" />
+                  <span className="inline-block h-2 w-3.5 rounded-[2px] border border-ink-300">
+                    <span className="block h-full w-[78%] rounded-[1px] bg-ink-700" />
                   </span>
                 </div>
               </div>
@@ -313,24 +313,24 @@ export function InteractivePhone() {
                 aria-hidden="true"
               />
 
-              {/* Screen content */}
-              <div className="px-5 pb-6 pt-8 text-white">
+              {/* Screen content — light UI matching official Markab */}
+              <div className="px-5 pb-6 pt-8">
                 {/* Header row: Markab mark */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-[13px] font-bold text-white shadow-[0_6px_14px_-4px_rgba(30,122,97,0.7)]">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-[13px] font-bold text-white shadow-[0_6px_14px_-6px_rgba(0,184,120,0.55)]">
                       M
                     </span>
                     <div className="leading-tight">
-                      <p className="text-[11px] font-semibold tracking-wide text-white">
+                      <p className="text-[11px] font-semibold tracking-wide text-ink-900">
                         Markab
                       </p>
-                      <p className="text-[9px] text-white/55">Halol moliya platformasi</p>
+                      <p className="text-[9px] text-ink-400">Halol moliya platformasi</p>
                     </div>
                   </div>
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-sunken text-ink-500">
                     <svg
-                      className="h-3.5 w-3.5 text-white/70"
+                      className="h-3.5 w-3.5"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -344,86 +344,73 @@ export function InteractivePhone() {
                 </div>
 
                 {/* Greeting */}
-                <p className="mt-5 text-[10px] uppercase tracking-[0.14em] text-white/45">
+                <p className="mt-5 text-[10px] uppercase tracking-[0.14em] text-ink-400">
                   Assalomu alaykum
                 </p>
-                <h3 className="mt-1 text-base font-semibold leading-tight text-white">
+                <h3 className="mt-1 text-base font-semibold leading-tight text-ink-900">
                   Xush kelibsiz
                 </h3>
 
-                {/* Next payment card */}
-                <div className="mt-4 rounded-2xl bg-gradient-to-br from-brand-500/90 to-brand-700/90 p-4 shadow-[0_14px_26px_-12px_rgba(30,122,97,0.8)]">
-                  <p className="text-[10px] font-medium uppercase tracking-wide text-white/75">
+                {/* Next payment card — brand green primary card */}
+                <div className="mt-4 rounded-2xl bg-brand-500 p-4 text-white shadow-[0_14px_26px_-12px_rgba(0,184,120,0.55)]">
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-white/80">
                     Navbatdagi to‘lov
                   </p>
-                  <p className="mt-1 text-xl font-bold tracking-tight text-white">
+                  <p className="mt-1 text-xl font-bold tracking-tight">
                     5,000,000
-                    <span className="ml-1 text-[11px] font-semibold text-white/75">so‘m</span>
+                    <span className="ml-1 text-[11px] font-semibold text-white/80">so‘m</span>
                   </p>
-                  <div className="mt-3 flex items-center justify-between text-[10px] text-white/80">
+                  <div className="mt-3 flex items-center justify-between text-[10px] text-white/85">
                     <span>15 okt · Payshanba</span>
-                    <span className="rounded-full bg-white/15 px-2 py-0.5 font-medium">
+                    <span className="rounded-full bg-white/20 px-2 py-0.5 font-medium">
                       3 kun qoldi
                     </span>
                   </div>
                 </div>
 
-                {/* Bonus card */}
-                <div className="mt-3 flex items-center gap-3 rounded-2xl bg-white/[0.05] px-4 py-3 ring-1 ring-white/[0.06]">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-500/15 text-accent-400">
+                {/* Bonus card — white card with gold star */}
+                <div className="mt-3 flex items-center gap-3 rounded-2xl bg-surface-muted px-4 py-3 ring-1 ring-line">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-50 text-accent-500">
                     <svg
                       className="h-4 w-4"
                       viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.8"
+                      fill="currentColor"
                       aria-hidden="true"
                     >
-                      <path
-                        d="M12 2l2.4 6.8H21l-5.6 4 2.1 6.7L12 15.6 6.5 19.5l2.1-6.7-5.6-4h6.6z"
-                        strokeLinejoin="round"
-                      />
+                      <path d="M12 2l2.4 6.8H21l-5.6 4 2.1 6.7L12 15.6 6.5 19.5l2.1-6.7-5.6-4h6.6z" />
                     </svg>
                   </span>
                   <div className="leading-tight">
-                    <p className="text-[10px] uppercase tracking-wide text-white/50">
+                    <p className="text-[10px] uppercase tracking-wide text-ink-400">
                       Bonus ballaringiz
                     </p>
-                    <p className="text-base font-semibold text-white">12,450</p>
+                    <p className="text-base font-semibold text-ink-900">12,450</p>
                   </div>
-                  <span className="ml-auto text-[10px] font-medium text-brand-200">+120 bugun</span>
+                  <span className="ml-auto text-[10px] font-medium text-brand-600">+120 bugun</span>
                 </div>
 
-                {/* Quick nav tiles */}
+                {/* Quick nav tiles — white cards with green icons */}
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   {[
-                    {
-                      label: 'Avtomobillar',
-                      hint: '20 ta',
-                      tint: 'from-white/10 to-white/[0.04]',
-                    },
-                    {
-                      label: 'Elektronika',
-                      hint: '42 ta',
-                      tint: 'from-white/10 to-white/[0.04]',
-                    },
+                    { label: 'Avtomobillar', hint: '20 ta' },
+                    { label: 'Elektronika', hint: '42 ta' },
                   ].map((tile) => (
                     <div
                       key={tile.label}
-                      className={`rounded-xl bg-gradient-to-br ${tile.tint} px-3 py-2.5 ring-1 ring-white/[0.06]`}
+                      className="rounded-xl bg-surface-muted px-3 py-2.5 ring-1 ring-line"
                     >
-                      <p className="text-[11px] font-semibold text-white">{tile.label}</p>
-                      <p className="mt-0.5 text-[9px] text-white/45">{tile.hint}</p>
+                      <p className="text-[11px] font-semibold text-ink-900">{tile.label}</p>
+                      <p className="mt-0.5 text-[9px] text-ink-400">{tile.hint}</p>
                     </div>
                   ))}
                 </div>
 
                 {/* Bottom tab bar */}
-                <div className="mt-4 flex items-center justify-around rounded-full bg-white/[0.06] px-4 py-2 ring-1 ring-white/[0.05]">
+                <div className="mt-4 flex items-center justify-around rounded-full bg-surface-sunken px-4 py-2 ring-1 ring-line">
                   {['Asosiy', 'Katalog', 'To‘lov', 'Profil'].map((t, i) => (
                     <span
                       key={t}
-                      className={`text-[9px] font-medium ${i === 0 ? 'text-brand-200' : 'text-white/45'}`}
+                      className={`text-[9px] font-medium ${i === 0 ? 'text-brand-600' : 'text-ink-400'}`}
                     >
                       {t}
                     </span>
@@ -432,7 +419,7 @@ export function InteractivePhone() {
 
                 {/* Home indicator */}
                 <div className="mt-3 flex justify-center">
-                  <span className="h-1 w-20 rounded-full bg-white/40" />
+                  <span className="h-1 w-20 rounded-full bg-ink-300" />
                 </div>
               </div>
             </div>

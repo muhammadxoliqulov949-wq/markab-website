@@ -129,7 +129,7 @@ export function SiteHeader() {
           nothing about how the site is built. */}
       <div
         className={[
-          'overflow-hidden bg-brand-900 text-white/70 transition-[max-height,opacity] duration-300 ease-smooth',
+          'overflow-hidden bg-brand-700 text-white/90 transition-[max-height,opacity] duration-300 ease-smooth',
           scrolled || open ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100',
         ].join(' ')}
       >
@@ -173,7 +173,7 @@ export function SiteHeader() {
                     {item.label}
                     <span
                       className={[
-                        'absolute inset-x-4 bottom-1.5 h-[2px] rounded-full bg-brand-600 transition-transform duration-300 ease-smooth',
+                        'absolute inset-x-4 bottom-1.5 h-[2px] rounded-full bg-brand-500 transition-transform duration-300 ease-smooth',
                         active ? 'scale-x-100' : 'scale-x-0',
                       ].join(' ')}
                       aria-hidden="true"

@@ -141,7 +141,7 @@ export function HeaderSearch() {
         <button
           type="submit"
           aria-label="Qidirish"
-          className="hidden h-11 items-center justify-center rounded-r-xl border border-l-0 border-line-strong bg-ink-900 px-3 text-white transition-colors hover:bg-ink-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 xl:inline-flex"
+          className="hidden h-11 items-center justify-center rounded-r-xl border border-l-0 border-line bg-brand-500 px-3 text-white transition-colors hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 xl:inline-flex"
         >
           <SearchIcon className="h-[18px] w-[18px]" />
         </button>

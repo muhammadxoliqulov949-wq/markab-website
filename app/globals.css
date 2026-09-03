@@ -29,7 +29,7 @@
   }
 
   body {
-    @apply bg-surface text-ink antialiased;
+    @apply bg-surface text-ink-700 antialiased;
     font-feature-settings: 'kern' 1, 'liga' 1;
   }
 
@@ -45,7 +45,7 @@
     text-wrap: pretty;
   }
 
-  /* Consistent, visible focus ring for keyboard users. */
+  /* Consistent, visible focus ring for keyboard users — Markab green on white. */
   :focus-visible {
     @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white rounded-[6px];
   }

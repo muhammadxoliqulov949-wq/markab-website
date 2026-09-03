@@ -25,16 +25,16 @@ function StoreBadge({
       target="_blank"
       rel="noopener noreferrer"
       title={href}
-      className="inline-flex min-h-[48px] flex-1 items-center justify-start gap-2.5 rounded-xl border border-line bg-surface px-4 py-2 text-ink-900 shadow-card transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 sm:h-[52px] sm:flex-none sm:gap-3 sm:px-5"
+      className="inline-flex min-h-[48px] flex-1 items-center justify-start gap-2.5 rounded-xl border border-black/10 bg-black px-4 py-2 text-white shadow-lg shadow-black/20 transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:bg-ink-900 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-500 sm:h-[52px] sm:flex-none sm:gap-3 sm:px-5"
     >
-      <span className="shrink-0 text-ink-900" aria-hidden="true">
+      <span className="shrink-0 text-white" aria-hidden="true">
         {icon}
       </span>
       <span className="flex min-w-0 flex-col items-start leading-tight">
-        <span className="text-[9px] font-medium uppercase tracking-wide text-ink-400 sm:text-[10px]">
+        <span className="text-[9px] font-medium uppercase tracking-wide text-white/70 sm:text-[10px]">
           {label}
         </span>
-        <span className="text-sm font-semibold text-ink-900 sm:text-[0.95rem]">{store}</span>
+        <span className="text-sm font-semibold text-white sm:text-[0.95rem]">{store}</span>
       </span>
     </a>
   );
@@ -65,35 +65,40 @@ export function AppDownloadSection() {
   return (
     <section
       aria-labelledby="app-download-heading"
-      className="relative overflow-hidden bg-surface section-y"
+      className="relative overflow-hidden bg-brand-500 section-y"
     >
-      {/* Decorative soft wash — stays within Markab emerald palette, no neon */}
+      {/* Soft tonal green wash — same family, no multicolor gradient, no neon. */}
       <div
-        className="pointer-events-none absolute -left-40 top-10 h-[28rem] w-[28rem] rounded-full bg-brand-50/70 blur-3xl"
+        className="pointer-events-none absolute -left-40 top-0 h-[32rem] w-[32rem] rounded-full bg-brand-400/20 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -right-32 bottom-0 h-[24rem] w-[24rem] rounded-full bg-brand-50/40 blur-3xl"
+        className="pointer-events-none absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-brand-600/25 blur-3xl"
+        aria-hidden="true"
+      />
+      {/* Very subtle top highlight for depth on the green surface */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/20"
         aria-hidden="true"
       />
 
       <Container className="relative">
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           {/* LEFT: content — appears FIRST on mobile, sits left on desktop. */}
-          <div className="order-1">
-            <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface-muted px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
+          <div className="order-1 text-white">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/90 backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent-500" aria-hidden="true" />
               Mobil ilova
             </p>
 
             <h2
               id="app-download-heading"
-              className="mt-5 text-display-lg text-ink-900 sm:text-display-xl"
+              className="mt-5 text-display-lg text-white sm:text-display-xl"
             >
               Markab ilovasini yuklab oling
             </h2>
 
-            <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-ink-500">
+            <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-white/85">
               To‘lovlar, eslatmalar va maxsus takliflar doimo yoningizda.
             </p>
 
@@ -123,24 +128,24 @@ export function AppDownloadSection() {
             <ul className="mt-10 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
               {BENEFITS.map((benefit) => (
                 <li key={benefit} className="flex items-center gap-3">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-500/20 text-accent-500">
                     <svg
                       className="h-3.5 w-3.5"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="2.5"
+                      strokeWidth="2.8"
                       aria-hidden="true"
                     >
                       <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
-                  <span className="text-sm font-medium text-ink-700">{benefit}</span>
+                  <span className="text-sm font-medium text-white/95">{benefit}</span>
                 </li>
               ))}
             </ul>
 
-            <p className="mt-8 text-xs leading-relaxed text-ink-400">
+            <p className="mt-8 text-xs leading-relaxed text-white/70">
               Ilova ichidagi ko‘rinish — namuna. To‘lov va bonus qiymatlari misol tariqasida
               keltirilgan.
             </p>
@@ -148,7 +153,7 @@ export function AppDownloadSection() {
             <div className="mt-4">
               <Link
                 href="/contact"
-                className="text-sm font-medium text-brand-700 underline-offset-4 transition-colors hover:text-brand-800 hover:underline"
+                className="text-sm font-medium text-white underline-offset-4 transition-colors hover:text-accent-500 hover:underline"
               >
                 Savollaringiz bormi? Aloqa bo‘limi →
               </Link>
