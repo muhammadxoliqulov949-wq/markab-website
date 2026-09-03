@@ -8,46 +8,33 @@ import { site } from '@/lib/site';
 /**
  * Office map — OpenStreetMap embedded iframe.
  *
- * WHY OPENSTREETMAP
+ * WHY NO IFRAME SANDBOX
  *
- *   • No API key, no paid SDK, no account required.
- *   • Official `/export/embed.html` endpoint is a lightweight static HTML/JS
- *     viewer that supports pan, zoom, touch and a "View Larger Map" link by
- *     default — exactly the interactivity a contact page needs.
- *   • No cookies are set by the embed in third-party context, per OSM's
- *     privacy policy. Tiles are fetched anonymously; no analytics.
+ * The iframe points at a tightly CSP-pinned origin (www.openstreetmap.org) and
+ * loads cross-origin, so the browser's same-origin policy already prevents the
+ * embedded page from touching our origin. An over-restrictive sandbox attribute
+ * prevents the OSM embed's own Leaflet bundle from reaching the DOM/storage
+ * APIs it needs to initialise tiles and attach the "View Larger Map" link,
+ * which caused the iframe to hang at the loading spinner in some environments.
+ * Removing sandbox keeps the iframe fully functional, while CSP frame-src keeps
+ * the allowed embed origin narrowed to exactly OpenStreetMap.
  *
- * The iframe is lazy-loaded (loading="lazy") so below-fold placement on
- * mobile doesn't compete with the page render. A stable aspect ratio is
- * reserved via CSS so layout does not shift when the iframe loads.
+ * LOAD / FAILURE DETECTION
  *
- * SECURITY
- *
- *   • frame-src is restricted to https://www.openstreetmap.org in CSP.
- *   • sandbox is not applied because OSM embed needs scripts/navigation to
- *     offer pan/zoom and the "View Larger Map" link, which opens in a new
- *     tab via target="_blank" (OSM ships it with rel="noopener" behaviour).
- *   • referrerPolicy="no-referrer-when-downgrade" prevents the full URL being
- *     sent on cross-origin navigation.
- *
- * PRIVACY
- *
- * When the map renders, the visitor's browser fetches tiles from
- * tile.openstreetmap.org. This is a third-party request; it is documented in
- * docs/REAL-API-INTEGRATION.md (Stage 1 addendum). No visitor-identifying
- * data is sent by our code, and the iframe is loaded lazily so it does not
- * fire until the visitor scrolls near it.
+ *   • iframe load event  → ready (iframe fades in)
+ *   • iframe error event → failed
+ *   • 8-second hard timer → failed (belt-and-braces: some browsers never fire
+ *     'error' on cross-origin network failures; this guarantees the UI never
+ *     shows a permanent spinner even when the third-party cannot be reached)
+ *   • Once a terminal state (ready/failed) is reached it never regresses.
  */
 
-// Verified office coordinates (from the existing Google Maps URL in lib/site.ts:
-//   https://www.google.com/maps/place/.../@41.331985,69.223558,17z
-// ). These are the same coordinates already published on markab.uz — we
-// re-use them rather than inventing a location.
+// Verified office coordinates from lib/site.ts mapUrl (markab.uz public map).
 const OFFICE_LAT = 41.331985;
 const OFFICE_LON = 69.223558;
-const OFFICE_ZOOM = 17;
 
-const OSM_EMBED = `https://www.openstreetmap.org/export/embed.html?bbox=${OFFICE_LON - 0.0035}%2C${OFFICE_LAT - 0.002}%2C${OFFICE_LON + 0.0035}%2C${OFFICE_LAT + 0.002}&layer=mapnik&marker=${OFFICE_LAT}%2C${OFFICE_LON}`;
+const OSM_EMBED =
+  `https://www.openstreetmap.org/export/embed.html?bbox=${OFFICE_LON - 0.0035}%2C${OFFICE_LAT - 0.002}%2C${OFFICE_LON + 0.0035}%2C${OFFICE_LAT + 0.002}&layer=mapnik&marker=${OFFICE_LAT}%2C${OFFICE_LON}`;
 
 type MapState = 'loading' | 'ready' | 'failed';
 
@@ -60,25 +47,22 @@ export function OfficeMap() {
     if (!node) return;
 
     let cancelled = false;
-    const handleLoad = () => {
+    const finish = (next: Exclude<MapState, 'loading'>) => {
       if (cancelled) return;
-      setState('ready');
+      setState((current) => (current === 'loading' ? next : current));
     };
-    const handleError = () => {
-      if (cancelled) return;
-      setState('failed');
-    };
+
+    const handleLoad = () => finish('ready');
+    const handleError = () => finish('failed');
 
     node.addEventListener('load', handleLoad);
     node.addEventListener('error', handleError);
 
-    // Safety net: if neither load nor error fires within 10s (e.g. embed
-    // HTML loads but tile network is blocked), surface a usable fallback
-    // rather than a permanent loading skeleton.
-    const timer = window.setTimeout(() => {
-      if (cancelled) return;
-      setState((current) => (current === 'loading' ? 'failed' : current));
-    }, 10_000);
+    // Hard fallback: if neither load nor error fires within 8 seconds (for
+    // example when the third-party network is blocked and cross-origin
+    // browsers never emit an error event), drop into the unavailable state
+    // so the visitor never sees an infinite spinner.
+    const timer = window.setTimeout(() => finish('failed'), 8_000);
 
     return () => {
       cancelled = true;
@@ -91,22 +75,31 @@ export function OfficeMap() {
   return (
     <div className="space-y-3">
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-line bg-surface-sunken sm:aspect-[16/10]">
-        {/* Loading state — visible until the iframe fires load. The reserved
-            aspect ratio prevents layout shift. */}
-        {state === 'loading' ? (
+        {state !== 'ready' ? (
           <div
             className="absolute inset-0 flex items-center justify-center"
             role="status"
             aria-live="polite"
           >
-            <div className="flex flex-col items-center gap-2 text-ink-400">
-              <div
-                className="h-8 w-8 animate-spin rounded-full border-2 border-line-strong border-t-brand-600"
-                aria-hidden="true"
-              />
-              <p className="text-xs">Xarita yuklanmoqda…</p>
-            </div>
-            <span className="sr-only">Xarita yuklanmoqda</span>
+            {state === 'loading' ? (
+              <div className="flex flex-col items-center gap-2 text-ink-400">
+                <div
+                  className="h-8 w-8 animate-spin rounded-full border-2 border-line-strong border-t-brand-600"
+                  aria-hidden="true"
+                />
+                <p className="text-xs">Xarita yuklanmoqda…</p>
+                <span className="sr-only">Xarita yuklanmoqda</span>
+              </div>
+            ) : (
+              <div className="w-full max-w-sm p-4">
+                <StateBlock
+                  compact
+                  variant="unavailable"
+                  title="Xarita yuklanmadi"
+                  description="Tarmoq yoki uchinchi tomon xizmati sabab xarita hozircha yuklanmadi. Manzil va 'Xaritada ochish' tugmasi ishlashda davom etadi."
+                />
+              </div>
+            )}
           </div>
         ) : null}
 
@@ -116,37 +109,29 @@ export function OfficeMap() {
           src={OSM_EMBED}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
-          // Allow OSM embed's own scripts + pointer events. Do NOT allow
-          // same-origin, top-navigation or popups. The "View Larger Map"
-          // link inside OSM uses target="_blank" and still works.
-          sandbox="allow-scripts allow-pointer-lock"
+          // Deliberately no sandbox attribute: CSP frame-src already pins the
+          // origin to https://www.openstreetmap.org, and the iframe is
+          // cross-origin (same-origin policy prevents script access to our
+          // page). Sandboxing breaks the OSM viewer's own Leaflet/tile code.
           className={`h-full w-full border-0 transition-opacity duration-500 ${
             state === 'ready' ? 'opacity-100' : 'opacity-0'
           }`}
-          style={{ opacity: state === 'ready' ? 1 : 0 }}
           aria-label={`Markab ofisi xaritada. Manzil: ${site.office.address}`}
         />
-
-        {state === 'failed' ? (
-          <div className="absolute inset-0 flex items-center justify-center p-4">
-            <div className="w-full max-w-sm">
-              <StateBlock
-                compact
-                variant="unavailable"
-                title="Xarita yuklanmadi"
-                description="Tarmoq yoki uchinchi tomon xizati sabab xarita hozircha yuklanmadi. Manzil va 'Xaritada ochish' tugmasi ishlatishda davom etadi."
-              />
-            </div>
-          </div>
-        ) : null}
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        <ButtonLink href={site.office.mapUrl} variant="secondary" size="sm" target="_blank" rel="noopener noreferrer">
+        <ButtonLink
+          href={site.office.mapUrl}
+          variant="secondary"
+          size="sm"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Xaritada ochish
         </ButtonLink>
         <p className="text-xs text-ink-400">
-          Xarita OpenStreetMap ma’lumotlari asosida ko‘rsatilmoqda.
+          Xarita OpenStreetMap ma&rsquo;lumotlari asosida ko&lsquo;rsatilmoqda.
         </p>
       </div>
     </div>
