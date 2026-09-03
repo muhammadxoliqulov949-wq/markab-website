@@ -10,6 +10,7 @@ import { InvestSection } from '@/components/home/InvestSection';
 import { AcademySection } from '@/components/home/AcademySection';
 import { AppSection } from '@/components/home/AppSection';
 import { FaqSection } from '@/components/home/FaqSection';
+import { HomepageContactSection } from '@/components/home/HomepageContactSection';
 import { FinalCta } from '@/components/home/FinalCta';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
@@ -123,6 +124,8 @@ export default async function HomePage() {
       <AppSection />
 
       <FaqSection items={faqItems} />
+
+      <HomepageContactSection />
 
       <FinalCta />
     </>
