@@ -40,7 +40,15 @@ const nextConfig = {
     formats: ['image/webp'],
   },
 
-  // Dev-server previews are served through a proxy host.
+  // Dev-server previews are served through a proxy host (Arena/e2b). The
+  // browser loads HTML from a sandbox subdomain like
+  // https://<port>-<sandbox>.e2b.app and requests /_next/static/* chunks,
+  // HMR websockets and RSC flight payloads against the same origin. Next.js
+  // 15's dev server blocks any cross-origin request to /_next/* unless the
+  // Origin/Referer host is allow-listed here. A leading ".*" matches any
+  // subdomain per the docs. Without this entry, every client-side chunk
+  // returns HTTP 403 and React never boots in the preview (the page renders
+  // SSR HTML but mount/useEffect never fire).
   allowedDevOrigins: ['*.e2b.app', '*.arena.ai'],
 
   /**
