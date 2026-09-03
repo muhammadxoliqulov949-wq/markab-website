@@ -60,12 +60,13 @@ export type CspOptions = {
 // specific hosts — no wildcard.
 const IMAGE_SOURCES = "'self' data: https://api.markab.uz https://tile.openstreetmap.org";
 
-// Only origins needed for the contact-page map embed. No other iframes are
-// allowed; this is deliberately NOT '*' and does NOT include arbitrary
-// third-party map providers. frame-ancestors is controlled separately and
-// stays 'none' (or preview origins) — frame-src governs what *we* embed, not
-// who may embed us.
-const FRAME_SOURCES = "'self' https://www.openstreetmap.org";
+// Origins allowed for the contact-page map embed. We use Google Maps'
+// no-API-key public /maps endpoint as the primary interactive map (drag,
+// zoom, Street View, directions work natively). OpenStreetMap is NOT
+// embedded — only listed to keep migration reversible without a CSP
+// deploy. frame-ancestors is controlled separately (none / preview origins);
+// frame-src governs what *we* embed. No wildcard.
+const FRAME_SOURCES = "'self' https://www.google.com https://maps.google.com https://www.openstreetmap.org";
 
 export function buildCsp({ nonce, frameAncestors, upgradeInsecure }: CspOptions): string {
   const directives: [string, string][] = [

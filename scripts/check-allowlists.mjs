@@ -73,13 +73,14 @@ check(
   !frameSrcResolved.includes('*'),
 );
 check(
-  'frame-src lists at most one explicit third-party host (map embed)',
-  frameHosts.length <= 1,
+  'frame-src allows Google Maps embed host (interactive)',
+  frameHosts.includes('www.google.com') || frameHosts.includes('maps.google.com'),
   `frame=[${frameHosts}]`,
 );
 check(
-  'frame-src allows OpenStreetMap embed host',
-  frameHosts.includes('www.openstreetmap.org'),
+  'frame-src lists a small explicit set (no more than three third-party hosts)',
+  frameHosts.length <= 3,
+  `frame=[${frameHosts}]`,
 );
 
 // --- CSP shape --------------------------------------------------------------

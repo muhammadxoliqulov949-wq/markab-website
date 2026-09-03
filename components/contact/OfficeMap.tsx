@@ -5,30 +5,36 @@ import { StateBlock } from '@/components/ui/StateBlock';
 import { site } from '@/lib/site';
 
 /**
- * Office map — OpenStreetMap embedded iframe.
+ * Office map — interactive Google Maps embed (no API key required).
+ *
+ * WHY GOOGLE MAPS (AND WHY NO API KEY)
+ *
+ * We use the public https://www.google.com/maps?q=...&output=embed endpoint,
+ * which renders a fully pan-zoom-streetview-drivable map without requiring an
+ * API key. This matches the deep link we already expose to visitors in the
+ * "Xaritada ochish" button (site.office.mapUrl) and is what end users expect
+ * when they click "open the location". The iframe is draggable, zoomable and
+ * supports Street View / directions out of the box.
  *
  * FAILURE MODES HANDLED
  *
- * The OSM iframe is loaded from https://www.openstreetmap.org. Cross-origin
- * sandboxes (like Arena preview) often fail TLS egress to external hosts, so
- * the iframe never fires 'load' and the 'error' event is suppressed by the
- * browser for cross-origin frames. We therefore:
- *
+ * In restricted sandboxes (Arena preview) the browser may fail to reach
+ * google.com over TLS. We therefore:
  *   1. listen to both 'load' and 'error' on the iframe;
- *   2. set a short (4s) hard fallback timer;
- *   3. latch into a terminal state ('ready' or 'failed') so the UI never
- *      regresses;
- *   4. disable pointer-events on the iframe while it is invisible so a
- *      hung/failed frame cannot eat clicks meant for surrounding controls;
- *   5. render a clear failure card with the address and deep-link actions
- *      instead of leaving a permanent spinner.
+ *   2. set a 4-second hard fallback timer;
+ *   3. latch into a terminal state so the UI never regresses;
+ *   4. disable pointer-events on the iframe while invisible so a hung frame
+ *      cannot eat clicks meant for surrounding controls;
+ *   5. render a clear failure card with the address and deep-link actions.
  */
 
+// Verified office coordinates from lib/site.ts (Kukcha Aryk, Yunusobod, Tashkent).
 const OFFICE_LAT = 41.331985;
 const OFFICE_LON = 69.223558;
-
-const OSM_EMBED =
-  `https://www.openstreetmap.org/export/embed.html?bbox=${OFFICE_LON - 0.0035}%2C${OFFICE_LAT - 0.002}%2C${OFFICE_LON + 0.0035}%2C${OFFICE_LAT + 0.002}&layer=mapnik&marker=${OFFICE_LAT}%2C${OFFICE_LON}`;
+// Query + zoom embed URL — draggable/zoomable, no API key required. Using
+// www.google.com (not maps.google.com) so CSP and typical browser HSTS accept it.
+const GMAPS_EMBED =
+  `https://www.google.com/maps?q=${OFFICE_LAT},${OFFICE_LON}(Markab+ofisi)&z=17&hl=uz&output=embed`;
 
 type MapState = 'loading' | 'ready' | 'failed';
 
@@ -116,7 +122,7 @@ export function OfficeMap() {
                   <p className="text-sm font-semibold text-ink-900">Markab ofisi</p>
                   <p className="max-w-[16rem] text-xs text-ink-500">{site.office.address}</p>
                   <p className="max-w-[18rem] text-[11px] text-ink-400">
-                    Tarmoq cheklovi sabab interaktiv xarita hozircha yuklanmadi. Pastdagi tugma orqali Google Xaritalarda ochishingiz mumkin.
+                    Tarmoq cheklovi sabab interaktiv xarita hozircha yuklanmadi. Pastdagi tugma orqali Google Xaritalarda to&lsquo;liq interaktiv ko&lsquo;rinishda ochishingiz mumkin.
                   </p>
                 </div>
               </div>
@@ -127,11 +133,13 @@ export function OfficeMap() {
         <iframe
           ref={iframeRef}
           title={`Markab ofisi xaritada — ${site.office.address}`}
-          src={OSM_EMBED}
+          src={GMAPS_EMBED}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           // Pointer events are disabled while the iframe is invisible so a hung
-          // frame cannot intercept clicks on the overlay or the link below.
+          // frame cannot intercept clicks on the overlay or the link below. Once
+          // it loads, pan/zoom/touch are re-enabled.
+          allow="fullscreen"
           className={`h-full w-full border-0 transition-opacity duration-500 ${
             state === 'ready' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
@@ -165,7 +173,7 @@ export function OfficeMap() {
           {copied ? 'Nusxalandi!' : 'Manzilni nusxalash'}
         </button>
         <p className="text-xs text-ink-400">
-          Xarita OpenStreetMap ma&rsquo;lumotlari asosida ko&lsquo;rsatilmoqda.
+          Xarita Google Maps orqali ko&lsquo;rsatilmoqda &mdash; sichqoncha bilan surish va kattalashtirish mumkin.
         </p>
       </div>
     </div>
