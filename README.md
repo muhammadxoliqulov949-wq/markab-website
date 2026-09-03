@@ -1041,3 +1041,55 @@ Also re-run: **0 serious/critical axe-core violations** across six routes at
   deliberately separate from a security phase.
 * **Anything needing an edge, a secret store or a log pipeline (A1–A3, B1–B3,
   E1–E3, E5, F1)** — environment work, specified in the doc.
+
+## Phase 13 — Real API integration and production data strategy
+
+**Status: built and exercised against a local stand-in API, not live.**
+No Bearer token has ever been available and `api.markab.uz` is unreachable from
+the sandbox, so no response from the real API has been read. Full detail —
+including what must be confirmed before the switch is flipped — is in
+[`docs/PHASE-13-API-INTEGRATION.md`](docs/PHASE-13-API-INTEGRATION.md).
+
+### What changed
+
+* **`lib/data/http/client.ts`** — the only place that calls `fetch`. Bearer
+  auth, timeout, bounded jittered retries with `Retry-After`, status mapping,
+  structured logging, and an SSRF boundary: the origin comes from
+  configuration only (`ALLOWED_API_HOSTS`, https enforced).
+* **`lib/data/http/validate.ts` / `mapping.ts`** — API payloads are treated as
+  untrusted. Three outcomes per field: valid, unknown (`null`), or quarantined
+  (record dropped, rule logged). Nothing is ever corrected — a battery health of
+  256 % does not become 100 %, and a missing mileage does not become zero.
+* **`httpProvider`** — no silent fixture fallback anywhere in it. If the API is
+  unreachable, misconfigured or unreadable, the page shows the honest state.
+* **Shared query semantics** — filtering, sorting, pagination, facets and search
+  moved out of `mockProvider` into `lib/vehicles/applyQuery.ts`,
+  `lib/products/applyQuery.ts`, `lib/vehicles/facets.ts`,
+  `lib/products/facets.ts` and `lib/search/catalogue.ts`, so both providers
+  behave identically.
+
+### Verified
+
+* **No fixture fallback in `http` mode** across six failure scenarios — missing
+  token, host outside the allow-list, `http://` base URL, upstream 500, 429 and
+  timeout. Every one: honest state, zero fixture records, and zero outbound
+  requests for the two misconfiguration cases.
+* **Mock mode unchanged**: the visible text of 11 routes is byte-identical
+  between the pre-Phase-13 build and this one.
+* **Client bundle**: 0 hits for the token, base URL, provider names or `Bearer`.
+* **Data reuse**: routes still render per request (the nonce CSP requires it),
+  while catalogue responses are reused for `MARKAB_API_REVALIDATE_SECONDS`
+  (default 300). Measured: one crawl per render even when a page asks the
+  repository for the list, the facets and the search index.
+* Security gates re-run: `security:allowlists` 17/17, `security:headers` 22/22.
+
+### Not done, and why
+
+* **Not live.** Credentials and a reachable host are prerequisites; the response
+  schema must be confirmed before `MARKAB_DATA_SOURCE=http` is enabled, or every
+  record will be dropped and the UI will show the error state by design.
+* **No endpoint probing, no auth work, no payments.** Only the two documented
+  endpoints are called.
+* **Editorial content has no endpoint** (Academy, FAQ, site content, investment,
+  loyalty). In `http` mode those blocks return `unavailable` and render as
+  honest gaps rather than silently serving fixture copy.

@@ -1,5 +1,13 @@
 # API CONTRACT & DATA ADAPTER — Phase 0.5
 
+> **Phase 13 update.** The HTTP provider described here is now implemented
+> (`lib/data/http/`). It has been exercised end to end against a local
+> stand-in API, **not** against `api.markab.uz` — no token has ever been
+> available and the host is unreachable from the sandbox. The field names in
+> §3 remain **inferred, not confirmed**; see
+> `docs/PHASE-13-API-INTEGRATION.md` §4 for what must be confirmed before
+> `MARKAB_DATA_SOURCE=http` is switched on in production.
+
 **Status:** 🟦 Structure-only mode. **No API token available**, so no live data is consumed yet.
 Everything the UI needs flows through one adapter; with no data source configured, every surface renders the shared Loading / Empty / NotFound / Error states. **No fixtures. No invented values.**
 

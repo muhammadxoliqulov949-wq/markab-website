@@ -64,7 +64,16 @@ check('object-src is none', /\['object-src', "'none'"\]/.test(cspSrc));
 check('frame-ancestors defaults to none', /"'none'"/.test(cspSrc));
 
 // --- Server-only boundary ---------------------------------------------------
-for (const file of ['lib/env/server.ts', 'lib/data/index.ts', 'lib/data/httpProvider.ts', 'lib/errors.ts']) {
+for (const file of [
+  'lib/env/server.ts',
+  'lib/data/index.ts',
+  'lib/data/httpProvider.ts',
+  // Phase 13: every file that touches the API or the token is server-only.
+  'lib/data/http/client.ts',
+  'lib/data/http/mapping.ts',
+  'lib/data/http/validate.ts',
+  'lib/errors.ts',
+]) {
   check(`${file} is server-only`, read(file).includes("import 'server-only'"));
 }
 
