@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { AuthProvider } from '@/components/auth/AuthProvider';
+
 import { CartProvider } from '@/components/cart/CartProvider';
 import { DemoModeProvider } from '@/components/account/DemoModeProvider';
 import { SavedItemsProvider } from '@/components/account/SavedItemsProvider';
@@ -8,6 +9,7 @@ import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { MobileTabBar } from '@/components/layout/MobileTabBar';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { LiveRegion } from '@/components/ui/LiveRegion';
 import { site } from '@/lib/site';
 import { organizationJsonLd, pageTitle } from '@/lib/seo';
 
@@ -43,12 +45,13 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0C1116',
+  viewportFit: 'cover',
+  themeColor: '#00B878',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="uz">
+    <html lang="uz" suppressHydrationWarning>
       <head>
         {/* Organization and WebSite only — the two nodes whose fields are all
             actually published. No logo, contact points or social profiles:
@@ -80,6 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </main>
                 <SiteFooter />
                 <MobileTabBar />
+                <LiveRegion />
               </CartProvider>
             </SavedItemsProvider>
           </DemoModeProvider>

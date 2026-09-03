@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Container } from '@/components/ui/Section';
+import { ButtonLink } from '@/components/ui/Button';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { RemoteImage } from '@/components/ui/RemoteImage';
 import { formatUzs } from '@/lib/format';
@@ -52,28 +53,22 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
             </p>
 
             <div className="animate-rise-4 mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
-              <Link
-                href="/cars"
-                className="inline-flex h-[52px] items-center justify-center gap-2 rounded-xl bg-brand-500 px-7 text-[0.9375rem] font-semibold text-white shadow-[0_6px_16px_-6px_rgba(0,184,120,0.45)] transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:bg-brand-600 hover:shadow-[0_8px_20px_-6px_rgba(0,184,120,0.5)] active:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
-              >
+              <ButtonLink href="/cars" size="lg" className="hover-only:-translate-y-0.5">
                 Avtomobillarni ko‘rish
                 <svg
                   className="h-4 w-4"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.9"
+                  strokeWidth="2"
                   aria-hidden="true"
                 >
                   <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-              </Link>
-              <Link
-                href="/invest"
-                className="inline-flex h-[52px] items-center justify-center rounded-xl border border-line bg-white px-7 text-[0.9375rem] font-semibold text-ink-900 shadow-card transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-brand-200 hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
-              >
+              </ButtonLink>
+              <ButtonLink href="/invest" variant="secondary" size="lg" className="hover-only:-translate-y-0.5">
                 Sarmoya imkoniyatlari
-              </Link>
+              </ButtonLink>
             </div>
 
             <p className="animate-rise-5 mt-5 text-sm">

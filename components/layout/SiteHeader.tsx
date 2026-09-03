@@ -127,7 +127,7 @@ export function SiteHeader() {
       {/* Top announcement bar — short value message, collapses on scroll. */}
       <div
         className={[
-          'overflow-hidden bg-brand-500 text-white/95 transition-[max-height,opacity] duration-300 ease-smooth',
+          'overflow-hidden bg-brand-600 text-white transition-[max-height,opacity] duration-300 ease-smooth',
           scrolled || open ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100',
         ].join(' ')}
       >
@@ -218,7 +218,7 @@ export function SiteHeader() {
               <circle cx="18" cy="20" r="1.4" />
             </svg>
             {count > 0 ? (
-              <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-500 px-1 text-[11px] font-semibold text-white">
+              <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-600 px-1 text-[11px] font-bold text-white">
                 {count}
               </span>
             ) : null}
@@ -311,7 +311,7 @@ export function SiteHeader() {
 
             <Link
               href={isAuthenticated ? '/profile' : '/login'}
-              className="mt-4 flex h-12 items-center justify-center rounded-xl bg-brand-500 text-sm font-semibold text-white shadow-[0_6px_16px_-6px_rgba(0,184,120,0.45)] transition-colors hover:bg-brand-600"
+              className="mt-4 flex h-12 items-center justify-center rounded-btn bg-brand-600 px-6 text-sm font-semibold text-white shadow-glow transition-ctrl hover:bg-brand-700 hover:shadow-glow-lg hover-only:-translate-y-0.5 active:bg-brand-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
             >
               {isAuthenticated ? 'Kabinet' : 'Kirish'}
             </Link>

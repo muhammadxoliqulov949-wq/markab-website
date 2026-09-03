@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ButtonLink } from '@/components/ui/Button';
 import { Container } from '@/components/ui/Section';
 import { site } from '@/lib/site';
 
@@ -19,15 +20,15 @@ export function FinalCta() {
   return (
     <section
       aria-labelledby="final-cta-heading"
-      className="relative overflow-hidden bg-brand-500 py-14 text-white sm:py-16 lg:py-20"
+      className="relative overflow-hidden bg-gradient-to-b from-brand-600 to-brand-700 py-14 text-white sm:py-16 lg:py-20"
     >
       {/* Soft tonal green washes — same family, no multicolor, no neon. */}
       <div
-        className="pointer-events-none absolute -left-40 -top-20 h-[28rem] w-[28rem] rounded-full bg-brand-400/20 blur-3xl"
+        className="pointer-events-none absolute -left-40 -top-20 h-[28rem] w-[28rem] rounded-full bg-brand-300/20 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -right-32 bottom-0 h-[24rem] w-[24rem] rounded-full bg-brand-600/25 blur-3xl"
+        className="pointer-events-none absolute -right-32 bottom-0 h-[24rem] w-[24rem] rounded-full bg-brand-800/40 blur-3xl"
         aria-hidden="true"
       />
       <div
@@ -46,18 +47,12 @@ export function FinalCta() {
           </p>
 
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link
-              href="/cars"
-              className="inline-flex h-[52px] items-center justify-center rounded-xl bg-black px-7 text-[0.9375rem] font-semibold text-white shadow-lg shadow-black/20 transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:bg-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-500"
-            >
+            <ButtonLink href="/cars" variant="onDark" size="lg" className="hover-only:-translate-y-0.5">
               Avtomobil tanlash
-            </Link>
-            <Link
-              href="/financing"
-              className="inline-flex h-[52px] items-center justify-center rounded-xl border border-white/35 bg-white/5 px-7 text-[0.9375rem] font-semibold text-white backdrop-blur-sm transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10"
-            >
+            </ButtonLink>
+            <ButtonLink href="/financing" variant="onDarkOutline" size="lg" className="hover-only:-translate-y-0.5 backdrop-blur-sm">
               Moliyalashtirishni ko‘rish
-            </Link>
+            </ButtonLink>
           </div>
         </div>
 

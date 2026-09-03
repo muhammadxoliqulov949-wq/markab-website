@@ -25,7 +25,7 @@ function StoreBadge({
       target="_blank"
       rel="noopener noreferrer"
       title={href}
-      className="inline-flex min-h-[48px] flex-1 items-center justify-start gap-2.5 rounded-xl border border-black/10 bg-black px-4 py-2 text-white shadow-lg shadow-black/20 transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:bg-ink-900 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-500 sm:h-[52px] sm:flex-none sm:gap-3 sm:px-5"
+      className="tap-target inline-flex min-h-[48px] flex-1 items-center justify-start gap-2.5 rounded-card border border-black/10 bg-black px-4 py-2 text-white shadow-lg shadow-black/20 transition-ctrl hover-only:-translate-y-0.5 hover:bg-ink-900 hover:shadow-xl focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-700 sm:h-[52px] sm:flex-none sm:gap-3 sm:px-5"
     >
       <span className="shrink-0 text-white" aria-hidden="true">
         {icon}
@@ -65,15 +65,15 @@ export function AppDownloadSection() {
   return (
     <section
       aria-labelledby="app-download-heading"
-      className="relative overflow-hidden bg-brand-500 section-y"
+      className="relative overflow-hidden bg-gradient-to-b from-brand-600 to-brand-700 section-y"
     >
       {/* Soft tonal green wash — same family, no multicolor gradient, no neon. */}
       <div
-        className="pointer-events-none absolute -left-40 top-0 h-[32rem] w-[32rem] rounded-full bg-brand-400/20 blur-3xl"
+        className="pointer-events-none absolute -left-40 top-0 h-[32rem] w-[32rem] rounded-full bg-brand-300/20 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-brand-600/25 blur-3xl"
+        className="pointer-events-none absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-brand-800/40 blur-3xl"
         aria-hidden="true"
       />
       {/* Very subtle top highlight for depth on the green surface */}
