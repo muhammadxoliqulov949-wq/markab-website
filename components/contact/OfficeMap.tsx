@@ -113,8 +113,13 @@ export function OfficeMap() {
           // origin to https://www.openstreetmap.org, and the iframe is
           // cross-origin (same-origin policy prevents script access to our
           // page). Sandboxing breaks the OSM viewer's own Leaflet/tile code.
+          //
+          // Pointer events are DISABLED until the iframe fires `load`, so a
+          // hung/stuck/failed iframe that is still opacity:0 cannot eat taps
+          // meant for the failure StateBlock or the surrounding controls.
+          // Once `ready`, pointer-events turn back on so pan/zoom/touch work.
           className={`h-full w-full border-0 transition-opacity duration-500 ${
-            state === 'ready' ? 'opacity-100' : 'opacity-0'
+            state === 'ready' ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
           }`}
           aria-label={`Markab ofisi xaritada. Manzil: ${site.office.address}`}
         />
