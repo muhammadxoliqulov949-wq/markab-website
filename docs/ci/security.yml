@@ -1,0 +1,93 @@
+# GitHub Actions workflow template — NOT active at this path.
+#
+# Install it with:
+#
+#   mkdir -p .github/workflows && cp docs/ci/security.yml .github/workflows/security.yml
+#
+# Why it is not already there: the GitHub App this branch was built with does
+# not hold the `workflows` scope, and GitHub refuses to create or update files
+# under .github/workflows/ without it. The push was rejected rather than
+# silently dropped, so the template lives here until someone with that scope
+# installs it.
+#
+# See docs/PHASE-12-DEPLOYMENT-SECURITY.md §D2 and §F2.
+
+name: Security
+
+# Phase 12 — D2 and F2.
+#
+# The point of this file is that the security posture is asserted on every
+# change rather than remembered. Two of the jobs are gates; the audit job is
+# informational on purpose, and says so.
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  schedule:
+    # Mondays, 06:17 UTC — dependency advisories do not wait for a commit.
+    - cron: '17 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+
+      # Gate: a critical advisory fails the build.
+      - name: Fail on critical advisories
+        run: npm audit --audit-level=critical
+
+      # Informational: the known postcss findings inside next@15.5.24 are
+      # recorded and accepted (Phase 12 D1). They are printed so nobody has to
+      # rediscover them, but they do not block, because the fix is a semver
+      # major upgrade that needs its own migration and verification.
+      - name: Report all advisories
+        continue-on-error: true
+        run: npm audit || true
+
+  verify:
+    name: Security checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+
+      - name: Types
+        run: npm run typecheck
+
+      - name: Lint (including no-eval / no-implied-eval / no-new-func)
+        run: npm run lint
+
+      - name: Allow-list consistency (image host in all three places, server-only fences)
+        run: npm run security:allowlists
+
+      # The image flag is set because a CI runner has no egress to
+      # api.markab.uz; it does not affect headers.
+      - name: Build
+        run: npm run build
+        env:
+          MARKAB_IMAGE_UNOPTIMIZED: 'true'
+
+      - name: Security headers against a running server
+        run: |
+          MARKAB_IMAGE_UNOPTIMIZED=true npm start &
+          # Wait for the server rather than sleeping a fixed amount.
+          for i in $(seq 1 40); do
+            curl -sf -o /dev/null http://127.0.0.1:3000/ && break
+            sleep 1
+          done
+          EXPECT_PREVIEW=true npm run security:headers -- http://127.0.0.1:3000

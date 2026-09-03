@@ -1,0 +1,69 @@
+import 'server-only';
+
+import { cache } from 'react';
+import { httpProvider } from './httpProvider';
+import { mockProvider } from './mockProvider';
+import type { DataAdapter } from './adapter';
+import { vehicleBrands } from './fixtures/vehicles';
+import { productCategories } from './fixtures/products';
+import type { LessonQuery, ProductQuery, VehicleQuery } from './types';
+import { serverEnv } from '@/lib/env/server';
+
+/**
+ * Several marketing blocks read the same content during one render. `cache`
+ * dedupes them to a single provider call per request, so moving content behind
+ * the repository does not multiply data access.
+ */
+const siteContentOnce = cache(() => getAdapter().getSiteContent());
+
+/**
+ * Repository — the single entry point the UI talks to.
+ *
+ * SERVER-ONLY, and enforced as such: `import 'server-only'` turns any attempt
+ * to pull this module into a client bundle into a hard error rather than a
+ * silent bundling of the provider graph. Client components therefore receive
+ * catalogue data as props from the server components that render them — see
+ * `components/sell/SellWizard.tsx`, which used to import this module directly
+ * and shipped every fixture to the browser as a side effect.
+ *
+ * Provider selection is environment-driven so the production API can replace
+ * fixtures without touching a single component. The environment itself is read
+ * through `lib/env/server.ts`, which is where the credential boundary lives.
+ */
+function getAdapter(): DataAdapter {
+  const source = serverEnv().dataSource;
+  return source === 'http' ? httpProvider : mockProvider;
+}
+
+export const repository = {
+  listVehicles: (query?: VehicleQuery) => getAdapter().listVehicles(query),
+  getVehicleBySlug: (slug: string) => getAdapter().getVehicleBySlug(slug),
+  getVehicleFacets: () => getAdapter().getVehicleFacets(),
+  listProducts: (query?: ProductQuery) => getAdapter().listProducts(query),
+  getProductById: (id: string) => getAdapter().getProductById(id),
+  getProductFacets: () => getAdapter().getProductFacets(),
+  getFeatured: () => getAdapter().getFeatured(),
+  searchCatalogue: (query: string, limitPerKind?: number) =>
+    getAdapter().searchCatalogue(query, limitPerKind),
+  listLessons: (query?: LessonQuery) => getAdapter().listLessons(query),
+  getLessonBySlug: (slug: string) => getAdapter().getLessonBySlug(slug),
+  getLessonCategories: () => getAdapter().getLessonCategories(),
+  listRelatedLessons: (slug: string, limit?: number) =>
+    getAdapter().listRelatedLessons(slug, limit),
+  listFaq: () => getAdapter().listFaq(),
+  getSiteContent: () => siteContentOnce(),
+  getInvestmentProfile: () => getAdapter().getInvestmentProfile(),
+  getAccountSnapshot: () => getAdapter().getAccountSnapshot(),
+  getLoyaltyProgram: () => getAdapter().getLoyaltyProgram(),
+};
+
+export const activeDataSourceName = getAdapter().name;
+
+/** Human-readable note surfaced in the UI so demo data is never mistaken for live data. */
+export const dataSourceNote =
+  activeDataSourceName === 'http'
+    ? null
+    : 'Namuna ma’lumotlari: markab.uz ochiq sahifalaridagi tasdiqlangan e’lonlar asosida.';
+
+export { vehicleBrands, productCategories };
+export * from './types';

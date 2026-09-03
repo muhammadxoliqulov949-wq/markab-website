@@ -1,0 +1,64 @@
+import { Container, SectionHeading } from '@/components/ui/Section';
+import { Reveal } from '@/components/ui/Reveal';
+import { PendingValue } from '@/components/ui/StateBlock';
+import { PENDING_LABEL } from '@/lib/investment/status';
+import { repository } from '@/lib/data';
+
+/**
+ * Why Markab — calm, editorial, four items.
+ *
+ * No cards, no boxes: a large statement on the left and a numbered hairline list
+ * on the right. Each item is a published Markab value proposition; none is a
+ * superlative ("eng yaxshi", "eng tez"), and where supporting documentation is
+ * missing (AAOIFI) the gap is stated on the item itself.
+ */
+export async function WhyMarkab() {
+  const content = await repository.getSiteContent();
+  const valueProps = content.status === 'success' ? content.data.valueProps : [];
+
+  return (
+    <section aria-labelledby="why-heading" className="bg-surface-muted section-y-sm">
+      <Container>
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+          <SectionHeading
+            id="why-heading"
+            eyebrow="Nima uchun Markab?"
+            title="Shaffof shartlar, tushunarli jarayon"
+            description="Saytda e’lon qilingan asosiy tamoyillar. Har biri rasmiy hujjatlar bilan to‘ldiriladi."
+          />
+
+          <div className="lg:pt-2">
+            {valueProps.map((prop, index) => (
+              <Reveal key={prop.id} delay={index * 60}>
+                <div className="border-t border-line py-6 first:border-t-0 first:pt-0">
+                  <div className="flex gap-5">
+                    <span className="mt-0.5 text-xs font-semibold tracking-[0.14em] text-brand-600">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <div className="max-w-lg">
+                      <h3 className="text-base font-semibold text-ink-900">{prop.title}</h3>
+                      {prop.description ? (
+                        <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-600">
+                          {prop.description}
+                        </p>
+                      ) : (
+                        // A value proposition with no substantiated figure is
+                        // shown as pending, not filled with a plausible one.
+                        <p className="mt-2">
+                          <PendingValue label={PENDING_LABEL} />
+                        </p>
+                      )}
+                      {prop.note ? (
+                        <p className="mt-2.5 text-xs leading-relaxed text-ink-400">{prop.note}</p>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}
