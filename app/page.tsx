@@ -9,6 +9,7 @@ import { HowItWorks } from '@/components/home/HowItWorks';
 import { InvestSection } from '@/components/home/InvestSection';
 import { AcademySection } from '@/components/home/AcademySection';
 import { AppSection } from '@/components/home/AppSection';
+import { AppDownloadSection } from '@/components/home/AppDownloadSection';
 import { FaqSection } from '@/components/home/FaqSection';
 import { HomepageContactSection } from '@/components/home/HomepageContactSection';
 import { FinalCta } from '@/components/home/FinalCta';
@@ -124,6 +125,8 @@ export default async function HomePage() {
       <AppSection />
 
       <FaqSection items={faqItems} />
+
+      <AppDownloadSection />
 
       <HomepageContactSection />
 
