@@ -1,17 +1,20 @@
 import type { Metadata } from 'next';
 import { Hero } from '@/components/home/Hero';
-import { TrustLayer } from '@/components/home/TrustLayer';
 import { GoalChooser } from '@/components/home/GoalChooser';
 import { FeaturedShowcase } from '@/components/home/FeaturedShowcase';
 import { FinancingPreview } from '@/components/home/FinancingPreview';
 import { WhyMarkab } from '@/components/home/WhyMarkab';
 import { HowItWorks } from '@/components/home/HowItWorks';
 import { InvestSection } from '@/components/home/InvestSection';
+<<<<<<< HEAD
 import { AcademySection } from '@/components/home/AcademySection';
+=======
+>>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
 import { AppDownloadSection } from '@/components/home/AppDownloadSection';
 import { FaqSection } from '@/components/home/FaqSection';
 import { HomepageContactSection } from '@/components/home/HomepageContactSection';
 import { FinalCta } from '@/components/home/FinalCta';
+import { MarkabDivider } from '@/components/ui/MarkabStar';
 import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
@@ -48,10 +51,10 @@ export const metadata: Metadata = buildMetadata({
 });
 
 /**
- * Homepage — 15 blocks in a deliberate order:
- *   header · hero · trust strip · "Sizga nima kerak?" · featured cars · featured
- *   electronics · financing/calculator preview · why Markab · how it works ·
- *   investment · Academy · digital experience · FAQ · final CTA · footer
+ * Homepage — 9 visual sections, premium editorial rhythm:
+ *   header · hero(+trust-strip) · yo‘nalish tanlash · avtomobillar ·
+ *   elektronika · moliyalashtirish · nima uchun · sarmoya+jarayon+ilova
+ *   (composed as one dark block) · FAQ · final CTA · footer
  *
  * Data comes only from the repository (adapter → fixtures today, API later);
  * nothing is hardcoded and nothing is computed on this page.
@@ -63,12 +66,6 @@ export default async function HomePage() {
   const vehicles = featured.status === 'success' ? featured.data.vehicles : [];
   const products = featured.status === 'success' ? featured.data.products : [];
 
-  /*
-   * The hero and the two catalogue goal cards prefer items whose financing
-   * figures are actually published, so the interfaces show verified values
-   * rather than three pending markers. Presentation choice over real data —
-   * nothing is computed or invented.
-   */
   const heroVehicle =
     vehicles.find((vehicle) => vehicle.financing.monthlyPaymentUzs) ?? vehicles[0] ?? null;
   const heroProduct =
@@ -78,8 +75,6 @@ export default async function HomePage() {
     <>
       <Hero vehicle={heroVehicle} product={heroProduct} />
 
-      <TrustLayer />
-
       <GoalChooser
         vehicleImage={vehicles[0]?.images[0] ?? heroVehicle?.images[0] ?? null}
         productImage={products[0]?.images[0] ?? heroProduct?.images[0] ?? null}
@@ -88,7 +83,7 @@ export default async function HomePage() {
       <FeaturedShowcase
         eyebrow="Tanlangan takliflar"
         title="Avtomobillar"
-        description="Muddatli to‘lov asosida taqdim etilayotgan avtomobillar."
+        description="Muddatli to‘lov asosida taqdim etilayotgan avtomobillar. Har bir e’lon shartnoma va oldindan ma’lum oylik to‘lov bilan birga keladi."
         href="/cars"
         cta="Barchasini ko‘rish"
         headingId="cars-heading"
@@ -101,8 +96,8 @@ export default async function HomePage() {
       <FeaturedShowcase
         tone="muted"
         eyebrow="Elektronika"
-        title="Telefonlar va elektronika"
-        description="Muddatli to‘lov asosida xarid qilish mumkin bo‘lgan mahsulotlar."
+        title="Telefonlar va texnika"
+        description="Muddatli to‘lov asosida xarid qilish mumkin bo‘lgan smartfon va elektronika mahsulotlari."
         href="/electronics"
         cta="Barchasini ko‘rish"
         headingId="electronics-heading"
@@ -115,11 +110,22 @@ export default async function HomePage() {
 
       <WhyMarkab />
 
+      {/* Jarayon + Ilova — visual weight paired, separated by a star divider */}
       <HowItWorks />
+
+      <div className="border-y border-line-faint bg-surface">
+        <div className="container-page py-6">
+          <MarkabDivider />
+        </div>
+      </div>
 
       <InvestSection />
 
+<<<<<<< HEAD
       <AcademySection />
+=======
+      <AppDownloadSection />
+>>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
 
       <FaqSection items={faqItems} />
 

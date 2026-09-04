@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { Badge } from '@/components/ui/Badge';
+import { ButtonLink } from '@/components/ui/Button';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { formatUzs } from '@/lib/format';
+import { MarkabStar } from '@/components/ui/MarkabStar';
 
 /**
  * Sample INPUTS for the preview — labelled as a sample, never as a result.
@@ -36,8 +38,12 @@ export function FinancingPreview() {
   return (
     <section
       aria-labelledby="financing-preview-heading"
-      className="bg-surface py-16 sm:py-20 lg:py-24"
+      className="relative overflow-hidden bg-surface section-y"
     >
+      <div
+        className="pointer-events-none absolute -right-40 top-20 h-[30rem] w-[30rem] rounded-full bg-brand-50/60 blur-3xl"
+        aria-hidden="true"
+      />
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
           {/* LEFT — explanation and process. */}
@@ -72,26 +78,38 @@ export function FinancingPreview() {
               ))}
             </ul>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink
                 href="/financing/calculator"
-                className="inline-flex h-[52px] items-center justify-center rounded-xl bg-brand-700 px-7 text-[0.9375rem] font-semibold text-white transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:bg-brand-800"
+                size="lg"
+                className="hover-only:-translate-y-0.5"
               >
                 Hisob-kitobni ko‘rish
-              </Link>
-              <Link
+              </ButtonLink>
+              <ButtonLink
                 href="/financing"
-                className="inline-flex h-[52px] items-center justify-center rounded-xl border border-line-strong bg-surface px-7 text-[0.9375rem] font-semibold text-ink-900 transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-ink-300 hover:bg-surface-muted"
+                variant="secondary"
+                size="lg"
+                className="hover-only:-translate-y-0.5"
               >
-                Moliyalashtirish qanday ishlaydi?
-              </Link>
+                Jarayon bilan tanishish
+              </ButtonLink>
             </div>
           </div>
 
           {/* RIGHT — the calculator interface. */}
-          <div className="overflow-hidden rounded-2xl bg-ink-900 p-6 shadow-lift sm:p-7">
-            <div className="flex items-center justify-between gap-4">
-              <h3 className="text-base font-semibold text-white">To‘lov kalkulyatori</h3>
+          <div className="relative overflow-hidden rounded-panel bg-gradient-to-br from-ink-800 to-ink-900 p-7 shadow-lift ring-1 ring-white/10 sm:p-8">
+            <div
+              className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-brand-500/20 blur-3xl"
+              aria-hidden="true"
+            />
+            <div className="relative flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 ring-1 ring-inset ring-white/10">
+                  <MarkabStar size={16} tone="white" />
+                </span>
+                <h3 className="text-base font-semibold text-white">To‘lov kalkulyatori</h3>
+              </div>
               <Badge tone="pending" className="border-white/20 bg-white/5 text-white/65">
                 Namuna
               </Badge>

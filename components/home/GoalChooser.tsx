@@ -57,7 +57,7 @@ export function GoalChooser({
   ];
 
   return (
-    <section aria-labelledby="goals-heading" className="bg-surface-muted section-y">
+    <section aria-labelledby="goals-heading" className="bg-surface-muted section-y-sm">
       <Container>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
@@ -89,7 +89,7 @@ export function GoalChooser({
                 <Reveal delay={index * 70}>
                   <Link
                     href={card.href}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-card transition-all duration-500 ease-smooth hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover"
+                    className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface transition-card hover-only:-translate-y-1 hover-only:border-brand-200/70 hover-only:shadow-card-hover"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
                       {card.image ? (

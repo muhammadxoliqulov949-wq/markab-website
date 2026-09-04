@@ -29,23 +29,25 @@ const config: Config = {
     extend: {
       colors: {
         ink: {
-          DEFAULT: '#0F172A',
-          900: '#0F172A',
-          800: '#172033',
-          700: '#1E293B',
+          DEFAULT: '#0B1220',
+          900: '#0B1220',
+          800: '#141C2C',
+          700: '#1E2A3E',
           600: '#334155',
-          500: '#475569',
+          500: '#4B5869',
           400: '#64748B',
           300: '#94A3B8',
         },
         surface: {
           DEFAULT: '#FFFFFF',
-          muted: '#F8FAFC',
-          sunken: '#F1F5F9',
+          muted: '#F7F9FC',
+          sunken: '#EEF2F7',
+          elevated: '#FFFFFF',
         },
         line: {
-          DEFAULT: '#E2E8F0',
-          strong: '#CBD5E1',
+          DEFAULT: '#E4E8EF',
+          strong: '#CBD3DE',
+          faint: '#EEF1F6',
         },
         brand: {
           50: '#ECFDF5',
@@ -58,6 +60,32 @@ const config: Config = {
           700: '#008A5A',
           800: '#065F46',
           900: '#064E3B',
+        },
+        /** Semantic signal palette — subtle, used only for status.
+            Brand green stays the primary action color (never used for success
+            badges at full weight, to avoid bleeding meaning). */
+        success: {
+          50: '#ECFDF5',
+          500: '#10B981',
+          600: '#059669',
+          700: '#047857',
+        },
+        warning: {
+          50: '#FFFBEB',
+          500: '#F59E0B',
+          600: '#D97706',
+          700: '#B45309',
+        },
+        danger: {
+          50: '#FEF2F2',
+          500: '#EF4444',
+          600: '#DC2626',
+          700: '#B91C1C',
+        },
+        info: {
+          50: '#EFF6FF',
+          500: '#3B82F6',
+          600: '#2563EB',
         },
         accent: {
           50: '#FFFBEB',
@@ -76,13 +104,15 @@ const config: Config = {
        * smell and should be migrated here.
        */
       fontSize: {
-        'display-xl': ['clamp(2.25rem, 1.1rem + 2.8vw, 3.75rem)', { lineHeight: '1.02', letterSpacing: '-0.035em', fontWeight: '700' }],
-        'display-lg': ['clamp(2rem, 1.4rem + 1.7vw, 3rem)', { lineHeight: '1.08', letterSpacing: '-0.028em', fontWeight: '700' }],
-        'display-md': ['clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem)', { lineHeight: '1.15', letterSpacing: '-0.025em', fontWeight: '700' }],
-        'display-sm': ['1.5rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '600' }],
-        lead: ['1.125rem', { lineHeight: '1.7' }],
-        'body-lg': ['1.0625rem', { lineHeight: '1.65' }],
-        body: ['0.9375rem', { lineHeight: '1.6' }],
+        'display-xl': ['clamp(2.5rem, 1.2rem + 3vw, 4rem)', { lineHeight: '1.0', letterSpacing: '-0.04em', fontWeight: '700' }],
+        'display-lg': ['clamp(2.125rem, 1.5rem + 1.9vw, 3.25rem)', { lineHeight: '1.05', letterSpacing: '-0.032em', fontWeight: '700' }],
+        'display-md': ['clamp(1.875rem, 1.3rem + 1.3vw, 2.5rem)', { lineHeight: '1.12', letterSpacing: '-0.028em', fontWeight: '700' }],
+        'display-sm': ['1.625rem', { lineHeight: '1.2', letterSpacing: '-0.022em', fontWeight: '600' }],
+        /** Editorial/UI body lead — 18px/1.65 (premium reading weight). */
+        lead: ['1.125rem', { lineHeight: '1.65' }],
+        'body-lg': ['1.0625rem', { lineHeight: '1.6' }],
+        /** Premium default body — 16px, comfortable line-height. */
+        body: ['1rem', { lineHeight: '1.6' }],
         caption: ['0.8125rem', { lineHeight: '1.5' }],
       },
       /**
@@ -93,23 +123,34 @@ const config: Config = {
        *   pill   – chips / tabs / status dots (full rounded)
        */
       borderRadius: {
+        sm: '8px',
         btn: '12px',
-        card: '16px',
-        panel: '20px',
+        card: '20px',
+        panel: '24px',
+        xl: '28px',
         pill: '9999px',
       },
       /**
-       * Shadow ladder — three elevation tiers plus the brand glow for CTAs.
-       * No colourised/coloured shadows outside the glow family.
+       * Shadow ladder — tighter, richer.
+       *   subtle    – form controls, inputs (bare-there)
+       *   card      – rest state (1px hairline only — no cheap grey)
+       *   card-hover— active hover lift
+       *   panel     – sheets/dropdowns
+       *   popover   – select/tooltip — stays crisp
+       *   lift      – hero floating card, FinalCTA
+       *   glow/glow-lg — brand CTAs
+       *   header    – sticky nav
        */
       boxShadow: {
-        card: '0 1px 0 rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.03)',
-        'card-hover': '0 12px 32px -12px rgba(15,23,42,0.14), 0 2px 8px -2px rgba(15,23,42,0.05)',
-        panel: '0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -12px rgba(15,23,42,0.08)',
-        lift: '0 24px 48px -20px rgba(15,23,42,0.22), 0 2px 8px rgba(15,23,42,0.05)',
-        glow: '0 6px 16px -6px rgba(0,163,106,0.45)',
-        'glow-lg': '0 12px 28px -8px rgba(0,163,106,0.5)',
-        header: '0 1px 0 rgba(15,23,42,0.04), 0 8px 24px -12px rgba(15,23,42,0.08)',
+        subtle: '0 1px 2px rgba(11,18,32,0.04), 0 1px 1px rgba(11,18,32,0.02)',
+        card: '0 1px 0 rgba(11,18,32,0.05), 0 0 0 1px rgba(11,18,32,0.04)',
+        'card-hover': '0 16px 40px -16px rgba(11,18,32,0.18), 0 4px 12px -4px rgba(11,18,32,0.06), 0 0 0 1px rgba(0,163,106,0.08)',
+        panel: '0 2px 6px rgba(11,18,32,0.04), 0 12px 32px -12px rgba(11,18,32,0.1)',
+        popover: '0 4px 12px rgba(11,18,32,0.08), 0 16px 40px -12px rgba(11,18,32,0.14)',
+        lift: '0 28px 60px -24px rgba(11,18,32,0.28), 0 6px 16px rgba(11,18,32,0.06)',
+        glow: '0 8px 20px -8px rgba(0,163,106,0.5)',
+        'glow-lg': '0 16px 40px -12px rgba(0,163,106,0.55)',
+        header: '0 1px 0 rgba(11,18,32,0.05), 0 8px 28px -14px rgba(11,18,32,0.12)',
       },
       maxWidth: {
         /** Single source of truth for the content grid: 1248px.
@@ -160,22 +201,27 @@ const config: Config = {
           from: { 'grid-template-rows': '0fr', opacity: '0' },
           to: { 'grid-template-rows': '1fr', opacity: '1' },
         },
+        float: {
+          '0%,100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
       },
       animation: {
-        'fade-up': 'fade-up 0.6s cubic-bezier(0.2,0.8,0.2,1) both',
-        'fade-in': 'fade-in 0.4s ease-out both',
-        'sheet-up': 'sheet-up 0.28s cubic-bezier(0.2,0.8,0.2,1) both',
-        'dropdown-in': 'dropdown-in 0.18s cubic-bezier(0.2,0.8,0.2,1) both',
-        'rise-1': 'fade-up 0.7s cubic-bezier(0.2,0.8,0.2,1) 0.05s both',
-        'rise-2': 'fade-up 0.7s cubic-bezier(0.2,0.8,0.2,1) 0.14s both',
-        'rise-3': 'fade-up 0.7s cubic-bezier(0.2,0.8,0.2,1) 0.23s both',
-        'rise-4': 'fade-up 0.7s cubic-bezier(0.2,0.8,0.2,1) 0.32s both',
-        'rise-5': 'fade-up 0.9s cubic-bezier(0.2,0.8,0.2,1) 0.42s both',
+        'fade-up': 'fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both',
+        'fade-in': 'fade-in 0.5s cubic-bezier(0.16,1,0.3,1) both',
+        'sheet-up': 'sheet-up 0.32s cubic-bezier(0.16,1,0.3,1) both',
+        'dropdown-in': 'dropdown-in 0.2s cubic-bezier(0.16,1,0.3,1) both',
+        'rise-1': 'fade-up 0.8s cubic-bezier(0.16,1,0.3,1) 0.04s both',
+        'rise-2': 'fade-up 0.8s cubic-bezier(0.16,1,0.3,1) 0.12s both',
+        'rise-3': 'fade-up 0.8s cubic-bezier(0.16,1,0.3,1) 0.20s both',
+        'rise-4': 'fade-up 0.8s cubic-bezier(0.16,1,0.3,1) 0.28s both',
+        'rise-5': 'fade-up 1s cubic-bezier(0.16,1,0.3,1) 0.36s both',
         'scale-pulse': 'scale-pulse 0.5s cubic-bezier(0.2,0.8,0.2,1) both',
-        'star-breathe': 'star-breathe 3s ease-in-out infinite',
-        'star-spin': 'star-spin 1.2s linear infinite',
-        'heart-pop': 'heart-pop 0.45s cubic-bezier(0.2,0.8,0.2,1)',
-        'accordion-down': 'accordion-down 0.25s ease',
+        'star-breathe': 'star-breathe 4s ease-in-out infinite',
+        'star-spin': 'star-spin 1.4s cubic-bezier(0.4,0,0.2,1) infinite',
+        'heart-pop': 'heart-pop 0.55s cubic-bezier(0.2,0.8,0.2,1)',
+        'accordion-down': 'accordion-down 0.3s cubic-bezier(0.16,1,0.3,1)',
+        'float': 'float 6s ease-in-out infinite',
       },
     },
   },

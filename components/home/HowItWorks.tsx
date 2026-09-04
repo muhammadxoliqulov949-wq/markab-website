@@ -18,24 +18,27 @@ export async function HowItWorks() {
     <section
       id="qanday-ishlaydi"
       aria-labelledby="how-heading"
-      className="scroll-mt-24 bg-surface section-y-sm"
+      className="scroll-mt-24 bg-surface section-y"
     >
       <Container>
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
             id="how-heading"
             eyebrow="Jarayon"
-            title="Muddatli to‘lov qanday ishlaydi"
-            description="Mahsulot tanlashdan tortib, uni qabul qilib olishgacha — olti bosqich."
+            title="Olti bosqichda yakunlanadi."
+            description="Mahsulot tanlashdan tortib, uni qabul qilib olishgacha — har bir bosqich aniq va hujjatlashtirilgan."
           />
           <ArrowLink href="/financing" className="shrink-0">
             Batafsil yo‘l xaritasi
           </ArrowLink>
         </div>
 
-        <ol className="relative mt-14 grid gap-8 lg:grid-cols-6 lg:gap-6">
-          {/* Connector — desktop only. */}
-          <span aria-hidden="true" className="absolute left-0 right-0 top-[18px] hidden h-px bg-line lg:block" />
+        <ol className="relative mt-14 grid gap-10 lg:mt-16 lg:grid-cols-6 lg:gap-4">
+          {/* Connector — desktop only: soft line, not a harsh hairline. */}
+          <span
+            aria-hidden="true"
+            className="absolute left-0 right-0 top-[20px] hidden h-px bg-gradient-to-r from-transparent via-line to-transparent lg:block"
+          />
 
           {financingSteps.map((step, index) => {
             const isLast = index === financingSteps.length - 1;
@@ -44,17 +47,17 @@ export async function HowItWorks() {
                 {!isLast ? (
                   <span
                     aria-hidden="true"
-                    className="absolute left-[18px] top-12 -bottom-8 w-px bg-line lg:hidden"
+                    className="absolute left-[20px] top-12 -bottom-10 w-px bg-line lg:hidden"
                   />
                 ) : null}
 
-                <span className="relative z-10 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-sm font-semibold text-ink-900 lg:mb-6">
+                <span className="relative z-10 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-sm font-semibold text-ink-900 ring-1 ring-line shadow-subtle lg:mb-6">
                   {step.step}
                 </span>
 
-                <div className="min-w-0 pt-1 lg:pt-0">
-                  <h3 className="text-base font-semibold text-ink-900">{step.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-ink-500">{step.description}</p>
+                <div className="min-w-0 pt-1 lg:pt-0 lg:pr-3">
+                  <h3 className="text-[15px] font-semibold text-ink-900">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-500">{step.description}</p>
                 </div>
               </li>
             );

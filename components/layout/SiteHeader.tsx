@@ -12,7 +12,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 function MarkabMark() {
   return (
     <span
-      className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-700 text-white"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-btn bg-brand-600 text-white shadow-glow"
       aria-hidden="true"
     >
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">

@@ -24,7 +24,11 @@ export function MarkabStar({
   stroke = false,
   ariaHidden = true,
 }: {
+<<<<<<< HEAD
   size?: 12 | 16 | 20 | 24 | 32 | 48 | 64 | 96 | 128;
+=======
+  size?: number;
+>>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
   tone?: Tone;
   className?: string;
   pulse?: boolean;
@@ -71,6 +75,7 @@ export function MarkabStar({
 }
 
 /** Hairline divider with the Markab star in the middle — used between
+<<<<<<< HEAD
     content sections / in footers where a small brand mark is welcome. */
 export function MarkabDivider({ className = '' }: { className?: string }) {
   return (
@@ -78,6 +83,24 @@ export function MarkabDivider({ className = '' }: { className?: string }) {
       <div className="h-px flex-1 bg-line" />
       <MarkabStar size={12} tone="muted" className="mx-3 opacity-60" />
       <div className="h-px flex-1 bg-line" />
+=======
+    content sections / in footers where a small brand mark is welcome.
+    Accepts `tone` so it can render on dark brand bands without forcing
+    light text on a light divider. */
+export function MarkabDivider({
+  className = '',
+  tone = 'light',
+}: {
+  className?: string;
+  tone?: 'light' | 'dark';
+}) {
+  const line = tone === 'dark' ? 'bg-white/20' : 'bg-line';
+  return (
+    <div className={['relative flex items-center py-4', className].filter(Boolean).join(' ')} aria-hidden="true">
+      <div className={`h-px flex-1 ${line}`} />
+      <MarkabStar size={12} tone={tone === 'dark' ? 'white' : 'muted'} className="mx-3 opacity-70" />
+      <div className={`h-px flex-1 ${line}`} />
+>>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
     </div>
   );
 }

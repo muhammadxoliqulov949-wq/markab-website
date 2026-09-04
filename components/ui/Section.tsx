@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { MarkabStar } from '@/components/ui/MarkabStar';
 
 type Tone = 'default' | 'muted' | 'sunken' | 'dark';
 
@@ -70,7 +71,7 @@ export function SectionHeading({
   const descTone = tone === 'dark' ? 'text-white/65' : 'text-ink-500';
   const eyebrowCls =
     tone === 'dark'
-      ? 'inline-flex items-center gap-2 rounded-pill bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-200 ring-1 ring-inset ring-white/15'
+      ? 'inline-flex items-center gap-2 rounded-pill bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-100 ring-1 ring-inset ring-white/15'
       : 'eyebrow';
 
   const titleSize =

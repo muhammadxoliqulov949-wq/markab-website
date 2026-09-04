@@ -2,6 +2,10 @@ import Link from 'next/link';
 import { Container } from '@/components/ui/Section';
 import { InteractivePhone } from '@/components/home/InteractivePhone';
 import { site } from '@/lib/site';
+<<<<<<< HEAD
+=======
+import { MarkabStar } from '@/components/ui/MarkabStar';
+>>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
 
 /**
  * Store badge — native anchor so clicks always open the store in a new tab.
@@ -65,6 +69,7 @@ export function AppDownloadSection() {
   return (
     <section
       aria-labelledby="app-download-heading"
+<<<<<<< HEAD
       className="brand-radial-glow relative overflow-hidden bg-gradient-to-b from-brand-600 to-brand-700 section-y"
     >
       {/* Soft tonal green wash — same family, no multicolor gradient, no neon. */}
@@ -79,20 +84,47 @@ export function AppDownloadSection() {
       {/* Very subtle top highlight for depth on the green surface */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/20"
+=======
+      className="brand-radial-glow dot-pattern-dark relative overflow-hidden bg-gradient-to-b from-brand-600 via-brand-700 to-brand-800 section-y"
+    >
+      {/* Large watermark star for premium depth */}
+      <div
+        className="pointer-events-none absolute -left-20 top-20 opacity-[0.06]"
+        aria-hidden="true"
+      >
+        <MarkabStar size={180} tone="white" />
+      </div>
+      {/* Soft tonal green wash — same family, no multicolor gradient, no neon. */}
+      <div
+        className="pointer-events-none absolute -left-40 top-0 h-[40rem] w-[40rem] rounded-full bg-brand-300/15 blur-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -right-32 bottom-0 h-[32rem] w-[32rem] rounded-full bg-brand-900/40 blur-3xl"
+>>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
         aria-hidden="true"
       />
 
       <Container className="relative">
+<<<<<<< HEAD
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           {/* LEFT: content — appears FIRST on mobile, sits left on desktop. */}
           <div className="order-1 text-white">
             <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-accent-500" aria-hidden="true" />
+=======
+        <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
+          {/* LEFT: content — appears FIRST on mobile, sits left on desktop. */}
+          <div className="order-1 text-white">
+            <p className="eyebrow-on-dark">
+              <MarkabStar size={10} tone="white" />
+>>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
               Mobil ilova
             </p>
 
             <h2
               id="app-download-heading"
+<<<<<<< HEAD
               className="mt-5 text-display-lg text-white sm:text-display-xl"
             >
               Markab ilovasini yuklab oling
@@ -100,6 +132,16 @@ export function AppDownloadSection() {
 
             <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-white/85">
               To‘lovlar, eslatmalar va maxsus takliflar doimo yoningizda.
+=======
+              className="mt-6 text-display-lg text-white sm:mt-7 sm:text-display-xl"
+            >
+              Hamyoningizda bir zumda.
+            </h2>
+
+            <p className="mt-5 max-w-md text-lead text-white/80 sm:mt-6">
+              To‘lovlar, eslatmalar va maxsus takliflar doimo yoningizda — ilova orqali
+              boshqaring.
+>>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
