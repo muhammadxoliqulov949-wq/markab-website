@@ -66,28 +66,17 @@ export function AppDownloadSection() {
   return (
     <section
       aria-labelledby="app-download-heading"
-      className="brand-radial-glow dot-pattern-dark relative overflow-hidden bg-gradient-to-b from-brand-600 via-brand-700 to-brand-800 section-y"
+      className="brand-radial-glow relative overflow-hidden bg-gradient-to-b from-brand-600 to-brand-800 section-y"
     >
-      {/* Large watermark star for premium depth */}
+      {/* One soft wash — no dot pattern, no giant watermark star, just light. */}
       <div
-        className="pointer-events-none absolute -left-20 top-20 opacity-[0.06]"
-        aria-hidden="true"
-      >
-        <MarkabStar size={180} tone="white" />
-      </div>
-      {/* Soft tonal green wash — same family, no multicolor gradient, no neon. */}
-      <div
-        className="pointer-events-none absolute -left-40 top-0 h-[40rem] w-[40rem] rounded-full bg-brand-300/15 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -right-32 bottom-0 h-[32rem] w-[32rem] rounded-full bg-brand-900/40 blur-3xl"
+        className="pointer-events-none absolute -left-32 -top-20 h-[32rem] w-[32rem] rounded-full bg-white/[0.08] blur-3xl"
         aria-hidden="true"
       />
 
       <Container className="relative">
         <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
-          {/* LEFT: content — appears FIRST on mobile, sits left on desktop. */}
+          {/* LEFT: content */}
           <div className="order-1 text-white">
             <p className="eyebrow-on-dark">
               <MarkabStar size={10} tone="white" />

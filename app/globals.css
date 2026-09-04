@@ -191,11 +191,11 @@ html {
     @apply inline-flex items-center gap-2 rounded-pill bg-brand-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-700 ring-1 ring-inset ring-brand-100;
   }
   .eyebrow-on-dark {
-    @apply inline-flex items-center gap-2 rounded-pill bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-100 ring-1 ring-inset ring-white/15;
+    @apply inline-flex items-center gap-2 rounded-pill bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/90;
   }
 
-  /* Subtle warm radial light used once on dark bands (AppDownload, FinalCta)
-     to keep the brand glow soft rather than a harsh linear gradient. */
+  /* Subtle top highlight used on dark brand bands. Very soft, very wide —
+     creates a gentle top-to-bottom depth without any dots or streaks. */
   .brand-radial-glow {
     position: relative;
     isolation: isolate;
@@ -205,10 +205,10 @@ html {
     position: absolute;
     top: 0;
     left: 50%;
-    width: min(80rem, 120%);
-    height: 70%;
+    width: min(72rem, 110%);
+    height: 60%;
     transform: translateX(-50%);
-    background: radial-gradient(50% 100% at 50% 0%, rgba(255, 255, 255, 0.16), transparent 70%);
+    background: radial-gradient(50% 100% at 50% 0%, rgba(255, 255, 255, 0.10), transparent 70%);
     pointer-events: none;
     z-index: 0;
   }

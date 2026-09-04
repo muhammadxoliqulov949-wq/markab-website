@@ -19,23 +19,15 @@ export function FinalCta() {
   return (
     <section
       aria-labelledby="final-cta-heading"
-      className="brand-radial-glow dot-pattern-dark relative overflow-hidden bg-gradient-to-b from-brand-600 via-brand-700 to-brand-800 text-white section-y"
+      className="brand-radial-glow relative overflow-hidden bg-gradient-to-b from-brand-600 to-brand-800 text-white section-y"
     >
-      {/* Large watermark star — centered bottom, low opacity. */}
+      {/* One soft top light, one deep bottom green — no dots, no giant star. */}
       <div
-        className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/4 opacity-[0.08]"
-        aria-hidden="true"
-      >
-        <MarkabStar size={220} tone="white" />
-      </div>
-
-      {/* Soft tonal green washes */}
-      <div
-        className="pointer-events-none absolute -left-40 -top-24 h-[36rem] w-[36rem] rounded-full bg-brand-300/15 blur-3xl"
+        className="pointer-events-none absolute -left-32 -top-24 h-[32rem] w-[32rem] rounded-full bg-white/[0.08] blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -right-40 bottom-0 h-[32rem] w-[32rem] rounded-full bg-brand-900/40 blur-3xl"
+        className="pointer-events-none absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-brand-900/50 blur-3xl"
         aria-hidden="true"
       />
 
