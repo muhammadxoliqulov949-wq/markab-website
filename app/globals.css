@@ -41,7 +41,8 @@ html {
 @layer base {
   body {
     @apply bg-surface text-ink-700 antialiased;
-    font-feature-settings: 'kern' 1, 'liga' 1;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1;
+    font-variant-numeric: tabular-nums;
     min-height: 100vh;
     min-height: 100dvh;
     text-rendering: optimizeLegibility;

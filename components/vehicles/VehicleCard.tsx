@@ -33,7 +33,7 @@ export function VehicleCard({
   const monthly = vehicle.financing.monthlyPaymentUzs;
 
   return (
-    <article className="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
+    <article className="group flex h-full w-full flex-col overflow-hidden rounded-card border border-line bg-surface transition-card hover-only:-translate-y-0.5 hover-only:border-brand-200/70 hover-only:shadow-card-hover">
       <Link href={href} className="flex flex-1 flex-col">
         {/* Fixed 4:3 frame — the same geometry the electronics cards use. */}
         <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
@@ -45,14 +45,14 @@ export function VehicleCard({
             className="object-cover transition-transform duration-700 ease-smooth group-hover:scale-[1.04]"
           />
 
-          <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+          <div className="absolute left-2 top-2 flex flex-wrap gap-2">
             {highlight ? (
-              <Badge tone="brand" className="bg-white/95">
+              <Badge tone="brand" className="bg-white/95 shadow-sm">
                 Tanlangan
               </Badge>
             ) : null}
             {vehicle.isNew ? (
-              <Badge tone="brand" className="bg-white/95">
+              <Badge tone="brand" className="bg-white/95 shadow-sm">
                 Yangi
               </Badge>
             ) : null}

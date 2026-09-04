@@ -40,7 +40,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
   const href = `/electronics/${product.id}`;
 
   return (
-    <article className="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
+    <article className="group flex h-full w-full flex-col overflow-hidden rounded-card border border-line bg-surface transition-card hover-only:-translate-y-0.5 hover-only:border-brand-200/70 hover-only:shadow-card-hover">
       <Link href={href} className="flex flex-1 flex-col">
         {/* Fixed frame — source photo proportions cannot change it. */}
         <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
@@ -53,7 +53,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
             className="object-contain object-center p-4 transition-transform duration-700 ease-smooth group-hover:scale-[1.03]"
           />
 
-          <div className="absolute left-3 top-3">
+          <div className="absolute left-2 top-2">
             <Badge tone={stock.tone}>{stock.label}</Badge>
           </div>
 
