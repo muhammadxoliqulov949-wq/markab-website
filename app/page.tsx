@@ -8,7 +8,6 @@ import { HowItWorks } from '@/components/home/HowItWorks';
 import { InvestSection } from '@/components/home/InvestSection';
 import { AppDownloadSection } from '@/components/home/AppDownloadSection';
 import { FaqSection } from '@/components/home/FaqSection';
-import { HomepageContactSection } from '@/components/home/HomepageContactSection';
 import { FinalCta } from '@/components/home/FinalCta';
 import { MarkabDivider } from '@/components/ui/MarkabStar';
 import { repository } from '@/lib/data';
@@ -120,10 +119,6 @@ export default async function HomePage() {
       <AppDownloadSection />
 
       <FaqSection items={faqItems} />
-
-      <AppDownloadSection />
-
-      <HomepageContactSection />
 
       <FinalCta />
     </>
