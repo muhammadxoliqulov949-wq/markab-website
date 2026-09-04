@@ -26,7 +26,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden bg-surface pb-12 pt-8 sm:pb-14 sm:pt-10 lg:pb-16 lg:pt-14"
+      className="relative overflow-hidden bg-surface pb-16 pt-10 sm:pb-20 sm:pt-14 lg:pb-24 lg:pt-20"
     >
       {/* Restrained wash: one soft brand tint behind the visual column. */}
       <div
@@ -38,7 +38,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
         <div className="grid items-center gap-10 md:grid-cols-2 md:gap-8 lg:grid-cols-[1.02fr_1fr] lg:gap-14">
           {/* LEFT — content first, in DOM order and in reading order. */}
           <div className="md:max-w-none lg:max-w-xl">
-            <p className="animate-rise-1 inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700">
+            <p className="animate-rise-1 eyebrow">
               <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
               {site.positioning}
             </p>
@@ -47,12 +47,12 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
               Qadriyatlarga asoslangan zamonaviy moliyaviy ekotizim
             </h1>
 
-            <p className="animate-rise-3 mt-5 text-[0.9375rem] leading-relaxed text-ink-600 sm:text-base">
+            <p className="animate-rise-3 mt-6 max-w-lg text-body text-ink-600 sm:text-lead">
               Avtomobil va elektronikani muddatli to‘lov asosida xarid qiling. Shartlar oldindan
               ko‘rinadi, sarmoya yo‘nalishi bilan tanishish mumkin — barchasi bitta ekotizimda.
             </p>
 
-            <div className="animate-rise-4 mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
+            <div className="animate-rise-4 mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center">
               <ButtonLink href="/cars" size="lg" className="hover-only:-translate-y-0.5">
                 Avtomobillarni ko‘rish
                 <svg
@@ -60,7 +60,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="1.7"
                   aria-hidden="true"
                 >
                   <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -82,7 +82,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.8"
+                  strokeWidth="1.7"
                   aria-hidden="true"
                 >
                   <path d="M12 5v14M6 13l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -178,7 +178,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        strokeWidth="1.8"
+                        strokeWidth="1.7"
                         aria-hidden="true"
                       >
                         <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />

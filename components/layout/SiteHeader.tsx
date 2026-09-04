@@ -134,7 +134,7 @@ export function SiteHeader() {
       className={[
         'sticky top-0 z-50 border-b transition-all duration-300 ease-smooth',
         scrolled
-          ? 'border-line bg-white/90 shadow-[0_1px_2px_rgba(12,17,22,0.05)] backdrop-blur-xl'
+          ? 'border-line bg-white/92 shadow-header backdrop-blur-xl'
           : 'border-transparent bg-white/80 backdrop-blur-xl',
       ].join(' ')}
     >
@@ -154,7 +154,7 @@ export function SiteHeader() {
             className="hidden shrink-0 items-center gap-1 text-white/90 underline-offset-2 transition-colors hover:text-white hover:underline sm:inline-flex"
           >
             Batafsil
-            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
@@ -257,7 +257,7 @@ export function SiteHeader() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.8"
+              strokeWidth="1.7"
               aria-hidden="true"
             >
               {open ? (
@@ -297,7 +297,7 @@ export function SiteHeader() {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="1.8"
+                      strokeWidth="1.7"
                       aria-hidden="true"
                     >
                       <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />

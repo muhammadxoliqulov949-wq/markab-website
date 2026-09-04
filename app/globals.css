@@ -163,11 +163,48 @@ html {
   /* One vertical rhythm for page sections.
      Two values cover every section: standard, and compact for supporting blocks. */
   .section-y {
-    @apply py-12 sm:py-16;
+    @apply py-16 sm:py-24;
   }
 
   .section-y-sm {
-    @apply py-10 sm:py-14;
+    @apply py-12 sm:py-16;
+  }
+
+  /* Tabular numerics — use everywhere prices, sums, rates, counts are shown
+     so digits line up vertically and don't jump on load. */
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  /* Brand eyebrow chip — tiny all-caps label used as a section/kicker label
+     across the site. */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-pill bg-brand-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-700;
+  }
+
+  /* Subtle warm radial light used once on dark bands (AppDownload, FinalCta)
+     to keep the brand glow soft rather than a harsh linear gradient. */
+  .brand-radial-glow {
+    position: relative;
+  }
+  .brand-radial-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: min(72rem, 100%);
+    height: 60%;
+    transform: translateX(-50%);
+    background: radial-gradient(60% 100% at 50% 0%, rgba(255, 255, 255, 0.12), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Default stroke treatment on outline icons — single cap/join setting so
+     every path in the system draws consistently without per-tag attrs. */
+  svg[stroke]:not([stroke='none']) {
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   /* Compact product action bar on a detail page.

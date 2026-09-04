@@ -334,7 +334,7 @@ export function InteractivePhone() {
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="2"
+                      strokeWidth="1.7"
                       aria-hidden="true"
                     >
                       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -444,7 +444,7 @@ export function InteractivePhone() {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="1.7"
                 aria-hidden="true"
               >
                 <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />

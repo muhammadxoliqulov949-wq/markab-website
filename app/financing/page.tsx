@@ -257,7 +257,7 @@ export default async function FinancingPage() {
                   {step.href ? (
                     <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700">
                       Ochish
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
                         <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </span>
@@ -313,7 +313,7 @@ export default async function FinancingPage() {
               </p>
               <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700">
                 Katalogni ochish
-                <svg className="h-4 w-4 transition-transform duration-300 ease-smooth group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                <svg className="h-4 w-4 transition-transform duration-300 ease-smooth group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
                   <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
@@ -339,7 +339,7 @@ export default async function FinancingPage() {
               </p>
               <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand-700">
                 Katalogni ochish
-                <svg className="h-4 w-4 transition-transform duration-300 ease-smooth group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                <svg className="h-4 w-4 transition-transform duration-300 ease-smooth group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
                   <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>

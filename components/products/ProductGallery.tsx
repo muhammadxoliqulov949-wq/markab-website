@@ -26,7 +26,7 @@ export function ProductGallery({ images, name }: { images: string[]; name: strin
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.3"
+          strokeWidth="1.7"
           aria-hidden="true"
         >
           <rect x="6" y="3" width="12" height="18" rx="2.5" />

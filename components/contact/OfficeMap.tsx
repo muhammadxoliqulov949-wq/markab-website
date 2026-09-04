@@ -158,7 +158,7 @@ export function OfficeMap() {
           title={site.office.mapUrl}
           className="inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-line-strong bg-white px-3.5 text-sm font-medium text-ink-900 transition-all duration-200 hover:border-ink-300 hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
         >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" strokeLinecap="round" strokeLinejoin="round" />
             <circle cx="12" cy="9" r="2.5" />
           </svg>

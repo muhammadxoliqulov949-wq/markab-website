@@ -50,7 +50,7 @@ export function SearchHitRow({ hit }: { hit: SearchHit }) {
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="1.8"
+          strokeWidth="1.7"
           aria-hidden="true"
         >
           <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />

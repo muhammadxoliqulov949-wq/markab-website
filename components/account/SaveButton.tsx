@@ -30,7 +30,7 @@ function HeartIcon({ filled }: { filled: boolean }) {
       viewBox="0 0 24 24"
       fill={filled ? 'currentColor' : 'none'}
       stroke="currentColor"
-      strokeWidth="1.8"
+      strokeWidth="1.7"
       aria-hidden="true"
     >
       <path

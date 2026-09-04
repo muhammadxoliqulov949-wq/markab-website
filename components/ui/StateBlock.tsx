@@ -43,14 +43,14 @@ function Icon({ variant }: { variant: StateVariant }) {
   switch (variant) {
     case 'not-found':
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.5-3.5" strokeLinecap="round" />
         </svg>
       );
     case 'error':
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
           <path d="M12 9v4" strokeLinecap="round" />
           <path d="M12 17h.01" strokeLinecap="round" />
           <path d="M10.3 3.9 2.4 17.3A1.9 1.9 0 0 0 4 20.2h16a1.9 1.9 0 0 0 1.6-2.9L13.7 3.9a1.9 1.9 0 0 0-3.4 0Z" />
@@ -58,7 +58,7 @@ function Icon({ variant }: { variant: StateVariant }) {
       );
     case 'empty':
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
           <rect x="3" y="5" width="18" height="14" rx="2.5" />
           <path d="M3 10h18M8 15h8" strokeLinecap="round" />
         </svg>
@@ -66,7 +66,7 @@ function Icon({ variant }: { variant: StateVariant }) {
     case 'pending':
     case 'unavailable':
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+        <svg className={common} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
           <path d="M12 8v4l3 2" strokeLinecap="round" />
           <circle cx="12" cy="12" r="9" />
         </svg>
@@ -74,8 +74,8 @@ function Icon({ variant }: { variant: StateVariant }) {
     default:
       return (
         <svg className={`${common} animate-spin`} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.2" strokeWidth="2" />
-          <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity="0.2" strokeWidth="1.7" />
+          <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
         </svg>
       );
   }
@@ -153,7 +153,7 @@ export function PendingValue({
     <span
       className={`inline-flex items-center gap-1.5 text-sm ${className || 'text-ink-400'}`}
     >
-      <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
         <circle cx="12" cy="12" r="9" />
         <path d="M12 8v4l3 2" strokeLinecap="round" />
       </svg>

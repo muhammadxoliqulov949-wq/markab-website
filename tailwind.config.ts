@@ -76,10 +76,11 @@ const config: Config = {
        * smell and should be migrated here.
        */
       fontSize: {
+        'display-xl': ['clamp(2.25rem, 1.1rem + 2.8vw, 3.75rem)', { lineHeight: '1.02', letterSpacing: '-0.035em', fontWeight: '700' }],
+        'display-lg': ['clamp(2rem, 1.4rem + 1.7vw, 3rem)', { lineHeight: '1.08', letterSpacing: '-0.028em', fontWeight: '700' }],
+        'display-md': ['clamp(1.75rem, 1.2rem + 1.2vw, 2.25rem)', { lineHeight: '1.15', letterSpacing: '-0.025em', fontWeight: '700' }],
         'display-sm': ['1.5rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '600' }],
-        'display-md': ['clamp(1.75rem, 1.4rem + 1vw, 2.25rem)', { lineHeight: '1.12', letterSpacing: '-0.025em', fontWeight: '600' }],
-        'display-lg': ['clamp(2rem, 1.4rem + 1.7vw, 2.875rem)', { lineHeight: '1.08', letterSpacing: '-0.028em', fontWeight: '600' }],
-        'display-xl': ['clamp(2.125rem, 1.05rem + 2.8vw, 3.5rem)', { lineHeight: '1.05', letterSpacing: '-0.03em', fontWeight: '600' }],
+        lead: ['1.125rem', { lineHeight: '1.7' }],
         'body-lg': ['1.0625rem', { lineHeight: '1.65' }],
         body: ['0.9375rem', { lineHeight: '1.6' }],
         caption: ['0.8125rem', { lineHeight: '1.5' }],
@@ -102,12 +103,13 @@ const config: Config = {
        * No colourised/coloured shadows outside the glow family.
        */
       boxShadow: {
-        card: '0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.03)',
-        'card-hover': '0 10px 24px -12px rgba(15,23,42,0.14), 0 2px 6px rgba(15,23,42,0.05)',
-        panel: '0 1px 2px rgba(15,23,42,0.05)',
-        lift: '0 20px 44px -20px rgba(15,23,42,0.28)',
-        glow: '0 6px 16px -6px rgba(0,184,120,0.45)',
-        'glow-lg': '0 10px 24px -8px rgba(0,184,120,0.5)',
+        card: '0 1px 0 rgba(15,23,42,0.04), 0 1px 2px rgba(15,23,42,0.03)',
+        'card-hover': '0 12px 32px -12px rgba(15,23,42,0.14), 0 2px 8px -2px rgba(15,23,42,0.05)',
+        panel: '0 1px 2px rgba(15,23,42,0.04), 0 8px 24px -12px rgba(15,23,42,0.08)',
+        lift: '0 24px 48px -20px rgba(15,23,42,0.22), 0 2px 8px rgba(15,23,42,0.05)',
+        glow: '0 6px 16px -6px rgba(0,163,106,0.45)',
+        'glow-lg': '0 12px 28px -8px rgba(0,163,106,0.5)',
+        header: '0 1px 0 rgba(15,23,42,0.04), 0 8px 24px -12px rgba(15,23,42,0.08)',
       },
       maxWidth: {
         /** Single source of truth for the content grid: 1248px.
@@ -143,6 +145,21 @@ const config: Config = {
           '50%': { transform: 'scale(1.25)' },
           '100%': { transform: 'scale(1)' },
         },
+        'star-breathe': {
+          '0%,100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.7', transform: 'scale(0.92)' },
+        },
+        'star-spin': { to: { transform: 'rotate(360deg)' } },
+        'heart-pop': {
+          '0%': { transform: 'scale(1)' },
+          '40%': { transform: 'scale(1.3)' },
+          '70%': { transform: 'scale(0.92)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        'accordion-down': {
+          from: { 'grid-template-rows': '0fr', opacity: '0' },
+          to: { 'grid-template-rows': '1fr', opacity: '1' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.6s cubic-bezier(0.2,0.8,0.2,1) both',
@@ -155,6 +172,10 @@ const config: Config = {
         'rise-4': 'fade-up 0.7s cubic-bezier(0.2,0.8,0.2,1) 0.32s both',
         'rise-5': 'fade-up 0.9s cubic-bezier(0.2,0.8,0.2,1) 0.42s both',
         'scale-pulse': 'scale-pulse 0.5s cubic-bezier(0.2,0.8,0.2,1) both',
+        'star-breathe': 'star-breathe 3s ease-in-out infinite',
+        'star-spin': 'star-spin 1.2s linear infinite',
+        'heart-pop': 'heart-pop 0.45s cubic-bezier(0.2,0.8,0.2,1)',
+        'accordion-down': 'accordion-down 0.25s ease',
       },
     },
   },

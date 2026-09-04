@@ -20,15 +20,15 @@ export function FinalCta() {
   return (
     <section
       aria-labelledby="final-cta-heading"
-      className="relative overflow-hidden bg-gradient-to-b from-brand-600 to-brand-700 py-14 text-white sm:py-16 lg:py-20"
+      className="brand-radial-glow relative overflow-hidden bg-gradient-to-b from-brand-600 to-brand-700 text-white section-y"
     >
       {/* Soft tonal green washes — same family, no multicolor, no neon. */}
       <div
-        className="pointer-events-none absolute -left-40 -top-20 h-[28rem] w-[28rem] rounded-full bg-brand-300/20 blur-3xl"
+        className="pointer-events-none absolute -left-40 -top-20 h-[32rem] w-[32rem] rounded-full bg-brand-300/15 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -right-32 bottom-0 h-[24rem] w-[24rem] rounded-full bg-brand-800/40 blur-3xl"
+        className="pointer-events-none absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-brand-800/35 blur-3xl"
         aria-hidden="true"
       />
       <div

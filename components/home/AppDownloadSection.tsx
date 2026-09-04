@@ -65,15 +65,15 @@ export function AppDownloadSection() {
   return (
     <section
       aria-labelledby="app-download-heading"
-      className="relative overflow-hidden bg-gradient-to-b from-brand-600 to-brand-700 section-y"
+      className="brand-radial-glow relative overflow-hidden bg-gradient-to-b from-brand-600 to-brand-700 section-y"
     >
       {/* Soft tonal green wash — same family, no multicolor gradient, no neon. */}
       <div
-        className="pointer-events-none absolute -left-40 top-0 h-[32rem] w-[32rem] rounded-full bg-brand-300/20 blur-3xl"
+        className="pointer-events-none absolute -left-40 top-0 h-[36rem] w-[36rem] rounded-full bg-brand-300/15 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-brand-800/40 blur-3xl"
+        className="pointer-events-none absolute -right-32 bottom-0 h-[30rem] w-[30rem] rounded-full bg-brand-800/35 blur-3xl"
         aria-hidden="true"
       />
       {/* Very subtle top highlight for depth on the green surface */}
@@ -86,7 +86,7 @@ export function AppDownloadSection() {
         <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
           {/* LEFT: content — appears FIRST on mobile, sits left on desktop. */}
           <div className="order-1 text-white">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/90 backdrop-blur-sm">
+            <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-accent-500" aria-hidden="true" />
               Mobil ilova
             </p>
