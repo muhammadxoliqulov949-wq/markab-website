@@ -1,14 +1,17 @@
+@import "@fontsource-variable/inter";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /*
- * Typography: Inter is loaded through next/font/google and sets --font-sans.
- * The system stack is kept as the final fallback so rendering is never blank
- * while the font downloads or if font-loading fails (display: swap).
+ * Typography: Inter Variable is self-hosted through @fontsource-variable/inter
+ * (latin + latin-ext + cyrillic). The system stack is kept as the final fallback
+ * so rendering is never blank while the font downloads or if font-loading fails
+ * (the package uses font-display: swap by default).
  */
 :root {
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  --font-sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
 
   /*

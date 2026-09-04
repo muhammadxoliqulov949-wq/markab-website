@@ -106,8 +106,12 @@ export function buildCsp({ nonce, frameAncestors, upgradeInsecure }: CspOptions)
  * otherwise be blanked by the very control under review. It is set in exactly
  * one place — `start-preview.sh` — and nowhere else.
  */
+// Re-export the zod-validated reader from serverEnv so callers (middleware,
+// tests, scripts) never bypass validation by reading process.env directly.
+import { allowPreviewFraming as readPreviewFlag } from '@/lib/env/server';
+
 export function allowPreviewFraming(): boolean {
-  return process.env.MARKAB_ALLOW_PREVIEW_FRAME === 'true';
+  return readPreviewFlag();
 }
 
 export function frameAncestorsPolicy(): string {

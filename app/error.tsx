@@ -10,7 +10,7 @@ import { Container } from '@/components/ui/Section';
  * Users never see raw technical errors: the digest is logged server-side and only
  * a correlation reference is available here.
  */
-export default function GlobalError({
+export default function RouteError({
   error,
   reset,
 }: {
@@ -18,50 +18,43 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    /**
-     * The digest is always safe to log: it is an opaque correlation id, and the
-     * matching detail stays on the server.
-     *
-     * The message is a different matter. In production React replaces it with a
-     * generic string, but a boundary can still hand us a real one — and in
-     * development it always does — so it is logged only where that is useful
-     * and harmless, i.e. locally. Shipping internal exception text to every
-     * visitor's console is free reconnaissance for anyone who opens devtools.
-     */
     if (process.env.NODE_ENV === 'development') {
       console.error('[markab] route error', { digest: error.digest, message: error.message });
     } else {
-      // Production: this is where the error-monitoring service would go.
       console.error('[markab] route error', { digest: error.digest });
     }
   }, [error]);
 
   return (
-    <Container className="flex min-h-[60vh] flex-col justify-center py-16">
+    <Container className="flex min-h-[60vh] flex-col justify-center py-16 sm:py-24">
       <div className="mx-auto max-w-lg text-center">
-        <h1 className="text-2xl font-semibold text-ink-900">Nimadir xato ketdi</h1>
-        <p className="mt-3 text-sm leading-relaxed text-ink-500">
-          Sahifani yuklashda xatolik yuz berdi. Iltimos, qaytadan urinib ko‘ring — agar xatolik
-          takrorlansa, qo‘llab-quvvatlash xizmatiga murojaat qiling.
+        <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-100 bg-brand-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700">
+          <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
+          Xatolik
+        </p>
+        <h1 className="text-display-sm text-ink-900 sm:text-display-md">Nimadir noto‘g‘ri bajarildi</h1>
+        <p className="mt-4 text-sm leading-relaxed text-ink-500 sm:text-base">
+          Sahifani yuklashda kutilmagan xato ro‘y berdi. Quyidagi tugma orqali qayta urinib
+          ko‘ring — agar xatolik takrorlansa, bosh sahifaga qaytishingiz mumkin.
         </p>
 
         {error.digest ? (
-          <p className="mt-3 text-xs text-ink-400">Xatolik kodi: {error.digest}</p>
+          <p className="mt-4 font-mono text-xs text-ink-400">
+            Xato kodi: <span className="font-semibold">{error.digest}</span>
+          </p>
         ) : null}
 
-        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Button onClick={reset} size="lg">
             Qayta urinish
           </Button>
-          {/* A router-boundary escape hatch: after a route error the router may
-              be unusable, so this stays a plain anchor and forces a real
-              document load rather than a client navigation that could fail the
-              same way again. The lint rule is disabled for this one link with
-              the reason recorded, not silenced globally. */}
+          {/* After a route error the router may be unusable; use a plain anchor
+              to force a real document load rather than a client navigation that
+              could fail the same way. */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/"
-            className="inline-flex h-12 items-center justify-center rounded-lg border border-line-strong bg-white px-6 text-base font-medium text-ink-900 transition-colors hover:bg-surface-muted"
+            className="tap-target inline-flex h-[46px] items-center justify-center rounded-btn border border-line bg-white px-6 text-[0.9375rem] font-semibold text-ink-900 shadow-card transition-ctrl hover:border-brand-200 hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
           >
             Bosh sahifa
           </a>

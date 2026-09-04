@@ -6,6 +6,7 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import { primaryNav, secondaryNav, site } from '@/lib/site';
 import { HeaderSearch } from '@/components/search/HeaderSearch';
 import { useCart } from '@/components/cart/CartProvider';
+import { CartBadge } from '@/components/cart/CartBadge';
 import { useAuth } from '@/components/auth/AuthProvider';
 
 function MarkabMark() {
@@ -35,6 +36,7 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [announcementDismissed, setAnnouncementDismissed] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const { count } = useCart();
@@ -46,6 +48,11 @@ export function SiteHeader() {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+    try {
+      if (window.sessionStorage.getItem('markab.announcement.dismissed') === '1') {
+        setAnnouncementDismissed(true);
+      }
+    } catch { /* storage disabled */ }
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -111,6 +118,13 @@ export function SiteHeader() {
   const closeMenu = () => {
     setOpen(false);
     toggleRef.current?.focus();
+  };
+
+  const dismissAnnouncement = () => {
+    setAnnouncementDismissed(true);
+    try {
+      window.sessionStorage.setItem('markab.announcement.dismissed', '1');
+    } catch { /* storage disabled */ }
   };
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
@@ -217,11 +231,7 @@ export function SiteHeader() {
               <circle cx="10" cy="20" r="1.4" />
               <circle cx="18" cy="20" r="1.4" />
             </svg>
-            {count > 0 ? (
-              <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-600 px-1 text-[11px] font-bold text-white">
-                {count}
-              </span>
-            ) : null}
+            <CartBadge />
           </Link>
 
           <span className="mx-0.5 hidden h-6 w-px bg-line lg:mx-1 lg:block" aria-hidden="true" />
