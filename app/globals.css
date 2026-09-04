@@ -39,18 +39,6 @@ html {
 }
 
 @layer base {
-<<<<<<< HEAD
-  body {
-    @apply bg-surface text-ink-700 antialiased;
-    font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1;
-    font-variant-numeric: tabular-nums;
-    min-height: 100vh;
-    min-height: 100dvh;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overscroll-behavior-y: none;
-=======
   html {
     background-color: #ffffff;
   }
@@ -68,7 +56,6 @@ html {
     min-height: 100dvh;
     overscroll-behavior-y: none;
     letter-spacing: -0.005em;
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
   }
 
   /* Avoid iOS zoom-on-focus: every input/select/textarea must be at least 16px.
@@ -184,19 +171,11 @@ html {
   /* One vertical rhythm for page sections.
      Two values cover every section: standard, and compact for supporting blocks. */
   .section-y {
-<<<<<<< HEAD
-    @apply py-16 sm:py-24;
-  }
-
-  .section-y-sm {
-    @apply py-12 sm:py-16;
-=======
     @apply py-20 sm:py-28 lg:py-32;
   }
 
   .section-y-sm {
     @apply py-14 sm:py-20;
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
   }
 
   /* Tabular numerics — use everywhere prices, sums, rates, counts are shown
@@ -209,39 +188,23 @@ html {
   /* Brand eyebrow chip — tiny all-caps label used as a section/kicker label
      across the site. */
   .eyebrow {
-<<<<<<< HEAD
-    @apply inline-flex items-center gap-2 rounded-pill bg-brand-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-700;
-=======
     @apply inline-flex items-center gap-2 rounded-pill bg-brand-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-700 ring-1 ring-inset ring-brand-100;
   }
   .eyebrow-on-dark {
     @apply inline-flex items-center gap-2 rounded-pill bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-100 ring-1 ring-inset ring-white/15;
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
   }
 
   /* Subtle warm radial light used once on dark bands (AppDownload, FinalCta)
      to keep the brand glow soft rather than a harsh linear gradient. */
   .brand-radial-glow {
     position: relative;
-<<<<<<< HEAD
-=======
     isolation: isolate;
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
   }
   .brand-radial-glow::before {
     content: '';
     position: absolute;
     top: 0;
     left: 50%;
-<<<<<<< HEAD
-    width: min(72rem, 100%);
-    height: 60%;
-    transform: translateX(-50%);
-    background: radial-gradient(60% 100% at 50% 0%, rgba(255, 255, 255, 0.12), transparent 70%);
-    pointer-events: none;
-  }
-
-=======
     width: min(80rem, 120%);
     height: 70%;
     transform: translateX(-50%);
@@ -281,7 +244,6 @@ html {
   .bg-wash-tl { background: radial-gradient(60rem 30rem at 0% -10%, rgba(0,184,120,0.08), transparent 60%); }
   .bg-wash-br { background: radial-gradient(50rem 30rem at 100% 110%, rgba(0,184,120,0.05), transparent 60%); }
 
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
   /* Default stroke treatment on outline icons — single cap/join setting so
      every path in the system draws consistently without per-tag attrs. */
   svg[stroke]:not([stroke='none']) {
@@ -289,12 +251,9 @@ html {
     stroke-linejoin: round;
   }
 
-<<<<<<< HEAD
-=======
   /* Selection colour tuned to brand. */
   ::selection { background-color: rgba(0,184,120,0.22); color: #0B1220; }
 
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
   /* Compact product action bar on a detail page.
      Sits directly ABOVE the mobile tab bar below md, and flush to the bottom
      from md up, where the tab bar is hidden. Accounts for iOS safe-area. */

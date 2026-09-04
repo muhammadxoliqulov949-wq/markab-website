@@ -41,19 +41,10 @@ const variants: Record<Variant, string> = {
 };
 
 const sizes: Record<Size, string> = {
-<<<<<<< HEAD
-  // 40px is one pixel under the 44px HIG; we pad touch targets via an extended
-  // hit area in the global tap-target utility where needed, while keeping
-  // secondary / toolbar buttons visually at 40px.
-  sm: 'h-10 px-4 text-sm rounded-[10px]',
-  md: 'h-[46px] px-6 text-[0.9375rem]',
-  lg: 'h-12 px-7 text-base',
-=======
   sm: 'h-10 px-4 text-sm rounded-[10px]',
   md: 'h-[46px] px-6 text-[0.9375rem]',
   lg: 'h-12 px-7 text-base',
   xl: 'h-14 px-8 text-[1.0625rem] rounded-[14px]',
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
 };
 
 type CommonProps = {

@@ -26,11 +26,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
   return (
     <section
       aria-labelledby="hero-heading"
-<<<<<<< HEAD
-      className="relative overflow-hidden bg-surface pb-16 pt-10 sm:pb-20 sm:pt-14 lg:pb-24 lg:pt-20"
-=======
       className="relative overflow-hidden bg-surface pt-20 sm:pt-24 lg:pt-28"
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
     >
       {/* Two restrained editorial washes — one warm-brand at top-left, one cool-slate bottom-right. */}
       <div
@@ -42,21 +38,12 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
         aria-hidden="true"
       />
 
-<<<<<<< HEAD
-      <Container className="relative">
-        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-8 lg:grid-cols-[1.02fr_1fr] lg:gap-14">
-          {/* LEFT — content first, in DOM order and in reading order. */}
-          <div className="md:max-w-none lg:max-w-xl">
-            <p className="animate-rise-1 eyebrow">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />
-=======
       <Container className="relative pb-20 sm:pb-28 lg:pb-32">
         <div className="grid items-center gap-12 md:grid-cols-2 md:gap-10 lg:grid-cols-[1.02fr_1fr] lg:gap-20">
           {/* LEFT — content first, in DOM and reading order. */}
           <div className="md:max-w-none lg:max-w-[34rem]">
             <p className="animate-rise-1 eyebrow">
               <MarkabStar size={12} tone="brand" />
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
               {site.positioning}
             </p>
 
@@ -84,22 +71,13 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
               &nbsp;qabul qiling.
             </h1>
 
-<<<<<<< HEAD
-            <p className="animate-rise-3 mt-6 max-w-lg text-body text-ink-600 sm:text-lead">
-=======
             <p className="animate-rise-3 mt-6 max-w-xl text-lead text-ink-500 sm:mt-7">
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
               Avtomobil va elektronikani muddatli to‘lov asosida xarid qiling. Shartlar oldindan
               ko‘rinadi, sarmoya yo‘nalishi bilan tanishish mumkin — barchasi bitta ekotizimda.
             </p>
 
-<<<<<<< HEAD
-            <div className="animate-rise-4 mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center">
-              <ButtonLink href="/cars" size="lg" className="hover-only:-translate-y-0.5">
-=======
             <div className="animate-rise-4 mt-9 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center">
               <ButtonLink href="/cars" size="xl" className="min-w-[220px] hover-only:-translate-y-0.5">
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
                 Avtomobillarni ko‘rish
                 <svg
                   className="h-4 w-4"
@@ -112,16 +90,12 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
               </ButtonLink>
-<<<<<<< HEAD
-              <ButtonLink href="/invest" variant="secondary" size="lg" className="hover-only:-translate-y-0.5">
-=======
               <ButtonLink
                 href="/invest"
                 variant="secondary"
                 size="xl"
                 className="min-w-[220px] hover-only:-translate-y-0.5"
               >
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
                 Sarmoya imkoniyatlari
               </ButtonLink>
             </div>
@@ -134,11 +108,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-<<<<<<< HEAD
-                  strokeWidth="1.7"
-=======
                   strokeWidth="2.4"
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
                   aria-hidden="true"
                 >
                   <path d="M20 6L9 17l-5-5" />
@@ -197,21 +167,12 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
           <div className="animate-rise-3 lg:pb-16">
             <div className="relative">
               {image ? (
-<<<<<<< HEAD
-                <div className="relative overflow-hidden rounded-2xl bg-surface-sunken shadow-card-hover ring-1 ring-black/[0.04]">
-                  {/*
-                    Bounded height below lg so the photograph never becomes the
-                    page on a phone; 4:3 on desktop, inside the two-column grid.
-                  */}
-                  <div className="relative h-[210px] sm:h-[260px] md:aspect-[4/3] md:h-auto">
-=======
                 <div className="relative overflow-hidden rounded-panel bg-surface-sunken shadow-panel ring-1 ring-black/[0.05]">
                   {/* Tiny navigation star in the top-right corner as an accent. */}
                   <div className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 shadow-subtle ring-1 ring-black/5 backdrop-blur-sm">
                     <MarkabStar size={14} tone="brand" />
                   </div>
                   <div className="relative aspect-[4/3] sm:aspect-[4/3]">
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
                     <RemoteImage
                       src={image}
                       alt={vehicle ? vehicle.title : ''}
@@ -275,11 +236,7 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
                       </div>
                       <div className="flex items-center justify-between gap-4 border-t border-line pt-3">
                         <dt className="text-sm text-ink-500">Oylik to‘lov</dt>
-<<<<<<< HEAD
-                        <dd className="text-[0.9375rem] font-semibold text-brand-600">
-=======
                         <dd className="text-base font-semibold num text-brand-700">
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
                           {vehicle.financing.monthlyPaymentUzs ? (
                             formatUzs(vehicle.financing.monthlyPaymentUzs)
                           ) : (

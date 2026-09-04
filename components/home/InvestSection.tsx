@@ -91,29 +91,9 @@ export async function InvestSection() {
                     <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-50 text-sm font-semibold text-brand-700 ring-1 ring-inset ring-brand-100">
                       {index + 1}
                     </span>
-<<<<<<< HEAD
-                    <p className="mt-3 text-sm font-medium text-ink-900">{step}</p>
-                    {index < investorFlow.steps.length - 1 ? (
-                      <svg
-                        className="absolute -right-3 top-1/2 hidden h-4 w-4 -translate-y-1/2 text-ink-300 sm:block"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M5 12h14M13 6l6 6-6 6"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    ) : null}
-=======
                     <p className="mt-3 text-[15px] font-medium leading-snug text-ink-900">
                       {step}
                     </p>
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
                   </li>
                 ))}
               </ol>

@@ -6,10 +6,6 @@ import { FinancingPreview } from '@/components/home/FinancingPreview';
 import { WhyMarkab } from '@/components/home/WhyMarkab';
 import { HowItWorks } from '@/components/home/HowItWorks';
 import { InvestSection } from '@/components/home/InvestSection';
-<<<<<<< HEAD
-import { AcademySection } from '@/components/home/AcademySection';
-=======
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
 import { AppDownloadSection } from '@/components/home/AppDownloadSection';
 import { FaqSection } from '@/components/home/FaqSection';
 import { HomepageContactSection } from '@/components/home/HomepageContactSection';
@@ -121,11 +117,7 @@ export default async function HomePage() {
 
       <InvestSection />
 
-<<<<<<< HEAD
-      <AcademySection />
-=======
       <AppDownloadSection />
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
 
       <FaqSection items={faqItems} />
 

@@ -109,13 +109,9 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-10 flex flex-col gap-4 border-t border-line pt-8 text-xs text-ink-400 sm:flex-row sm:items-center sm:justify-between">
-<<<<<<< HEAD
-          <p>© {new Date().getFullYear()} Markab. Barcha huquqlar himoyalangan.</p>
-=======
           <p className="flex items-center gap-2">
             <MarkabStar size={10} tone="muted" className="opacity-70" />© {new Date().getFullYear()} Markab. Barcha huquqlar himoyalangan.
           </p>
->>>>>>> 8f654f2 (feat(design): phase 2 premium push — editorial hero, 16px body, refined tokens, 9-section home, upgraded CTAs)
           <p className="max-w-md sm:text-right">
             Narxlar va shartlar oldindan ogohlantirmasdan o‘zgartirilishi mumkin. Moliyaviy xizmatlar litsenziya asosida taqdim etiladi.
           </p>
