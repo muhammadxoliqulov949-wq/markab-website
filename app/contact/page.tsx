@@ -6,6 +6,7 @@ import { OfficeMap } from '@/components/contact/OfficeMap';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { site } from '@/lib/site';
 import { buildMetadata } from '@/lib/seo';
+import { MarkabStar } from '@/components/ui/MarkabStar';
 import { describeSubject } from '@/lib/financing/subject';
 import {
   investmentEnquiryMessage,
@@ -79,7 +80,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Sear
             <p className="mt-1 text-sm text-ink-500">
               Belgilangan manzilga ish vaqti davomida tashrif buyurishingiz mumkin.
             </p>
-          </div>
+          </section>
 
           <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-card">
             <div className="p-4 sm:p-5">

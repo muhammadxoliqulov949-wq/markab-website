@@ -124,10 +124,10 @@ export function ProductCard({ product, priority = false }: { product: Product; p
         </div>
         <Link
           href={href}
-          aria-label={`${product.name} — batafsil`}
+          aria-label={`${product.name} — xususiyatlarni ko‘rish`}
           className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-lg px-3 text-sm font-medium text-ink-800 transition-colors hover:bg-surface-muted hover:text-brand-800"
         >
-          Batafsil
+          Xususiyatlar
           <svg
             className="h-4 w-4 text-ink-400 transition-transform duration-300 ease-smooth group-hover:translate-x-1 group-hover:text-brand-700"
             viewBox="0 0 24 24"

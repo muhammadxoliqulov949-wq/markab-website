@@ -111,14 +111,14 @@ export function ApplicationForm({
 
   if (status === 'blocked') {
     return (
-      <div className="rounded-xl border border-line bg-surface p-6 shadow-card sm:p-8">
+      <div className="rounded-panel border border-line bg-surface p-6 shadow-panel sm:p-8">
         <StateBlock
           variant="unavailable"
           title="Ariza yuborilmadi"
           description="Ariza serverga yuborilmadi va saqlanmadi. Kiritgan ma’lumotlaringiz nusxasi quyida turibdi — uni ko‘chirib, menejerga yuborishingiz mumkin."
         />
 
-        <div className="mt-6 rounded-xl border border-line bg-surface-muted p-5">
+        <div className="mt-6 rounded-card border border-line bg-surface-muted p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-sm font-semibold text-ink-900">Kiritilgan ma’lumotlar</h3>
             <button
@@ -129,7 +129,7 @@ export function ApplicationForm({
                   () => setCopied(false),
                 );
               }}
-              className="inline-flex h-9 items-center rounded-lg border border-line-strong bg-white px-3.5 text-sm font-medium text-ink-900 transition-colors hover:bg-surface"
+              className="inline-flex h-10 items-center rounded-btn border border-line bg-white px-4 text-sm font-medium text-ink-900 transition-ctrl hover:bg-surface-muted"
             >
               {copied ? 'Nusxa olindi' : 'Nusxa olish'}
             </button>
@@ -145,7 +145,7 @@ export function ApplicationForm({
           </Button>
           <Link
             href="/contact"
-            className="inline-flex h-11 items-center rounded-lg border border-line-strong px-5 text-sm font-medium text-ink-900 transition-colors hover:bg-surface-muted"
+            className="inline-flex h-12 items-center rounded-btn border border-line px-5 text-sm font-medium text-ink-900 transition-ctrl hover:bg-surface-muted"
           >
             Menejer bilan bog‘lanish
           </Link>
@@ -168,7 +168,7 @@ export function ApplicationForm({
   return (
     <form
       noValidate
-      className="rounded-xl border border-line bg-surface p-6 shadow-card sm:p-8"
+      className="rounded-panel border border-line bg-surface p-6 shadow-panel sm:p-8"
       onSubmit={(event) => {
         event.preventDefault();
         setTouched(true);

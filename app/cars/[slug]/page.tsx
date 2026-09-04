@@ -13,6 +13,8 @@ import { VehicleCard } from '@/components/vehicles/VehicleCard';
 import { formatKm, formatUzs, formatViews } from '@/lib/format';
 import { fuelLabel, transmissionLabel } from '@/lib/labels';
 import { repository } from '@/lib/data';
+import { Breadcrumb, PageHeader } from '@/components/ui/Breadcrumb';
+import { MarkabStar } from '@/components/ui/MarkabStar';
 import { breadcrumbJsonLd, buildMetadata, productJsonLd } from '@/lib/seo';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { relatedReason, selectRelatedVehicles } from '@/lib/vehicles/related';
@@ -102,7 +104,15 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
   ];
 
   return (
-    <Container className="py-8 sm:py-12">
+    <>
+      <Breadcrumb
+        items={[
+          { label: 'Bosh sahifa', href: '/' },
+          { label: 'Avtomobillar', href: '/cars' },
+          { label: `${vehicle.brand} ${vehicle.model} ${vehicle.year}` },
+        ]}
+      />
+      <Container className="pt-8 pb-20 sm:pt-10 sm:pb-24">
       {/*
         Structured data: a BreadcrumbList and a Product whose fields all come
         from the listing. No aggregateRating or review anywhere — the data
@@ -130,35 +140,25 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
           availability: 'unknown',
         })}
       />
-      {/* 1 — Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="mb-6 text-sm">
-        <ol className="flex flex-wrap items-center gap-x-2 text-ink-400">
-          <li>
-            <Link href="/" className="inline-flex items-center py-1 transition-colors hover:text-ink-700">
-              Bosh sahifa
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li>
-            <Link href="/cars" className="inline-flex items-center py-1 transition-colors hover:text-ink-700">
-              Avtomobillar
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li>
-            <Link
-              href={`/cars?brand=${encodeURIComponent(vehicle.brand)}`}
-              className="inline-flex items-center py-1 transition-colors hover:text-ink-700"
-            >
-              {vehicle.brand}
-            </Link>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li className="truncate py-1 text-ink-700">
-            {vehicle.model} {vehicle.year}
-          </li>
-        </ol>
-      </nav>
+      {/* 1 — Title + price block */}
+      <header className="mb-8 mt-4">
+        <div className="flex flex-wrap items-center gap-2">
+          {vehicle.isNew ? <Badge tone="brand">Yangi</Badge> : null}
+          <Badge tone="pending">Tekshirilgan e’lon</Badge>
+        </div>
+        <h1 className="mt-3 text-display-md text-ink-900 sm:text-display-lg">
+          {vehicle.title}
+        </h1>
+        <div className="mt-4 flex flex-wrap items-end gap-x-6 gap-y-2">
+          <p className="text-display-sm font-semibold num text-ink-900">
+            {formatUzs(vehicle.priceUzs)}
+          </p>
+          <p className="flex items-center gap-2 text-sm text-ink-500">
+            <MarkabStar size={12} tone="muted" className="opacity-70" />
+            {formatViews(vehicle.views)}
+          </p>
+        </div>
+      </header>
 
       <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:gap-12">
         {/* ---------- LEFT ---------- */}
@@ -442,6 +442,7 @@ export default async function VehicleDetailPage({ params }: { params: Params }) 
         )}
       </section>
     </Container>
+    </>
   );
 }
 

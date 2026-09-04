@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { VehicleCard } from '@/components/vehicles/VehicleCard';
+import { RevealGroup, RevealItem } from '@/components/ui/Reveal';
 import { VehicleBrowser } from '@/components/vehicles/VehicleBrowser';
 import { Pagination } from '@/components/ui/Pagination';
 import { StateBlock } from '@/components/ui/StateBlock';
@@ -154,13 +155,17 @@ async function VehicleResults({
           h1 directly and the outline would skip a level. */}
       <h2 className="sr-only">Avtomobillar ro‘yxati</h2>
 
-      <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <RevealGroup
+        as="ul"
+        className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
+        step={70}
+      >
         {vehicles.map((vehicle, index) => (
-          <li key={vehicle.id} className="flex">
+          <RevealItem as="li" key={vehicle.id} className="flex">
             <VehicleCard vehicle={vehicle} priority={index < ABOVE_FOLD_CARDS} />
-          </li>
+          </RevealItem>
         ))}
-      </ul>
+      </RevealGroup>
 
       <div className="mt-10">
         <Pagination

@@ -1,32 +1,35 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from 'react';
 
 /**
- * Scroll-reveal wrapper.
+ * Scroll-reveal primitives.
  *
  * PROGRESSIVE ENHANCEMENT, NOT A GATE.
  *
- * Content is ALWAYS visible by default: the server renders `opacity: 1`, so a
+ * Content is ALWAYS visible by default: the server renders opacity: 1, so a
  * browser without JavaScript, a preview that never fires the observer, or a
  * page photographed before scrolling never shows an empty section. Motion only
- * enhances the entrance for elements that begin below the fold, and it is never
- * allowed to leave something permanently invisible (a fallback timer reveals
- * anything the observer did not reach).
+ * enhances the entrance for elements that begin below the fold. A fallback
+ * timer reveals anything the observer did not reach.
  */
+
+type TagKind = 'div' | 'section' | 'li' | 'article' | 'ul' | 'ol';
+
 export function Reveal({
   children,
   delay = 0,
   className = '',
   as: Tag = 'div',
+  y = 14,
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
-  as?: 'div' | 'section' | 'li' | 'article';
+  as?: TagKind;
+  y?: number;
 }) {
   const ref = useRef<HTMLElement | null>(null);
-  // Visible on the server AND before any observer runs — the safe default.
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -37,17 +40,11 @@ export function Reveal({
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Motion is opt-out; no observer in this environment means no motion.
     if (prefersReduced || typeof IntersectionObserver === 'undefined') return;
 
-    // Only animate elements that start below the fold. Anything already on
-    // screen stays fully visible — there is nothing to reveal.
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
     if (node.getBoundingClientRect().top < viewportHeight * 0.9) return;
 
-    // Hide just in time and reveal when the visitor reaches it. This happens
-    // after mount, so the server-rendered default (visible) is never the thing
-    // a user sees flash away below the fold.
     setVisible(false);
 
     let revealed = false;
@@ -70,9 +67,6 @@ export function Reveal({
     );
 
     observer.observe(node);
-
-    // Safety net: if the observer never fires (e.g. a framed preview or a
-    // suppressed IO), content still becomes visible after a short delay.
     fallback = window.setTimeout(reveal, 2500);
 
     return () => {
@@ -81,16 +75,136 @@ export function Reveal({
     };
   }, []);
 
-  const style = {
+  const style: CSSProperties = {
     opacity: visible ? 1 : 0,
-    transform: visible ? 'translateY(0)' : 'translateY(14px)',
+    transform: visible ? 'translateY(0)' : `translateY(${y}px)`,
     transition: `opacity 620ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, transform 620ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
   };
 
   return (
-    // data-reveal lets the <noscript> fallback in the root layout force the
-    // content visible when JS never runs — motion must never hide content.
     <Tag ref={ref as never} data-reveal="" style={style} className={className}>
+      {children}
+    </Tag>
+  );
+}
+
+/**
+ * Staggered reveal group.
+ *
+ * Applies sequenced delays to direct children with data-reveal-item via inline
+ * styles when the parent enters viewport. All children visible by default.
+ */
+export function RevealGroup({
+  children,
+  className = '',
+  as: Tag = 'div',
+  step = 65,
+  initialDelay = 0,
+  y = 16,
+  startIndex = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  as?: TagKind;
+  step?: number;
+  initialDelay?: number;
+  y?: number;
+  startIndex?: number;
+}) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      setActive(true);
+      return;
+    }
+
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    if (node.getBoundingClientRect().top < viewportHeight * 0.9) {
+      setActive(true);
+      return;
+    }
+
+    let revealed = false;
+    let fallback = 0;
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      setActive(true);
+      observer.disconnect();
+      window.clearTimeout(fallback);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) reveal();
+        });
+      },
+      { threshold: 0.05, rootMargin: '0px 0px -20px 0px' },
+    );
+
+    observer.observe(node);
+    fallback = window.setTimeout(reveal, 2500);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(fallback);
+    };
+  }, []);
+
+  // Apply staggered delays to children via CSS nth-child
+  const containerStyle: CSSProperties = {
+    ['--rg-step' as string]: `${step}ms`,
+    ['--rg-initial' as string]: `${initialDelay}ms`,
+    ['--rg-y' as string]: `${y}px`,
+  };
+
+  return (
+    <Tag
+      ref={ref as never}
+      data-reveal-group={active ? 'in' : 'pending'}
+      className={`reveal-group ${className}`}
+      style={containerStyle}
+    >
+      {children}
+    </Tag>
+  );
+}
+
+/**
+ * RevealItem — an item inside a RevealGroup; its entrance is sequenced by order.
+ */
+export function RevealItem({
+  children,
+  className = '',
+  as: Tag = 'div',
+  index,
+}: {
+  children: ReactNode;
+  className?: string;
+  as?: TagKind;
+  index?: number;
+}) {
+  const style: CSSProperties =
+    index !== undefined
+      ? ({
+          ['--ri' as string]: index,
+        } as CSSProperties)
+      : {};
+  return (
+    <Tag
+      data-reveal-item=""
+      style={style}
+      className={`reveal-item ${className}`}
+    >
       {children}
     </Tag>
   );

@@ -21,6 +21,7 @@ export function CatalogueImage({
   priority = false,
   className = 'object-cover',
   fallbackLabel = 'Rasm yuklanmadi',
+  tone = true,
 }: {
   src: string | null;
   alt: string;
@@ -28,6 +29,7 @@ export function CatalogueImage({
   priority?: boolean;
   className?: string;
   fallbackLabel?: string;
+  tone?: boolean;
 }) {
   return (
     <RemoteImage

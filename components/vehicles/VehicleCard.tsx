@@ -114,7 +114,7 @@ export function VehicleCard({
         */}
         <div className="flex items-center justify-between border-t border-line px-5 py-3">
           <span className="text-sm font-medium text-ink-800 transition-colors group-hover:text-brand-800">
-            Batafsil
+            Avtomobilni ko‘rish
           </span>
           <svg
             className="h-4 w-4 text-ink-400 transition-transform duration-300 ease-smooth group-hover:translate-x-1 group-hover:text-brand-700"
