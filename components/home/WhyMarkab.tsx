@@ -17,7 +17,7 @@ export async function WhyMarkab() {
   const valueProps = content.status === 'success' ? content.data.valueProps : [];
 
   return (
-    <section aria-labelledby="why-heading" className="relative overflow-hidden bg-surface-muted section-y dot-pattern">
+    <section aria-labelledby="why-heading" className="relative overflow-hidden bg-surface-sunken section-y dot-pattern">
       <Container>
         <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
           <div className="lg:sticky lg:top-28 lg:self-start">

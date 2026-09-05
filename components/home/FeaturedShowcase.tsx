@@ -55,7 +55,7 @@ export function FeaturedShowcase({
   return (
     <section
       aria-labelledby={headingId}
-      className={`${tone === 'muted' ? 'bg-surface-muted' : 'bg-surface'} ${
+      className={`${tone === 'muted' ? 'bg-surface-sunken' : 'bg-surface'} ${
         weight === 'high' ? 'py-16 sm:py-20 lg:py-24' : 'section-y'
       }`}
     >

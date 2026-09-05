@@ -60,7 +60,7 @@ export function GoalChooser({
   ];
 
   return (
-    <section aria-labelledby="goals-heading" className="bg-surface-muted section-y-sm">
+    <section aria-labelledby="goals-heading" className="bg-surface-sunken section-y-sm">
       <Container>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-5">
           <SectionHeading
