@@ -18,3 +18,7 @@ data/
 *.db
 *.db-wal
 *.db-shm
+data/
+*.db
+*.db-wal
+*.db-shm
