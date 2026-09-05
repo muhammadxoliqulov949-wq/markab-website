@@ -1,6 +1,24 @@
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { ArrowLink } from '@/components/ui/ArrowLink';
 import { repository } from '@/lib/data';
+import {
+  Package,
+  FileText,
+  PenLine,
+  BadgeCheck,
+  FileSignature,
+  KeyRound,
+  type LucideIcon,
+} from 'lucide-react';
+
+/**
+ * Step icon sticker set — one coherent family, one size, one palette.
+ * lucide-react (ISC, tree-shakeable) is the only source: no custom raster
+ * or unlicensed assets. Order follows the six published steps in the
+ * content fixture (select → terms → application → approval → contract →
+ * handover), so a shorter list keeps correct semantics per index.
+ */
+const stepIcons: LucideIcon[] = [Package, FileText, PenLine, BadgeCheck, FileSignature, KeyRound];
 
 /**
  * How it works — six published steps.
@@ -42,6 +60,7 @@ export async function HowItWorks() {
 
           {financingSteps.map((step, index) => {
             const isLast = index === financingSteps.length - 1;
+            const StepIcon = stepIcons[index % stepIcons.length] ?? Package;
             return (
               <li key={step.step} className="relative flex gap-4 lg:flex-col lg:gap-0">
                 {!isLast ? (
@@ -53,6 +72,13 @@ export async function HowItWorks() {
 
                 <span className="relative z-10 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface text-sm font-semibold text-ink-900 ring-1 ring-line shadow-subtle lg:mb-6">
                   {step.step}
+                  {/* Sticker badge — sits on the number circle's top-right rim. */}
+                  <span
+                    aria-hidden="true"
+                    className="absolute -right-1.5 -top-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand-600 text-white shadow-subtle ring-2 ring-white"
+                  >
+                    <StepIcon className="h-3 w-3" strokeWidth={2.5} />
+                  </span>
                 </span>
 
                 <div className="min-w-0 pt-1 lg:pt-0 lg:pr-3">
