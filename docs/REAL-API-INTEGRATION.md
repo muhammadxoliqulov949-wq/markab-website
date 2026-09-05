@@ -398,30 +398,40 @@ schema are supplied:
 
 ## 20. Stage 1 addendum — contact page map
 
-The `/contact` page now embeds an **OpenStreetMap** iframe
-(`https://www.openstreetmap.org/export/embed.html`) pinned at the verified
-office coordinates (41.331985, 69.223558), re-used from the existing
-`site.office.mapUrl` Google Maps link on markab.uz. This is the only
+The `/contact` page embeds a **Google Maps** iframe (public
+`https://www.google.com/maps?q=…&output=embed` endpoint, no API key) pinned at
+the verified office coordinates (41.331985, 69.223558). Google Maps was chosen
+over OpenStreetMap because it matches the existing `site.office.mapUrl`
+deep-link visitors are offered in the "Xaritada ochish" button — see the
+WHY GOOGLE MAPS note in `components/contact/OfficeMap.tsx`. This is the only
 third-party iframe permitted.
 
 CSP changes (narrow, deliberate — no wildcards, no `unsafe-inline`/`unsafe-eval`):
 
-* `frame-src: 'self' https://www.openstreetmap.org` (was `'none'`)
-* `img-src` additionally allows `https://tile.openstreetmap.org` for map tiles
+* `frame-src: 'self' https://www.google.com https://maps.google.com
+  https://www.openstreetmap.org` (was `'none'`)
+* `img-src` additionally allows `https://tile.openstreetmap.org`
 * `frame-ancestors`, `script-src` (nonce + strict-dynamic), and every other
   directive are unchanged.
 
 Third parties contacted when the map renders:
 
-* `www.openstreetmap.org` — embed HTML/JS (served inside the iframe)
-* `tile.openstreetmap.org` — map tile images, fetched by the visitor's browser
-  from inside the iframe
+* `www.google.com` — the embed HTML/JS (served inside the iframe; Google Maps
+  tiles load within the iframe's own origin, not under our `img-src`)
 
-OSM's embed does not set cookies in third-party context (per OSM's privacy
-policy), and the iframe is loaded with `loading="lazy"`, `sandbox="allow-scripts
-allow-pointer-lock"` (no `allow-same-origin`, no `allow-top-navigation`),
-`referrerPolicy="no-referrer-when-downgrade"`, and an explicit accessible title.
+The iframe is loaded with `loading="lazy"`, `referrerPolicy="no-referrer-when-downgrade"`,
+`allow="fullscreen"`, and an explicit accessible title. A 4-second load/failure
+guard latches to a terminal state: the overlay shows the verified address and
+keeps the "Xaritada ochish" deep link and "Manzilni nusxalash" actions usable,
+so the contact form and office info remain fully reachable if the embed cannot
+load (e.g. restricted networks block google.com).
 
-A 10-second load/failure guard replaces the iframe with a compact unavailable
-state if the embed cannot load; the verified address, the "Xaritada ochish"
-deep-link to Google Maps and the contact form remain usable regardless.
+Deploy gates covering this policy:
+
+* `scripts/check-allowlists.mjs` — static: `FRAME_SOURCES` contains no
+  wildcard, lists Google Maps embed hosts, and stays small (static, run in CI)
+* `scripts/check-security-headers.mjs` — live: the served `frame-src` must
+  equal exactly `'self'` + the Google Maps/OSM embed host set above (run
+  against a running server; update it in the same commit as `lib/security/csp.ts`
+  whenever the provider set changes)
+

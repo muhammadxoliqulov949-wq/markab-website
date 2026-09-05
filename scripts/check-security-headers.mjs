@@ -57,15 +57,37 @@ const scriptSrc = (headers) => {
   check('CSP has object-src none', /object-src 'none'/.test(csp(home.headers)));
   check('CSP has base-uri self', /base-uri 'self'/.test(csp(home.headers)));
   check('CSP has form-action self', /form-action 'self'/.test(csp(home.headers)));
-  // frame-src is deliberately NOT 'none' because /contact embeds the
-  // OpenStreetMap map iframe. The CSP pins it to a single host
-  // (www.openstreetmap.org) — same host set enforced by
-  // scripts/check-allowlists.mjs. This is a strict, named origin, not a
-  // wildcard, and it never permits framing of our own pages (that is
-  // controlled by frame-ancestors below).
+  // frame-src is deliberately NOT 'none' because /contact embeds an
+  // interactive map iframe (Google Maps via components/contact/OfficeMap.tsx).
+  // The policy pins frame-src to an exact, explicit set — 'self' plus the
+  // Google Maps embed hosts (www.google.com / maps.google.com) and
+  // OpenStreetMap — no wildcard of any kind. This assertion is the live
+  // regression gate for that allow-list: it must be updated IN THE SAME
+  // commit as lib/security/csp.ts FRAME_SOURCES whenever a provider is added
+  // or removed (the sibling static check, scripts/check-allowlists.mjs,
+  // mirrors the constant). It never permits framing of our own pages (that
+  // is controlled by frame-ancestors below).
   check(
-    'frame-src restricted to self + OpenStreetMap only',
-    /frame-src 'self' https:\/\/www\.openstreetmap\.org(;|$)/.test(csp(home.headers)),
+    'frame-src restricted to self + Google Maps/OSM embed hosts only (no wildcards)',
+    (() => {
+      const directive = csp(home.headers)
+        .split(';')
+        .map((d) => d.trim())
+        .find((d) => d.startsWith('frame-src'));
+      if (!directive) return false;
+      const sources = new Set(directive.split(/\s+/).slice(1));
+      const allowed = new Set([
+        "'self'",
+        'https://www.google.com',
+        'https://maps.google.com',
+        'https://www.openstreetmap.org',
+      ]);
+      if (sources.size !== allowed.size) return false;
+      for (const source of sources) {
+        if (!allowed.has(source)) return false;
+      }
+      return true;
+    })(),
     csp(home.headers),
   );
 

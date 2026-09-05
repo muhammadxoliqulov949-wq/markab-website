@@ -5,6 +5,17 @@ import { Container } from '@/components/ui/Section';
 export type Crumb = { label: string; href?: string };
 
 /**
+ * RDFa microdata attributes must be emitted with the exact lowercase name
+ * `typeof`. SWC's JSX transform rewrites a JSX attribute literally named
+ * `typeof` (a reserved word) into the prop `typeOf`, which React then writes
+ * to the DOM — silently invalidating the schema.org markup and triggering a
+ * React dev warning. Passing the attribute through a spread of an object
+ * keeps the exact key, so the rendered HTML carries `typeof="…"` correctly.
+ */
+const RDFA_BREADCRUMB_LIST = { typeof: 'BreadcrumbList' };
+const RDFA_WEBPAGE = { typeof: 'WebPage' };
+
+/**
  * Breadcrumb — slim nav band above page headers.
  *
  * Uses RDFa `data-vocabulary.org/Breadcrumb` markup so Google reads the trail.
@@ -21,8 +32,8 @@ export function Breadcrumb({ items }: { items: Crumb[] }) {
             return (
               <Fragment key={`${crumb.label}-${i}`}>
                 <li
+                  {...RDFA_BREADCRUMB_LIST}
                   vocab="https://schema.org/"
-                  typeof="BreadcrumbList"
                   property="itemListElement"
                   className="flex items-center"
                 >
@@ -30,7 +41,7 @@ export function Breadcrumb({ items }: { items: Crumb[] }) {
                     <Link
                       href={crumb.href}
                       property="item"
-                      typeof="WebPage"
+                      {...RDFA_WEBPAGE}
                       className="inline-flex min-h-[28px] items-center transition-colors hover:text-brand-700"
                     >
                       <span property="name">{crumb.label}</span>
@@ -38,7 +49,7 @@ export function Breadcrumb({ items }: { items: Crumb[] }) {
                   ) : (
                     <span
                       property="item"
-                      typeof="WebPage"
+                      {...RDFA_WEBPAGE}
                       className="font-medium text-ink-800"
                       aria-current="page"
                     >
