@@ -40,7 +40,16 @@ export async function middleware(request: NextRequest) {
   const upgradeInsecure = isProduction() && !preview;
 
   const report = cspReportDirective();
-  const csp = buildCsp({ nonce, frameAncestors: frameAncestorsPolicy(), upgradeInsecure });
+  const csp = buildCsp({
+    nonce,
+    frameAncestors: frameAncestorsPolicy(),
+    upgradeInsecure,
+    // `next dev` modules are evaluated via eval (webpack runtime +
+    // react-refresh); the strict production CSP refuses them, which leaves
+    // every client interaction dead under a dev preview. unsafe-eval is a
+    // DEV-ONLY escape hatch — isProduction() is false only under `next dev`.
+    scriptUnsafeEval: !isProduction(),
+  });
   const cspValue = report ? `${csp}; ${report[0]} ${report[1]}` : csp;
 
   const requestHeaders = new Headers(request.headers);

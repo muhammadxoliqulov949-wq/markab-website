@@ -87,7 +87,19 @@ check(
 check("script-src builds a nonce source", /'nonce-\$\{nonce\}'/.test(cspSrc));
 check("script-src includes 'strict-dynamic'", /'strict-dynamic'/.test(cspSrc));
 check('no unsafe-inline in script-src', !/'unsafe-inline'/.test(cspSrc.split('script-src')[1]?.split('\n')[0] ?? ''));
-check('no unsafe-eval anywhere in the CSP', !/unsafe-eval/.test(cspSrc));
+// `unsafe-eval` is tolerated ONLY as the dev-server escape hatch: the token
+// must appear exclusively on the guarded line that appends it when
+// `scriptUnsafeEval` is true (middleware passes !isProduction(), so a
+// production build never receives it). An unguarded occurrence — the
+// regression this check exists to catch — fails here.
+{
+  const unsafeEvalLines = cspSrc.split('\n').filter((line) => line.includes("'unsafe-eval'"));
+  check(
+    'unsafe-eval appears only behind the scriptUnsafeEval dev guard',
+    unsafeEvalLines.length > 0 && unsafeEvalLines.every((line) => line.includes('scriptUnsafeEval ?')),
+    unsafeEvalLines.join(' | ').trim(),
+  );
+}
 check('object-src is none', /\['object-src', "'none'"\]/.test(cspSrc));
 check('frame-ancestors defaults to none', /"'none'"/.test(cspSrc));
 
