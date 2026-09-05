@@ -16,6 +16,12 @@ import {
   type ProductFilterValues,
 } from '@/lib/products/filters';
 
+// Catalogue pages are rendered per request:
+//  (1) nonce-based CSP stamps scripts at render time (see docs/PHASE-12-DEPLOYMENT-SECURITY.md);
+//  (2) prices / stock / availability can change at any time in HTTP mode;
+//  (3) searchParams must be resolved server-side.
+export const dynamic = 'force-dynamic';
+
 const PAGE_SIZE = 9;
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -67,21 +73,19 @@ export default async function ElectronicsPage({
   });
 
   return (
-    <div className="container-page section-y-sm">
-      <header className="max-w-2xl">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700">
-          Elektronika katalogi
-        </p>
-        <h1 className="mt-3 text-display-sm sm:text-display-md">
-          Muddatli to‘lov bilan elektronika
+    <div className="container-page section-y">
+      <header className="max-w-3xl">
+        <p className="eyebrow">Elektronika katalogi</p>
+        <h1 className="mt-5 text-display-md text-ink-900 sm:mt-6 sm:text-display-lg">
+          Telefon va texnika — muddatli to‘lov asosida.
         </h1>
-        <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-600 sm:text-base">
+        <p className="mt-5 max-w-2xl text-lead text-ink-500">
           Ochiq e’londagi ma’lumotlar asosida: xotira, batareya holati va narx bo‘yicha saralang.
           Oylik to‘lov faqat rasmiy hisob-kitobi e’lon qilingan mahsulotlarda ko‘rsatiladi.
         </p>
       </header>
 
-      <div className="mt-8 lg:mt-10">
+      <div className="mt-10 lg:mt-12">
         <ProductBrowser facets={facets} values={values} categoryLabels={categoryLabels}>
           {/*
             The Suspense boundary is local to this page. A segment-level

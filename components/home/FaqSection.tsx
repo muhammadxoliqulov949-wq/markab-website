@@ -15,9 +15,9 @@ import type { FaqItem } from '@/lib/data/types';
  */
 export function FaqSection({ items }: { items: FaqItem[] }) {
   return (
-    <section aria-labelledby="faq-heading" className="bg-surface section-y-sm">
+    <section aria-labelledby="faq-heading" className="bg-surface section-y">
       <Container>
-        <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-14">
+        <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-16">
           <div>
             <SectionHeading
               id="faq-heading"

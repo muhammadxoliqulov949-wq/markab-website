@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { Reveal } from '@/components/ui/Reveal';
+import { RemoteImage } from '@/components/ui/RemoteImage';
 import { homepageGoals } from '@/lib/site';
 
 /**
@@ -13,7 +13,10 @@ import { homepageGoals } from '@/lib/site';
  * the two service goals use a brand-tinted line-art panel. Nothing decorative
  * is invented for the sake of symmetry.
  *
- * Desktop: four columns. Tablet: two. Phone: a snap-scrolling rail.
+ * Desktop: four columns (280-300px cards). Tablet: two. Phone: a tight iOS-
+ * style snap rail with peek-previews (72% card width so the next card shows
+ * at the edge, signalling horizontal scroll), tighter radius, smaller
+ * padding, and aspect ratio tuned for thumb-friendly scanning.
  */
 
 const GOAL_ART: Record<string, { path: string; caption: string }> = {
@@ -34,7 +37,7 @@ function ArrowIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.9"
+      strokeWidth="2"
       aria-hidden="true"
     >
       <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -57,9 +60,9 @@ export function GoalChooser({
   ];
 
   return (
-    <section aria-labelledby="goals-heading" className="bg-surface-muted section-y">
+    <section aria-labelledby="goals-heading" className="bg-surface-muted section-y-sm">
       <Container>
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-5">
           <SectionHeading
             id="goals-heading"
             eyebrow="Yo‘nalish tanlang"
@@ -77,64 +80,80 @@ export function GoalChooser({
           </p>
         </div>
 
-        {/* Mobile: snap rail. sm+: grid. */}
-        <ul className="no-scrollbar -mx-5 mt-9 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:mt-11 lg:grid-cols-4">
+        {/*
+          Mobile rail — iOS App-Store-style peeking cards.
+          Tighter card (72vw), reduced radius (card token, not panel), tighter
+          internal padding, and the chevron CTA sits inline at the bottom so
+          cards read as tappable destinations not articles. sm+ revert to the
+          original 2/4-up grid untouched.
+        */}
+        <ul
+          className="no-scrollbar -mx-4 mt-7 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2
+                     sm:mx-0 sm:mt-9 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0
+                     lg:mt-11 lg:grid-cols-4"
+        >
           {cards.map((card, index) => {
             const art = GOAL_ART[card.id];
             return (
               <li
                 key={card.id}
-                className="w-[80%] shrink-0 snap-start sm:w-auto"
+                className="w-[72vw] shrink-0 snap-start sm:w-auto"
               >
                 <Reveal delay={index * 70}>
                   <Link
                     href={card.href}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-card transition-all duration-500 ease-smooth hover:-translate-y-1 hover:border-brand-200 hover:shadow-card-hover"
+                    className="group flex h-full flex-col overflow-hidden rounded-[16px] border border-line-hairline bg-surface shadow-[0_2px_10px_-4px_rgba(11,18,32,0.08)] transition-card active:scale-[0.98]
+                               sm:rounded-card sm:border-line sm:shadow-none
+                               hover-only:-translate-y-1 hover-only:border-brand-200/70 hover-only:shadow-card-hover"
                   >
-                    <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
+                    <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted sm:aspect-[4/3]">
                       {card.image ? (
                         <>
-                          <Image
+                          <RemoteImage
                             src={card.image}
                             alt={card.alt}
                             fill
-                            sizes="(max-width: 640px) 80vw, (max-width: 1024px) 45vw, 24vw"
+                            sizes="(max-width: 640px) 72vw, (max-width: 1024px) 45vw, 24vw"
                             className="object-cover object-center transition-transform duration-[900ms] ease-smooth group-hover:scale-[1.04]"
+                            fallbackLabel=""
                           />
                           <div
-                            className="absolute inset-0 bg-gradient-to-t from-ink-900/20 to-transparent"
+                            className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"
                             aria-hidden="true"
                           />
                         </>
                       ) : (
-                        <div className="flex h-full w-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-brand-50 via-brand-50 to-brand-100/70 px-4">
+                        <div className="flex h-full w-full flex-col items-center justify-center gap-2.5 bg-gradient-to-br from-brand-50 via-brand-50 to-brand-100/70 px-4">
                           <svg
                             viewBox="0 0 48 48"
-                            className="h-16 w-16 text-brand-600/70"
+                            className="h-12 w-12 text-brand-600/70 sm:h-16 sm:w-16"
                             fill="none"
                             stroke="currentColor"
-                            strokeWidth="1.6"
+                            strokeWidth="1.7"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             aria-hidden="true"
                           >
                             <path d={art?.path ?? ''} />
                           </svg>
-                          <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brand-700/80">
+                          <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-brand-700/80 sm:text-[11px]">
                             {art?.caption}
                           </span>
                         </div>
                       )}
                     </div>
 
-                    <div className="flex flex-1 flex-col p-5">
-                      <h3 className="text-base font-semibold leading-snug text-ink-900">
+                    <div className="flex flex-1 flex-col p-4 sm:p-5">
+                      <h3 className="text-[15px] font-semibold leading-snug text-ink-900 sm:text-base">
                         {card.title}
                       </h3>
-                      <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-500">
+                      <p className="mt-1.5 flex-1 text-[13px] leading-relaxed text-ink-500 sm:mt-2 sm:text-sm">
                         {card.description}
                       </p>
-                      <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors duration-200 group-hover:text-brand-800">
+                      <span
+                        className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-brand-700 transition-colors duration-200 group-hover:text-brand-800
+                                   sm:mt-5 sm:gap-1.5 sm:text-sm"
+                      >
                         {card.cta}
                         <ArrowIcon />
                       </span>
@@ -146,7 +165,7 @@ export function GoalChooser({
           })}
         </ul>
 
-        <p className="mt-7 text-sm text-ink-500 lg:hidden">
+        <p className="mt-5 text-sm text-ink-500 lg:hidden">
           O‘rganishni xohlaysizmi?{' '}
           <Link
             href="/academy"

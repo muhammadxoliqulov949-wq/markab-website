@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { VehicleCard } from '@/components/vehicles/VehicleCard';
+import { RevealGroup, RevealItem } from '@/components/ui/Reveal';
 import { VehicleBrowser } from '@/components/vehicles/VehicleBrowser';
 import { Pagination } from '@/components/ui/Pagination';
 import { StateBlock } from '@/components/ui/StateBlock';
@@ -15,6 +16,12 @@ import {
   toVehicleQuery,
   type VehicleFilterValues,
 } from '@/lib/vehicles/filters';
+
+// Catalogue pages are rendered per request:
+//  (1) nonce-based CSP stamps scripts at render time (see docs/PHASE-12-DEPLOYMENT-SECURITY.md);
+//  (2) prices / stock / availability can change at any time in HTTP mode;
+//  (3) searchParams must be resolved server-side.
+export const dynamic = 'force-dynamic';
 
 const PAGE_SIZE = 9;
 
@@ -59,21 +66,19 @@ export default async function CarsPage({
   const facets = facetsResult.status === 'success' ? facetsResult.data : null;
 
   return (
-    <div className="container-page section-y-sm">
-      <header className="max-w-2xl">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700">
-          Avtomobil katalogi
-        </p>
-        <h1 className="mt-3 text-display-sm sm:text-display-md">
-          Sizga mos avtomobilni toping
+    <div className="container-page section-y">
+      <header className="max-w-3xl">
+        <p className="eyebrow">Avtomobil katalogi</p>
+        <h1 className="mt-5 text-display-md text-ink-900 sm:mt-6 sm:text-display-lg">
+          Sizga mos avtomobilni toping.
         </h1>
-        <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-600 sm:text-base">
+        <p className="mt-5 max-w-2xl text-lead text-ink-500">
           Katalogdagi har bir avtomobil tekshirilgan ma’lumotlar asosida ko‘rsatiladi. Rasmiy
           hisob-kitob e’lon qilingan avtomobillar uchun oylik to‘lov ham keltiriladi.
         </p>
       </header>
 
-      <div className="mt-8 lg:mt-10">
+      <div className="mt-10 lg:mt-12">
         <VehicleBrowser facets={facets} values={values}>
           <Suspense
             key={`${page}|${JSON.stringify(values)}`}
@@ -150,13 +155,17 @@ async function VehicleResults({
           h1 directly and the outline would skip a level. */}
       <h2 className="sr-only">Avtomobillar ro‘yxati</h2>
 
-      <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <RevealGroup
+        as="ul"
+        className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
+        step={70}
+      >
         {vehicles.map((vehicle, index) => (
-          <li key={vehicle.id} className="flex">
+          <RevealItem as="li" key={vehicle.id} className="flex">
             <VehicleCard vehicle={vehicle} priority={index < ABOVE_FOLD_CARDS} />
-          </li>
+          </RevealItem>
         ))}
-      </ul>
+      </RevealGroup>
 
       <div className="mt-10">
         <Pagination

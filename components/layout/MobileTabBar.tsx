@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 /**
- * Mobile-first bottom navigation.
+ * iOS-style mobile bottom navigation.
  *
- * The primary goals of the product are one tap away on every screen — this is
- * the mobile answer to "what should I click first?".
+ * Translucent frosted-glass surface with a soft green pill behind the active
+ * tab (a la UITabBar appearance in iOS 15+). Targets are ≥48×48pt per Apple
+ * HIG; icons sit on top of the pill, labels fade from tertiary grey to brand
+ * green. Home-indicator padding comes from env(safe-area-inset-bottom).
  */
 const tabs = [
   {
@@ -60,11 +62,13 @@ export function MobileTabBar() {
   return (
     <nav
       aria-label="Tezkor navigatsiya"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 backdrop-blur-md md:hidden"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed inset-x-0 bottom-0 z-40 ios-tabbar md:hidden"
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 6px)' }}
     >
-      {/* Height pinned to --tabbar-h so the value in globals.css stays true. */}
-      <ul className="grid h-[var(--tabbar-h)] grid-cols-5 items-center">
+      <ul
+        className="mx-auto grid h-[58px] max-w-lg items-stretch px-2"
+        style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}
+      >
         {tabs.map((tab) => {
           const active = pathname === tab.href || pathname.startsWith(`${tab.href}/`);
           return (
@@ -72,24 +76,30 @@ export function MobileTabBar() {
               <Link
                 href={tab.href}
                 aria-current={active ? 'page' : undefined}
-                className={[
-                  'flex flex-col items-center gap-1 px-1 py-2.5 text-[10px] font-medium transition-colors',
-                  active ? 'text-brand-700' : 'text-ink-500',
-                ].join(' ')}
+                data-active={active}
+                className="ios-tabbar-item tap-target"
               >
-                <svg
-                  className="h-[22px] w-[22px]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
+                <span className="ios-tabbar-pill" aria-hidden="true" />
+                <span className="relative z-[1] inline-flex h-7 w-7 items-center justify-center">
+                  <svg
+                    className="h-[22px] w-[22px]"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={active ? 2.0 : 1.7}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    {tab.icon}
+                  </svg>
+                </span>
+                <span
+                  className="relative z-[1] transition-transform duration-200 ease-out"
+                  style={{ transform: active ? 'translateY(0)' : 'translateY(1px)' }}
                 >
-                  {tab.icon}
-                </svg>
-                {tab.label}
+                  {tab.label}
+                </span>
               </Link>
             </li>
           );

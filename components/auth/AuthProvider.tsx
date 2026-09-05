@@ -17,6 +17,8 @@ import {
   type OtpVerifyResult,
 } from '@/lib/auth/service';
 
+
+
 /**
  * Account state machine.
  *
@@ -55,16 +57,36 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({
   children,
-  service = unavailableAuthService,
+  service: injectedService,
 }: {
   children: ReactNode;
   /**
-   * Injectable so a real OTP service replaces this without editing the UI.
-   * Defaults to the honest `unavailable` implementation.
+   * Injectable so tests / preview can supply a stub. When omitted, the
+   * provider starts with the honest `unavailable` stub during SSR/first
+   * paint and swaps to the real HTTP service on mount.
    */
   service?: AuthService;
 }) {
+  const [service, setService] = useState<AuthService>(() => injectedService ?? unavailableAuthService);
   const [state, setState] = useState<AuthState>({ status: 'loading' });
+
+  useEffect(() => {
+    if (injectedService) {
+      setService(injectedService);
+      return;
+    }
+    // On the client, swap to the real HTTP service and hydrate the session.
+    // Dynamic import keeps this file tree-shakeable from the server bundle.
+    let cancelled = false;
+    (async () => {
+      const mod = await import('@/lib/auth/http-service');
+      if (cancelled) return;
+      setService(mod.httpAuthService);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [injectedService]);
 
   useEffect(() => {
     let cancelled = false;

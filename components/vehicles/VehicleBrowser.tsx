@@ -138,7 +138,7 @@ export function VehicleBrowser({
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.8"
+                  strokeWidth="1.7"
                   aria-hidden="true"
                 >
                   <path d="M4 6h16M7 12h10M10 18h4" strokeLinecap="round" />
@@ -176,7 +176,7 @@ export function VehicleBrowser({
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="1.7"
                   aria-hidden="true"
                 >
                   <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
@@ -322,7 +322,7 @@ function FilterSheet({
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              strokeWidth="1.8"
+              strokeWidth="1.7"
               aria-hidden="true"
             >
               <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />

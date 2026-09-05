@@ -3,6 +3,37 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
 
+  // Native modules (better-sqlite3) must be externalised for server components
+  // and kept out of the Webpack/Edge bundle. They are loaded only from Node
+  // runtime via instrumentation.ts and route handlers.
+  serverExternalPackages: ['better-sqlite3'],
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Make sure better-sqlite3 and its dependency tree stay external on
+      // the server bundle so webpack doesn't chase `bindings` → node-gyp →
+      // node:fs/path. serverExternalPackages already handles route-handler
+      // bundles; we add a plain externals regex for good measure.
+      config.externals = config.externals ?? [];
+      if (Array.isArray(config.externals)) {
+        config.externals.push(/^better-sqlite3(\/.*)?$/);
+        config.externals.push(/^bindings$/);
+      }
+    } else {
+      // Client/Edge bundles: keep Node built-ins out.
+      config.resolve = config.resolve ?? {};
+      config.resolve.fallback = {
+        ...(config.resolve.fallback ?? {}),
+        fs: false,
+        path: false,
+        crypto: false,
+        os: false,
+        stream: false,
+        util: false,
+      };
+    }
+    return config;
+  },
+
   images: {
     /**
      * Server-side image optimisation is ON by default. That is the
@@ -40,7 +71,15 @@ const nextConfig = {
     formats: ['image/webp'],
   },
 
-  // Dev-server previews are served through a proxy host.
+  // Dev-server previews are served through a proxy host (Arena/e2b). The
+  // browser loads HTML from a sandbox subdomain like
+  // https://<port>-<sandbox>.e2b.app and requests /_next/static/* chunks,
+  // HMR websockets and RSC flight payloads against the same origin. Next.js
+  // 15's dev server blocks any cross-origin request to /_next/* unless the
+  // Origin/Referer host is allow-listed here. A leading ".*" matches any
+  // subdomain per the docs. Without this entry, every client-side chunk
+  // returns HTTP 403 and React never boots in the preview (the page renders
+  // SSR HTML but mount/useEffect never fire).
   allowedDevOrigins: ['*.e2b.app', '*.arena.ai'],
 
   /**

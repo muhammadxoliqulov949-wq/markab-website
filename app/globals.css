@@ -1,36 +1,144 @@
+@import "@fontsource-variable/inter";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /*
- * Typography: a system stack is used deliberately.
- * next/font/google would download fonts at build time, which fails in offline
- * / sandboxed environments. This keeps rendering deterministic and fast.
- * Replace with the official brand typeface when brand guidelines are supplied.
+ * Typography: Inter Variable is self-hosted through @fontsource-variable/inter
+ * (latin + latin-ext + cyrillic). SF Pro fallbacks sit directly below Inter so
+ * iOS visitors get the system font immediately (Apple HIG feel) before Inter
+ * swaps in; other platforms fall through to their system stack.
  */
 :root {
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
-    'Noto Sans', sans-serif;
+  --font-sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display',
+    'Helvetica Neue', 'Segoe UI', Roboto, Arial, 'Noto Sans', sans-serif;
+
+  /*
+   * One height for the mobile tab bar, declared once so anything that has to
+   * sit above it (e.g. the product action bar on a detail page) uses the same
+   * number instead of hard-coding an offset that drifts. iOS includes the
+   * home-indicator safe-area into this value so the bar never sits under the
+   * indicator.
+   */
+  --tabbar-h: 62px;
+
+  /*
+   * Premium motion curves — referenced in token classes and inline transitions.
+   * Using transforms + opacity only; never width/height/top/left animations.
+   * Ease-out matches iOS spring-out on sheet presentations.
+   */
+  --ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* iOS system background tones — kept extremely close to pure white so the
+     site feels like a native canvas, not a tinted app. */
+  --ios-bg: #ffffff;
+  --ios-grouped: #f2f3f7;
+  --ios-separator: rgba(60, 60, 67, 0.18);
+  --ios-separator-opaque: #e5e5ea;
+}
+
+/* Let the browser know the site is rendered on a light surface so native
+   controls (scrollbars, <input type='date'>, <select>) pick a matching theme. */
+html {
+  color-scheme: light;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+  /* iOS rubber-band background matches the site canvas so overscroll looks
+     intentional, not a white void. */
+  background-color: var(--ios-bg);
 }
 
 @layer base {
-  :root {
-    /*
-     * Height of the mobile tab bar. Declared once here so anything that has to
-     * sit above it (e.g. the product action bar on a detail page) uses the
-     * same number instead of hard-coding an offset that drifts.
-     */
-    --tabbar-h: 62px;
-  }
-
   html {
-    -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
+    background-color: #ffffff;
+  }
+  body {
+    @apply bg-surface text-ink-600 antialiased;
+    font-family: var(--font-sans);
+    font-size: 1rem; /* 16px premium base */
+    line-height: 1.6;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'tnum' 1, 'ss01' 1;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* iOS overscroll rubber band — let it glow gently with brand colour. */
+    overscroll-behavior-x: none;
+    overscroll-behavior-y: none;
+    letter-spacing: -0.005em;
+    /* Mobile bottom padding accounts for the home indicator so content never
+       disappears under it; the mobile tab bar already pads itself, but full
+       page scroll without a tab bar (e.g. desktop, or routes where we hide it)
+       still respects the inset. */
+    padding-bottom: env(safe-area-inset-bottom);
+    overflow-x: hidden;
   }
 
-  body {
-    @apply bg-surface text-ink antialiased;
-    font-feature-settings: 'kern' 1, 'liga' 1;
+  /* On mobile, add a subtle hairline status-bar strip so notch/Dynamic Island
+     devices get a true edge-to-edge iOS feel rather than white space at the
+     top. The strip is transparent on larger viewports where it adds nothing. */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: env(safe-area-inset-top);
+    background: linear-gradient(to bottom, rgba(0,184,120,0.06), transparent);
+    pointer-events: none;
+    z-index: 60;
+  }
+
+  /* Avoid iOS zoom-on-focus: every input/select/textarea must be at least 16px.
+     We enforce this globally so a single 14px field doesn't break the rule. */
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    font-size: 1rem;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+  }
+
+  /* Turn on native appearance only where we want it (checkbox/radio rendered
+     by the design system opts in explicitly via .form-check). */
+  input[type='checkbox'],
+  input[type='radio'] {
+    accent-color: theme('colors.brand.500');
+  }
+
+  /* Remove Safari's search-field chrome. */
+  input[type='search'] {
+    -webkit-appearance: none;
+  }
+  input[type='search']::-webkit-search-decoration,
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* Select needs a custom arrow globally — reset the native one. */
+  select {
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  /* Prevent long unbroken words (URLs, SKUs) from blowing the container. */
+  p,
+  li,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
   }
 
   h1,
@@ -45,13 +153,59 @@
     text-wrap: pretty;
   }
 
-  /* Consistent, visible focus ring for keyboard users. */
+  /* Turn off the iOS/Android long-press callout on interactive elements. */
+  a,
+  button {
+    -webkit-touch-callout: none;
+  }
+
+  /* iOS-native active tap: a 120ms brand-tinted overlay that mimics UIKit's
+     touch-down highlight. Active state clears faster than hover on touch. */
+  @media (hover: none) {
+    a:active,
+    button:active,
+    [role='button']:active {
+      transition: background-color 0.1s ease-out, opacity 0.1s ease-out;
+      filter: brightness(0.97);
+    }
+  }
+
+  /* Consistent, visible focus ring for keyboard users.
+     Markab green on white surfaces (3.26:1 against white at 2px ring + 2px
+     offset is visible and consistent with our CTA color); ring colour is
+     overridden for elements that sit on the brand-green band via a cascade. */
   :focus-visible {
-    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white rounded-[6px];
+    @apply outline-none ring-2 ring-brand-600 ring-offset-2 ring-offset-white rounded-[6px];
+  }
+
+  /* Elements that already render on a deep surface get a white ring instead. */
+  .bg-brand-500 :focus-visible,
+  .bg-brand-600 :focus-visible,
+  .bg-brand-700 :focus-visible,
+  .bg-ink-900 :focus-visible {
+    --tw-ring-color: #ffffff;
+    --tw-ring-offset-color: transparent;
   }
 
   ::selection {
     @apply bg-brand-100 text-ink-900;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Backdrop-filter is still vendor-prefixed in Safari; make sure both forms
+     render the same. Tailwind applies -webkit- automatically but not when
+     backdrop-filter is referenced inside arbitrary utilities. */
+  .backdrop-blur-safe {
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
   }
 }
 
@@ -60,28 +214,95 @@
     @apply mx-auto w-full max-w-container px-5 sm:px-6 lg:px-10;
   }
 
-  /*
-   * One vertical rhythm for page sections.
-   *
-   * The codebase previously used five different paddings for the same element,
-   * which read as uneven rather than intentional. Two values now cover every
-   * section: standard, and compact for supporting blocks.
-   */
+  /* One vertical rhythm for page sections.
+     Two values cover every section: standard, and compact for supporting blocks. */
   .section-y {
-    @apply py-12 sm:py-16;
+    @apply py-20 sm:py-28 lg:py-32;
   }
 
   .section-y-sm {
-    @apply py-10 sm:py-14;
+    @apply py-14 sm:py-20;
   }
 
-  /*
-   * Compact product action bar on a detail page.
-   *
-   * Sits directly ABOVE the mobile tab bar below md, where both are visible,
-   * and flush to the bottom from md up, where the tab bar is hidden. Hidden
-   * entirely from lg, where the actions live in the sticky purchase column.
-   */
+  /* Tabular numerics — use everywhere prices, sums, rates, counts are shown
+     so digits line up vertically and don't jump on load. */
+  .num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  /* Brand eyebrow chip — tiny all-caps label used as a section/kicker label
+     across the site. */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-pill bg-brand-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-700 ring-1 ring-inset ring-brand-100;
+  }
+  .eyebrow-on-dark {
+    @apply inline-flex items-center gap-2 rounded-pill bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/90;
+  }
+
+  /* Subtle top highlight used on dark brand bands. Very soft, very wide —
+     creates a gentle top-to-bottom depth without any dots or streaks. */
+  .brand-radial-glow {
+    position: relative;
+    isolation: isolate;
+  }
+  .brand-radial-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: min(72rem, 110%);
+    height: 60%;
+    transform: translateX(-50%);
+    background: radial-gradient(50% 100% at 50% 0%, rgba(255, 255, 255, 0.10), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Dot-paper texture — used inside dark bands or accent panels for depth.
+     Tiny, high-contrast dots; not a repeated motif across the page. */
+  .dot-pattern {
+    background-image: radial-gradient(rgba(11,18,32,0.07) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .dot-pattern-dark {
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Editorial hairline divider with the Markab star in the middle. */
+  .star-divider {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .star-divider::before,
+  .star-divider::after {
+    content: '';
+    flex: 1 1 auto;
+    height: 1px;
+    background: linear-gradient(to right, transparent, currentColor, transparent);
+    opacity: 0.18;
+  }
+  .star-divider > * { margin: 0 0.75rem; }
+
+  /* Big page background washes. Two positions so they don't collide. */
+  .bg-wash-tl { background: radial-gradient(60rem 30rem at 0% -10%, rgba(0,184,120,0.08), transparent 60%); }
+  .bg-wash-br { background: radial-gradient(50rem 30rem at 100% 110%, rgba(0,184,120,0.05), transparent 60%); }
+
+  /* Default stroke treatment on outline icons — single cap/join setting so
+     every path in the system draws consistently without per-tag attrs. */
+  svg[stroke]:not([stroke='none']) {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Selection colour tuned to brand. */
+  ::selection { background-color: rgba(0,184,120,0.22); color: #0B1220; }
+
+  /* Compact product action bar on a detail page.
+     Sits directly ABOVE the mobile tab bar below md, and flush to the bottom
+     from md up, where the tab bar is hidden. Accounts for iOS safe-area. */
   .sticky-action-bar {
     bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
   }
@@ -92,50 +313,45 @@
     }
   }
 
-  /* Subtle grid backdrop used once, in the hero — not a repeated decorative motif. */
+  /* Subtle grid backdrop used once, in the hero — never a repeated motif. */
   .hero-grid {
-    background-image: linear-gradient(to right, rgba(12, 17, 22, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(12, 17, 22, 0.05) 1px, transparent 1px);
+    background-image: linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
     background-size: 56px 56px;
     mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 40%, transparent 100%);
   }
 
-  /* Hero scrims: one horizontal (image → ink) and one bottom fade. */
   .hero-scrim-x {
     background: linear-gradient(
       to right,
-      #0c1116 0%,
-      #0c1116 34%,
-      rgba(12, 17, 22, 0.92) 52%,
-      rgba(12, 17, 22, 0.45) 74%,
-      rgba(12, 17, 22, 0.2) 100%
+      #0f172a 0%,
+      #0f172a 34%,
+      rgba(15, 23, 42, 0.92) 52%,
+      rgba(15, 23, 42, 0.45) 74%,
+      rgba(15, 23, 42, 0.2) 100%
     );
   }
 
   .hero-scrim-y {
-    background: linear-gradient(to top, #0c1116 2%, rgba(12, 17, 22, 0) 60%);
+    background: linear-gradient(to top, #0f172a 2%, rgba(15, 23, 42, 0) 60%);
   }
 
-  /**
-   * Scrim for text sitting on top of photography (featured product card).
-   * Bottom-weighted only — a full-field wash would flatten the image.
-   */
   .card-scrim {
     background: linear-gradient(
       to top,
-      rgba(12, 17, 22, 0.92) 0%,
-      rgba(12, 17, 22, 0.72) 34%,
-      rgba(12, 17, 22, 0.24) 68%,
-      rgba(12, 17, 22, 0) 100%
+      rgba(15, 23, 42, 0.92) 0%,
+      rgba(15, 23, 42, 0.72) 34%,
+      rgba(15, 23, 42, 0.24) 68%,
+      rgba(15, 23, 42, 0) 100%
     );
   }
 
-  /* Very low-opacity vignette for dark sections — no glow, no colour cast. */
   .vignette {
     background: radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.05), transparent 70%);
   }
 
+  /* ------ Skeleton ------ */
   .skeleton {
     @apply relative overflow-hidden bg-surface-sunken;
   }
@@ -150,7 +366,21 @@
       rgba(255, 255, 255, 0) 100%
     );
     transform: translateX(-100%);
-    animation: shimmer 1.6s infinite;
+    animation: skeleton-shimmer 1.6s infinite ease-in-out;
+    will-change: transform;
+  }
+
+  /* ------ Standard transition tokens (replaces ad-hoc transition-all) ------ */
+  .transition-ctrl {
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+    transition-duration: 200ms;
+    transition-timing-function: var(--ease-smooth);
+  }
+  .transition-card {
+    transition-property: border-color, box-shadow, transform;
+    transition-duration: 250ms;
+    transition-timing-function: var(--ease-smooth);
+    will-change: transform;
   }
 }
 
@@ -162,14 +392,202 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Hide scroll-reveal wrappers until IntersectionObserver flips them on.
+     When JS is disabled the <noscript> style in the root layout reveals them. */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
+    will-change: opacity, transform;
+  }
+  [data-reveal='in'] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Tap-safe button — enforce a 44px minimum touch target per Apple HIG. */
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Gradient text utility kept for rare inverse hero uses only. */
+  .text-gradient-brand {
+    background: linear-gradient(135deg, #00b878 0%, #008a5a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ------ iOS grouped list style (Settings.app look) ------
+     Used in the mobile menu drawer and secondary navigation. First/last items
+     round automatically; middle items carry hairline separators. */
+  .ios-group {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 0 0 0.5px var(--ios-separator);
+    overflow: hidden;
+  }
+  .ios-group > * + * {
+    border-top: 0.5px solid var(--ios-separator);
+  }
+  .ios-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    min-height: 48px;
+    font-size: 1.0625rem;
+    color: #0b1220;
+    background: #ffffff;
+    transition: background-color 120ms ease-out;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .ios-row:hover { background: #f7f9fc; }
+  }
+  .ios-row:active { background: #eef2f7; }
+  .ios-row-chevron {
+    color: #c7c7cc;
+    flex-shrink: 0;
+  }
+
+  /* ------ iOS-style bottom tab bar ------
+     Translucent frosted glass, active pill capsule behind the selected tab,
+     home-indicator padding. Used by MobileTabBar. */
+  .ios-tabbar {
+    background: rgba(255, 255, 255, 0.78);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    backdrop-filter: saturate(180%) blur(24px);
+    border-top: 0.5px solid var(--ios-separator);
+  }
+  .ios-tabbar-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px 2px;
+    font-size: 10px;
+    font-weight: 500;
+    color: #8e8e93;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 200ms var(--ease-smooth);
+  }
+  .ios-tabbar-item[data-active='true'] {
+    color: #00B878;
+  }
+  .ios-tabbar-item:active {
+    filter: brightness(0.92);
+  }
+  .ios-tabbar-pill {
+    position: absolute;
+    inset: -2px auto auto 50%;
+    transform: translateX(-50%);
+    width: 48px;
+    height: 32px;
+    border-radius: 12px;
+    background: rgba(0, 184, 120, 0.12);
+    z-index: 0;
+    pointer-events: none;
+    transition: transform 280ms var(--ease-spring), opacity 220ms var(--ease-out);
+  }
+  .ios-tabbar-item[data-active='true'] .ios-tabbar-pill {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  .ios-tabbar-item[data-active='false'] .ios-tabbar-pill {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.6);
+  }
+
+  /* ------ iOS section title (Settings-style all-caps) ------ */
+  .ios-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #6d6d72;
+    padding: 0 1rem 6px;
+  }
+
+  /* ------ Mobile section spacing tuning for iPhone viewports ------ */
+  @media (max-width: 767px) {
+    .section-y { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+    .section-y-sm { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+    .container-page { padding-left: 1rem; padding-right: 1rem; }
+  }
+
+  /* ------ iOS-style range sliders ------
+     Thumb: 24px white pill circle with soft shadow (matches UISlider).
+     Track: light grey with brand-tinted progress. Works cross-browser on
+     both WebKit (iOS/Safari) and Blink (Chrome/Android). */
+  input[type='range'].ios-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+  }
+  input[type='range'].ios-range::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  input[type='range'].ios-range::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  input[type='range'].ios-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: #ffffff;
+    margin-top: -8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.18);
+    transition: transform 140ms var(--ease-smooth), box-shadow 140ms var(--ease-smooth);
+  }
+  input[type='range'].ios-range::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: #ffffff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.18);
+  }
+  input[type='range'].ios-range:active::-webkit-slider-thumb {
+    transform: scale(1.15);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.32), 0 0 0 1px rgba(255, 255, 255, 0.3);
+  }
+  input[type='range'].ios-range:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28), 0 0 0 4px rgba(0, 184, 120, 0.28);
+  }
 }
 
-/* Motion is opt-out: honour the OS-level preference everywhere. */
+/* ------ Keyframes ------ */
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Motion opt-out: honour the OS-level preference everywhere. JS-driven motion
+   (Reveal, InteractivePhone tilt) checks the same media query itself. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -182,5 +600,22 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* On touch / coarse pointers the subtle hover lifts and shadows produce a
+   "sticky hover" state after a tap and add no value. Disable them globally
+   so hover classes only react when a real hover-capable pointer exists. */
+@media (hover: none) {
+  [class*='hover:translate-y'],
+  [class*='hover:shadow-'],
+  [class*='hover:-translate-y'] {
+    transform: none !important;
+    box-shadow: none !important;
   }
 }

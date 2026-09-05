@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/components/cart/CartProvider';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
+import { RemoteImage } from '@/components/ui/RemoteImage';
 import { formatUzs } from '@/lib/format';
 
 /**
@@ -45,19 +45,14 @@ export function CartView() {
                 tabIndex={-1}
                 aria-hidden="true"
               >
-                {item.image ? (
-                  <Image
-                    src={item.image}
-                    alt=""
-                    fill
-                    sizes="80px"
-                    className="object-contain p-1.5"
-                  />
-                ) : (
-                  <span className="flex h-full w-full items-center justify-center text-xs text-ink-400">
-                    Rasm yo‘q
-                  </span>
-                )}
+                <RemoteImage
+                  src={item.image ?? null}
+                  alt=""
+                  fill
+                  sizes="80px"
+                  className="object-contain p-1.5"
+                  fallbackLabel="Rasm yo‘q"
+                />
               </Link>
 
               <div className="min-w-0 flex-1">

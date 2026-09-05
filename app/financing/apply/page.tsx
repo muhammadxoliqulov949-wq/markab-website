@@ -1,121 +1,91 @@
 import type { Metadata } from 'next';
 import { Container } from '@/components/ui/Section';
-import { Badge } from '@/components/ui/Badge';
+import { Breadcrumb, PageHeader } from '@/components/ui/Breadcrumb';
+import { MarkabStar } from '@/components/ui/MarkabStar';
 import { ApplicationForm } from '@/components/financing/ApplicationForm';
-import { StateBlock, PendingValue } from '@/components/ui/StateBlock';
-import { ButtonLink } from '@/components/ui/Button';
-import { resolveFinancingSubject } from '@/lib/financing/subject';
-import { firstParam } from '@/lib/financing/handoff';
 import { buildMetadata } from '@/lib/seo';
 
+const APPLY_FINANCING = '/financing/apply';
+
 export const metadata: Metadata = buildMetadata({
-  title: 'Ariza yuborish',
+  title: 'Muddatli to‘lov arizasi',
   description:
-    'Muddatli to‘lov uchun ariza: mahsulot, xohis bildirilgan boshlang‘ich to‘lov va muddat, ism, telefon hamda qulay aloqa usuli. Ariza rasmiy backendga ulanmagan.',
-  path: '/financing/apply',
+    'Markab orqali muddatli to‘lov shartlarini bir daqiqada bilib oling. Arizani to‘ldiring, shaxsiy menejer sizga tez orada javob beradi.',
+  path: APPLY_FINANCING,
 });
 
-type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+const bullets: string[] = [
+  'Dastlabki javob 15 daqiqagacha — sizni kutishga majburlamaymiz.',
+  'Shartlar faqat sizning daromadingizga moslashtiriladi, qo‘shimcha to‘lovlarsiz.',
+  'Bitim ofisda — hujjatlar va shartnoma bir joyda, kuryer shoshmasdan.',
+];
 
-export default async function ApplyPage({ searchParams }: { searchParams: SearchParams }) {
-  const sp = await searchParams;
+const notAsked: string[] = [
+  'Pasport yoki ID-karta ma’lumotlari',
+  'JSHSHIR (shaxsiy identifikatsiya raqami)',
+  'Bank karta yoki hisob ma’lumotlari',
+  'Selfi yoki biometrik ma’lumot',
+  'Daromadni tasdiqlovchi hujjatlar',
+];
 
-  // Same resolver the calculator uses, so a handoff behaves identically in both
-  // places. An unknown id is a normal outcome, not an error.
-  const resolution = await resolveFinancingSubject(firstParam(sp.type), firstParam(sp.ref));
-  const subject = resolution.status === 'resolved' ? resolution.subject : null;
-
+export default function ApplyPage() {
   return (
-    <Container className="section-y-sm">
-      <header className="mb-8 max-w-2xl">
-        <Badge tone="pending" className="mb-3">
-          Prototip — ariza backend ulanmagan
-        </Badge>
-        <h1 className="text-display-sm sm:text-display-md">
-          Ariza yuborish
-        </h1>
-        <p className="mt-3 text-base leading-relaxed text-ink-600">
-          Faqat birinchi bog‘lanish uchun kerakli maydonlar. Ariza yuborilgach, u hech qayerga
-          ketmasligi aniq ko‘rsatiladi — «yuborildi» degan tasdiq chiqmaydi.
-        </p>
-      </header>
-
-      <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
-        <ApplicationForm subject={subject} invalidRef={resolution.status === 'invalid'} />
-
-        <aside className="space-y-6">
-          <div className="rounded-xl border border-line bg-surface p-5">
-            <h2 className="text-sm font-semibold text-ink-900">Nima so‘ralmaydi</h2>
-            <ul className="mt-3 space-y-2">
-              {[
-                'Pasport yoki ID-karta ma’lumotlari',
-                'JSHSHIR (shaxsiy identifikatsiya raqami)',
-                'Bank karta yoki hisob ma’lumotlari',
-                'Selfi yoki biometrik ma’lumot',
-                'Daromadni tasdiqlovchi hujjatlar',
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2 text-sm text-ink-600">
-                  <svg
-                    className="mt-0.5 h-4 w-4 shrink-0 text-ink-400"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    aria-hidden="true"
-                  >
-                    <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
-                  </svg>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-3 text-xs leading-relaxed text-ink-400">
-              Bu ma’lumotlar faqat rasmiy jarayon va huquqiy asos tasdiqlangandan so‘ng, real
-              tizimda talab qilinishi mumkin. Prototip ularni so‘ramaydi.
+    <>
+      <Breadcrumb
+        items={[
+          { label: 'Bosh sahifa', href: '/' },
+          { label: 'Muddatli to‘lov', href: '/financing' },
+          { label: 'Ariza' },
+        ]}
+      />
+      <PageHeader
+        eyebrow="Ariza · 2 daqiqa"
+        title="Shaxsiy muddatli to‘lov shartlarini oling"
+        description="Formani to‘ldiring — shaxsiy menejer sizga mos to‘lov jadvali, boshlang‘ich to‘lov va hujjatlar ro‘yxati bilan tez orada bog‘lanadi."
+        align="left"
+        className="pb-4"
+      />
+      <Container className="pb-20 pt-4 sm:pb-28">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:gap-10">
+          <div className="min-w-0">
+            <ApplicationForm subject={null} />
+            <p className="mt-6 flex items-start gap-2 rounded-card bg-ink-50 p-4 text-xs leading-relaxed text-ink-500">
+              <MarkabStar size={12} tone="muted" className="mt-0.5 shrink-0" />
+              Ma’lumotlaringiz xavfsiz saqlanadi va uchinchi shaxslarga berilmaydi.
             </p>
           </div>
-
-          <div className="rounded-xl border border-line bg-surface p-5">
-            <h2 className="text-sm font-semibold text-ink-900">Kerakli hujjatlar</h2>
-            <p className="mt-2">
-              <PendingValue label="Rasmiy ro‘yxat kutilmoqda" />
-            </p>
-            <p className="mt-2 text-xs leading-relaxed text-ink-400">
-              Hujjatlar ro‘yxati rasmiy jarayon tasdiqlangach shu yerda ko‘rsatiladi. Hozircha u
-              menejer orqali aniqlashtiriladi.
-            </p>
-            <ButtonLink href="/contact" variant="secondary" size="sm" className="mt-4">
-              Menejer bilan bog‘lanish
-            </ButtonLink>
-          </div>
-
-          <div className="rounded-xl border border-line bg-surface p-5">
-            <h2 className="text-sm font-semibold text-ink-900">Arizadan keyin</h2>
-            <ol className="mt-3 space-y-2 text-sm text-ink-600">
-              <li>1. Ariza qabul qilinadi</li>
-              <li>2. Menejer bog‘lanadi</li>
-              <li>3. Hujjatlar tekshiriladi</li>
-              <li>4. Shartnoma tuziladi</li>
-              <li>5. Mahsulot topshiriladi</li>
-            </ol>
-            <p className="mt-3 text-xs leading-relaxed text-ink-400">
-              Bosqichlar va muddatlar rasmiy jarayon tasdiqlangach aniq ko‘rsatiladi.
-            </p>
-          </div>
-
-          <StateBlock
-            compact
-            variant="pending"
-            title="Shartlar"
-            description="Boshlang‘ich to‘lov, muddat, ustama va komissiyalar Markab e’lon qilgach ko‘rsatiladi."
-            actions={
-              <ButtonLink href="/financing" variant="secondary" size="sm">
-                Moliyalashtirish bo‘limi
-              </ButtonLink>
-            }
-          />
-        </aside>
-      </div>
-    </Container>
+          <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+            <div className="rounded-panel border border-brand-100 bg-brand-50/50 p-6 shadow-panel-soft">
+              <p className="eyebrow text-brand-700">Nima uchun Markab?</p>
+              <h2 className="mt-2 text-heading-sm text-ink-900">Shaffof va tez</h2>
+              <ul className="mt-5 space-y-3.5 text-sm leading-relaxed text-ink-600">
+                {bullets.map((b) => (
+                  <li key={b} className="flex items-start gap-3">
+                    <span className="mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full bg-brand-500" />
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-panel border border-line bg-surface p-6 shadow-panel-soft">
+              <p className="eyebrow text-ink-500">Nima so‘ralmaydi</p>
+              <ul className="mt-4 space-y-2">
+                {notAsked.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-ink-600">
+                    <svg className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+                      <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />
+                    </svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-3 text-xs leading-relaxed text-ink-400">
+                Bu ma’lumotlar faqat rasmiy jarayon va huquqiy asos tasdiqlangandan so‘ng talab qilinishi mumkin.
+              </p>
+            </div>
+          </aside>
+        </div>
+      </Container>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { MarkabStar } from '@/components/ui/MarkabStar';
 
 type Tone = 'default' | 'muted' | 'sunken' | 'dark';
 
@@ -68,25 +69,24 @@ export function SectionHeading({
     align === 'center' ? 'text-center mx-auto items-center' : 'text-left items-start';
   const titleTone = tone === 'dark' ? 'text-white' : 'text-ink-900';
   const descTone = tone === 'dark' ? 'text-white/65' : 'text-ink-500';
-  const eyebrowTone = tone === 'dark' ? 'text-brand-200' : 'text-brand-600';
+  const eyebrowCls =
+    tone === 'dark'
+      ? 'eyebrow-on-dark'
+      : 'eyebrow';
 
   const titleSize =
     size === 'sm'
-      ? 'text-[1.375rem] sm:text-[1.5rem] lg:text-[1.75rem]'
-      : 'text-[1.5rem] sm:text-[1.75rem] lg:text-[2rem]';
+      ? 'text-display-sm'
+      : 'text-display-md lg:text-display-lg';
 
   return (
-    <div className={`flex max-w-2xl flex-col gap-3 ${alignment} ${className}`}>
-      {eyebrow ? (
-        <span className={`text-[11px] font-semibold uppercase tracking-[0.16em] ${eyebrowTone}`}>
-          {eyebrow}
-        </span>
-      ) : null}
-      <Tag id={id} className={`${titleSize} leading-[1.14] ${titleTone}`}>
+    <div className={`flex max-w-2xl flex-col gap-4 ${alignment} ${className}`}>
+      {eyebrow ? <span className={eyebrowCls}>{eyebrow}</span> : null}
+      <Tag id={id} className={`${titleSize} ${titleTone}`}>
         {title}
       </Tag>
       {description ? (
-        <p className={`max-w-xl text-[0.9375rem] leading-relaxed sm:text-base ${descTone}`}>
+        <p className={`max-w-xl text-body sm:text-lead ${descTone}`}>
           {description}
         </p>
       ) : null}

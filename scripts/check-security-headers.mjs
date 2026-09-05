@@ -57,7 +57,17 @@ const scriptSrc = (headers) => {
   check('CSP has object-src none', /object-src 'none'/.test(csp(home.headers)));
   check('CSP has base-uri self', /base-uri 'self'/.test(csp(home.headers)));
   check('CSP has form-action self', /form-action 'self'/.test(csp(home.headers)));
-  check('CSP has frame-src none', /frame-src 'none'/.test(csp(home.headers)));
+  // frame-src is deliberately NOT 'none' because /contact embeds the
+  // OpenStreetMap map iframe. The CSP pins it to a single host
+  // (www.openstreetmap.org) — same host set enforced by
+  // scripts/check-allowlists.mjs. This is a strict, named origin, not a
+  // wildcard, and it never permits framing of our own pages (that is
+  // controlled by frame-ancestors below).
+  check(
+    'frame-src restricted to self + OpenStreetMap only',
+    /frame-src 'self' https:\/\/www\.openstreetmap\.org(;|$)/.test(csp(home.headers)),
+    csp(home.headers),
+  );
 
   if (expectPreview) {
     check('frame-ancestors allows the preview origins', /frame-ancestors 'self' https:\/\/\*\.e2b\.app https:\/\/\*\.arena\.ai/.test(csp(home.headers)));

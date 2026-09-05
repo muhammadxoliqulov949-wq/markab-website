@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
+import { RemoteImage } from '@/components/ui/RemoteImage';
 import { Panel } from './Panel';
 import { useSavedItems } from '@/components/account/SavedItemsProvider';
 import { formatUzs } from '@/lib/format';
@@ -36,7 +36,7 @@ export function SavedPanel() {
       }
     >
       <div className="mb-4 flex items-start gap-2 rounded-lg border border-dashed border-line-strong bg-surface-muted px-4 py-3">
-        <svg className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+        <svg className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
           <rect x="3" y="11" width="18" height="10" rx="2" />
           <path d="M7 11V8a5 5 0 0 1 10 0v3" strokeLinecap="round" />
         </svg>
@@ -79,19 +79,14 @@ export function SavedPanel() {
                 href={item.href}
                 className="relative h-20 w-24 shrink-0 overflow-hidden rounded-md bg-surface-muted"
               >
-                {item.image ? (
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="96px"
-                    className="object-cover object-center"
-                  />
-                ) : (
-                  <span className="flex h-full w-full items-center justify-center text-[10px] text-ink-400">
-                    Rasm yo‘q
-                  </span>
-                )}
+                <RemoteImage
+                  src={item.image ?? null}
+                  alt={item.title}
+                  fill
+                  sizes="96px"
+                  className="object-cover object-center"
+                  fallbackLabel="Rasm yo‘q"
+                />
               </Link>
               <div className="flex min-w-0 flex-1 flex-col">
                 <div className="flex items-start justify-between gap-2">

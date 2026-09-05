@@ -17,7 +17,7 @@ function NoImage() {
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.5"
+        strokeWidth="1.7"
         aria-hidden="true"
       >
         <path d="M3 16.5V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10.5" />

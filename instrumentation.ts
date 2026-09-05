@@ -1,44 +1,68 @@
 /**
- * Server start-up: record the security posture this process is running with.
+ * Server-side instrumentation hook.
  *
- * WHY THIS EXISTS
- *
- * The two deployment switches (`MARKAB_ALLOW_PREVIEW_FRAME`,
- * `MARKAB_IMAGE_UNOPTIMIZED`) both relax a production default, and both are set
- * only by the environment — so a production server started with a preview flag
- * looks, from the outside, exactly like a preview server. One structured line
- * at start-up turns "someone must remember to check" into something that shows
- * up in the log, where it can be alerted on.
- *
- * Deliberately logs *presence*, never values: whether the API token is set is
- * operationally useful, what it is must never reach a log.
+ * Runs in Node (NOT Edge). Boots the database once at server start.
+ * Uses process.getBuiltinModule when available (Node 22+) with a
+ * createRequire fallback so we can load native modules without pulling
+ * them into the Edge bundle.
  */
-export async function register() {
-  // Runs for both runtimes; the report belongs to the Node server only.
-  if (process.env.NEXT_RUNTIME !== 'nodejs') return;
+import 'server-only';
 
-  const previewFraming = process.env.MARKAB_ALLOW_PREVIEW_FRAME === 'true';
-  const unoptimizedImages = process.env.MARKAB_IMAGE_UNOPTIMIZED === 'true';
+export const runtime = 'nodejs';
 
-  const posture = {
-    ts: new Date().toISOString(),
-    level: 'info',
-    event: 'security.posture',
-    nodeEnv: process.env.NODE_ENV ?? 'unknown',
-    dataSource: process.env.MARKAB_DATA_SOURCE ?? 'mock',
-    apiTokenConfigured: Boolean(process.env.MARKAB_API_TOKEN),
-    csp: 'nonce + strict-dynamic',
-    frameAncestors: previewFraming ? 'preview-origins' : 'none',
-    hstsMaxAge: previewFraming ? 86400 : 63072000,
-    imageOptimisation: unoptimizedImages ? 'disabled' : 'enabled',
-    cspReporting: process.env.MARKAB_CSP_REPORT_ENDPOINT ? 'configured' : 'off',
+let cjsRequire: ((id: string) => unknown) | null = null;
+try {
+  const pg = process as unknown as {
+    getBuiltinModule?: (id: string) => { createRequire: (url: string | URL) => NodeRequire };
   };
-
-  if (previewFraming || unoptimizedImages) {
-    posture.level = 'warn';
-    posture.event = 'security.posture.relaxed';
+  if (pg.getBuiltinModule) {
+    cjsRequire = pg.getBuiltinModule('node:module').createRequire(import.meta.url);
   }
+} catch {
+  /* ignored — we try another path below */
+}
 
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify(posture));
+if (!cjsRequire) {
+  try {
+    // Webpack-wrapped instrumentation runs in CJS scope where `require`
+    // is a local binding. Plain `let cjsRequire = require;` would be
+    // rewritten by webpack as an import of 'require'; assigning from a
+    // separate scope keeps it opaque to static analysis.
+    // eslint-disable-next-line no-new-func
+    cjsRequire = new Function('return require')() as NodeRequire;
+  } catch {
+    /* cjsRequire stays null */
+  }
+}
+
+if (cjsRequire) {
+  (globalThis as unknown as { __non_webpack_require__?: unknown }).__non_webpack_require__ = cjsRequire;
+}
+
+export async function register() {
+  if (process.env.NEXT_RUNTIME === 'edge') return;
+  try {
+    if (!cjsRequire) {
+      throw new Error('instrumentation: could not acquire CJS require; DB will not boot');
+    }
+    const { getDb } = await import('./lib/db');
+    getDb();
+    console.log(
+      JSON.stringify({
+        ts: new Date().toISOString(),
+        level: 'info',
+        event: 'server.boot',
+        message: 'Database ready.',
+      }),
+    );
+  } catch (err) {
+    console.error(
+      JSON.stringify({
+        ts: new Date().toISOString(),
+        level: 'error',
+        event: 'server.boot_failed',
+        error: err instanceof Error ? err.message : String(err),
+      }),
+    );
+  }
 }

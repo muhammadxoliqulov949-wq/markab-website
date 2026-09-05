@@ -14,3 +14,11 @@ next-env.d.ts
 .DS_Store
 *.log
 .coverage
+data/
+*.db
+*.db-wal
+*.db-shm
+data/
+*.db
+*.db-wal
+*.db-shm

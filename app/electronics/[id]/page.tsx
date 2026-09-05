@@ -18,6 +18,15 @@ import { breadcrumbJsonLd, buildMetadata, productJsonLd } from '@/lib/seo';
 import { availabilityNote, stockMeta } from '@/lib/products/stock';
 import { relatedProductReason, selectRelatedProducts } from '@/lib/products/related';
 import { applyHref, calculatorHref } from '@/lib/financing/handoff';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+
+// Catalogue pages are rendered per request:
+//  (1) nonce-based CSP stamps scripts at render time (see docs/PHASE-12-DEPLOYMENT-SECURITY.md);
+// Catalogue pages are rendered per request:
+//  (1) nonce-based CSP stamps scripts at render time (see docs/PHASE-12-DEPLOYMENT-SECURITY.md);
+//  (2) prices / stock / availability can change at any time in HTTP mode;
+//  (3) searchParams must be resolved server-side.
+export const dynamic = 'force-dynamic';
 
 type Params = Promise<{ id: string }>;
 
@@ -138,32 +147,14 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
         Extra bottom padding so the sticky action bar — and, below md, the
         mobile tab bar underneath it — never covers the end of the page.
       */}
-      <Container className="pb-40 pt-8 sm:pt-12 md:pb-28 lg:pb-12">
-        {/* 1 — Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-6 text-sm">
-          <ol className="flex flex-wrap items-center gap-x-2 text-ink-400">
-            <li>
-              <Link
-                href="/"
-                className="inline-flex items-center py-1 transition-colors hover:text-ink-700"
-              >
-                Bosh sahifa
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <Link
-                href="/electronics"
-                className="inline-flex items-center py-1 transition-colors hover:text-ink-700"
-              >
-                Elektronika
-              </Link>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li className="truncate py-1 text-ink-700">{product.name}</li>
-          </ol>
-        </nav>
-
+      <Breadcrumb
+        items={[
+          { label: 'Bosh sahifa', href: '/' },
+          { label: 'Elektronika', href: '/electronics' },
+          { label: product.name },
+        ]}
+      />
+      <Container className="pb-40 pt-4 sm:pt-6 md:pb-28 lg:pb-12">
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-12">
           {/* 2 — Gallery */}
           <div className="min-w-0">
@@ -182,7 +173,7 @@ export default async function ProductDetailPage({ params }: { params: Params }) 
             <p className="mt-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700">
               {product.brand}
             </p>
-            <h1 className="mt-1.5 text-display-sm sm:text-display-md">
+            <h1 className="mt-1.5 text-display-md text-ink-900 sm:text-display-lg">
               {product.name}
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-ink-500">{availabilityNote(product)}</p>
