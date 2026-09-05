@@ -1,19 +1,19 @@
 'use client';
 
-import Image from 'next/image';
-import { useState } from 'react';
-
 /**
- * Catalogue image with a real fallback.
+ * Catalogue image — thin wrapper around RemoteImage.
  *
- * `next/image` renders a broken image when the file 404s or the network drops,
- * which leaves a marketplace grid full of empty frames. This keeps the same
- * frame and swaps in the neutral placeholder instead, so a missing photograph
- * never reads as a broken card.
- *
- * It is a client component only because the failure has to be detected in the
- * browser — the markup it produces is otherwise identical.
+ * All catalogue photography now goes through RemoteImage, which shows a
+ * neutral sunken fallback when the remote image fails to load (CSP,
+ * egress/TLS reset in sandboxes like Arena, 404 upstream). CatalogueImage
+ * exists only so call sites keep the "catalogue" semantic name and the
+ * existing default fallback label ("Rasm yuklanmadi") — the underlying
+ * behavior has been unified into RemoteImage to avoid two divergent
+ * implementations of the same broken-image handling.
  */
+
+import { RemoteImage } from '@/components/ui/RemoteImage';
+
 export function CatalogueImage({
   src,
   alt,
@@ -21,6 +21,7 @@ export function CatalogueImage({
   priority = false,
   className = 'object-cover',
   fallbackLabel = 'Rasm yuklanmadi',
+  tone = true,
 }: {
   src: string | null;
   alt: string;
@@ -28,38 +29,17 @@ export function CatalogueImage({
   priority?: boolean;
   className?: string;
   fallbackLabel?: string;
+  tone?: boolean;
 }) {
-  const [failed, setFailed] = useState(false);
-
-  if (!src || failed) {
-    return (
-      <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-surface-sunken text-ink-400">
-        <svg
-          className="h-8 w-8"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          aria-hidden="true"
-        >
-          <rect x="3" y="5" width="18" height="14" rx="2.5" />
-          <path d="m4 16 4.5-4.5 3 3L16 10l4 4" strokeLinecap="round" />
-        </svg>
-        {fallbackLabel ? <span className="text-xs">{fallbackLabel}</span> : null}
-      </div>
-    );
-  }
-
   return (
-    <Image
+    <RemoteImage
       src={src}
       alt={alt}
       fill
       priority={priority}
-      loading={priority ? undefined : 'lazy'}
       sizes={sizes}
       className={className}
-      onError={() => setFailed(true)}
+      fallbackLabel={fallbackLabel}
     />
   );
 }

@@ -72,18 +72,19 @@ export function FeaturedShowcase({
           </ArrowLink>
         </div>
 
-        <div className="mt-9 lg:mt-11">
+        <div className="mt-7 sm:mt-9 lg:mt-11">
           {state.status === 'success' ? (
             <>
               {/*
-                One 3-up grid and one 4:3 frame for both catalogues. The first
-                car is marked "Tanlangan" rather than rendered at a different
-                size: an unequal card inside a grid row left a visible hole.
+                One grid on sm+. On phones, a horizontal snap rail with
+                peeked next-card (78vw card → 11% gap → the next card peeks on
+                the right to signal horizontal scroll, iOS App Store style).
+                Desktop grid geometry, sizes and image ratios are untouched.
               */}
               {isVehicles ? (
-                <ul className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 md:grid-cols-3">
+                <ul className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 md:grid-cols-3">
                   {state.data.vehicles.map((vehicle, index) => (
-                    <li key={vehicle.id} className="w-[80%] shrink-0 snap-start sm:w-auto">
+                    <li key={vehicle.id} className="w-[78vw] shrink-0 snap-start sm:w-auto">
                       <Reveal delay={index * 70}>
                         <VehicleCard
                           vehicle={vehicle}
@@ -95,11 +96,11 @@ export function FeaturedShowcase({
                   ))}
                 </ul>
               ) : (
-                <ul className="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 md:grid-cols-3">
+                <ul className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 md:grid-cols-3">
                   {state.data.products.map((product, index) => (
                     <li
                       key={product.id}
-                      className="w-[80%] shrink-0 snap-start sm:w-auto"
+                      className="w-[78vw] shrink-0 snap-start sm:w-auto"
                     >
                       <Reveal delay={index * 60}>
                         <ProductCard product={product} priority={index === 0} />
@@ -109,8 +110,8 @@ export function FeaturedShowcase({
                 </ul>
               )}
 
-              <p className="mt-7 text-xs leading-relaxed text-ink-400">
-                {dataSourceNote ? `${dataSourceNote} ` : ''}
+              <p className="mt-5 text-[11px] leading-relaxed text-ink-400 sm:mt-7 sm:text-xs">
+                {dataSourceNote() ? `${dataSourceNote()} ` : ''}
                 {publicTotal
                   ? `Ochiq e’lonlar soni: ${publicTotal} ta (markab.uz bo‘yicha).`
                   : null}

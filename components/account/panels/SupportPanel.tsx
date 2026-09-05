@@ -35,7 +35,7 @@ export function SupportPanel() {
                 <span className="block text-sm font-medium text-ink-900">{link.label}</span>
                 <span className="block text-xs text-ink-400">{link.hint}</span>
               </span>
-              <svg className="h-4 w-4 shrink-0 text-ink-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+              <svg className="h-4 w-4 shrink-0 text-ink-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
                 <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </Link>

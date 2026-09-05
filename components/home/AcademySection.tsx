@@ -72,7 +72,7 @@ export async function AcademySection() {
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        strokeWidth="1.9"
+                        strokeWidth="1.7"
                         aria-hidden="true"
                       >
                         <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />

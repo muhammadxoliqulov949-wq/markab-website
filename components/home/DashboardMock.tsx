@@ -76,7 +76,7 @@ export function DashboardMock() {
       <div className="absolute -bottom-6 -left-2 hidden w-52 rounded-xl border border-line bg-surface p-4 shadow-lift sm:block">
         <div className="flex items-center gap-2">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M13.7 21a2 2 0 0 1-3.4 0" strokeLinecap="round" />
             </svg>

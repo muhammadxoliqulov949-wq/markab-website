@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import { useSavedItems } from '@/components/account/SavedItemsProvider';
 import type { SavedItem } from '@/lib/account/types';
 
@@ -23,14 +24,20 @@ type Props = {
   className?: string;
 };
 
-function HeartIcon({ filled }: { filled: boolean }) {
+function HeartIcon({ filled, popping }: { filled: boolean; popping: boolean }) {
   return (
     <svg
-      className={variantless(filled)}
+      className={[
+        'h-4 w-4',
+        filled ? 'text-brand-600' : 'text-current',
+        popping ? 'animate-heart-pop' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       viewBox="0 0 24 24"
       fill={filled ? 'currentColor' : 'none'}
       stroke="currentColor"
-      strokeWidth="1.8"
+      strokeWidth={filled ? 0 : 1.7}
       aria-hidden="true"
     >
       <path
@@ -42,17 +49,28 @@ function HeartIcon({ filled }: { filled: boolean }) {
   );
 }
 
-// Kept separate so the icon sizing stays readable.
-function variantless(filled: boolean) {
-  return filled ? 'h-4 w-4' : 'h-4 w-4';
-}
-
 export function SaveButton({ item, variant = 'inline', className = '' }: Props) {
   const { has, toggle } = useSavedItems();
   const saved = has(item.ref);
+  const [popping, setPopping] = useState(false);
+  const popTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const label = saved ? 'Saqlangan' : 'Saqlash';
   const describedById = `save-note-${item.ref}`;
+
+  const trigger = () => {
+    const wasUnsaved = !saved;
+    toggle(item);
+    if (wasUnsaved) {
+      setPopping(false);
+      // Re-arm on next frame so the animation replays on repeated taps.
+      requestAnimationFrame(() => {
+        setPopping(true);
+        if (popTimer.current) clearTimeout(popTimer.current);
+        popTimer.current = setTimeout(() => setPopping(false), 500);
+      });
+    }
+  };
 
   if (variant === 'overlay') {
     return (
@@ -63,19 +81,19 @@ export function SaveButton({ item, variant = 'inline', className = '' }: Props) 
             // The whole card is a link; saving must not navigate.
             event.preventDefault();
             event.stopPropagation();
-            toggle(item);
+            trigger();
           }}
           aria-pressed={saved}
           aria-describedby={describedById}
           className={[
-            'absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full border bg-white/95 shadow-sm backdrop-blur-[2px] transition-colors',
+            'absolute right-2 top-2 inline-flex h-9 w-9 items-center justify-center rounded-full border bg-white/95 shadow-sm backdrop-blur-[2px] transition-ctrl',
             saved
               ? 'border-brand-200 text-brand-700 hover:bg-brand-50'
               : 'border-line text-ink-500 hover:border-line-strong hover:text-ink-800',
             className,
           ].join(' ')}
         >
-          <HeartIcon filled={saved} />
+          <HeartIcon filled={saved} popping={popping} />
           <span className="sr-only">
             {saved ? `${item.title} saqlangan — olib tashlash` : `${item.title} ni saqlash`}
           </span>
@@ -91,17 +109,17 @@ export function SaveButton({ item, variant = 'inline', className = '' }: Props) 
     <div className={className}>
       <button
         type="button"
-        onClick={() => toggle(item)}
+        onClick={() => trigger()}
         aria-pressed={saved}
         aria-describedby={describedById}
         className={[
-          'inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border px-4 text-sm font-medium transition-colors',
+          'inline-flex h-11 w-full items-center justify-center gap-2 rounded-btn border px-4 text-sm font-medium transition-ctrl',
           saved
             ? 'border-brand-200 bg-brand-50 text-brand-800 hover:bg-brand-100'
             : 'border-line-strong bg-surface text-ink-900 hover:border-ink-300 hover:bg-surface-muted',
         ].join(' ')}
       >
-        <HeartIcon filled={saved} />
+        <HeartIcon filled={saved} popping={popping} />
         {label}
       </button>
       <p id={describedById} className="mt-1.5 text-xs leading-relaxed text-ink-400">

@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { Badge } from '@/components/ui/Badge';
+import { ButtonLink } from '@/components/ui/Button';
 import { Container, SectionHeading } from '@/components/ui/Section';
 import { PendingValue } from '@/components/ui/StateBlock';
 import { repository } from '@/lib/data';
 import { PENDING_LABEL } from '@/lib/investment/status';
+import { MarkabStar } from '@/components/ui/MarkabStar';
 
 /**
  * Verified from markab.uz and shown as published — nothing else.
@@ -60,98 +62,99 @@ export async function InvestSection() {
   return (
     <section
       aria-labelledby="invest-heading"
-      className="bg-surface-muted section-y"
+      className="bg-surface-muted section-y dot-pattern"
     >
       <Container>
-        <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
+        <div className="grid gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
           <div>
             <SectionHeading
               id="invest-heading"
               eyebrow="Sarmoya"
-              title="Sarmoya imkoniyatlari"
-              description="Markab’ning sarmoya yo‘nalishi haqida ma’lumot oling: model qanday tavsiflanadi, qaysi shartlar e’lon qilingan va qaysi ma’lumotlar hali rasmiy tasdiqlanishi kerak."
+              title="Shaffof tamoyillarga asoslangan sarmoya."
+              description="Markab’ning sarmoya yo‘nalishi — e’lon qilingan model, ochiq hisobdorlik va rasmiy hujjatlar bilan."
             />
 
-            <div className="mt-8">
+            <div className="mt-9">
               <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-500">
-                  Markab tomonidan e’lon qilingan model tavsifi
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ink-500">
+                  E’lon qilingan uch bosqich
                 </p>
                 <Badge tone="pending">Tasdiqlanmagan</Badge>
               </div>
 
-              <ol className="mt-4 grid gap-3 sm:grid-cols-3">
+              <ol className="mt-5 grid gap-4 sm:grid-cols-3">
                 {investorFlow.steps.map((step, index) => (
                   <li
                     key={step}
-                    className="relative rounded-xl border border-line bg-surface p-5"
+                    className="relative rounded-card border border-line bg-surface p-5 shadow-subtle"
                   >
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 text-sm font-semibold text-brand-700">
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-50 text-sm font-semibold text-brand-700 ring-1 ring-inset ring-brand-100">
                       {index + 1}
                     </span>
-                    <p className="mt-3 text-sm font-medium text-ink-900">{step}</p>
-                    {index < investorFlow.steps.length - 1 ? (
-                      <svg
-                        className="absolute -right-3 top-1/2 hidden h-4 w-4 -translate-y-1/2 text-ink-300 sm:block"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M5 12h14M13 6l6 6-6 6"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    ) : null}
+                    <p className="mt-3 text-[15px] font-medium leading-snug text-ink-900">
+                      {step}
+                    </p>
                   </li>
                 ))}
               </ol>
 
-              <p className="mt-4 text-xs leading-relaxed text-ink-500">
+              <p className="mt-4 text-caption leading-relaxed text-ink-500">
                 Bu sxema markab.uz’da e’lon qilingan tavsifdir. Modelning aniq mexanikasi,
                 shartnoma turi va to‘lov tartibi rasmiy hujjatlar bilan tasdiqlanadi.
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
+            <div className="mt-9 flex flex-wrap gap-3">
+              <ButtonLink
                 href="/invest"
-                className="inline-flex h-[52px] items-center justify-center rounded-xl bg-brand-700 px-7 text-[0.9375rem] font-semibold text-white transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:bg-brand-800"
+                size="lg"
+                className="hover-only:-translate-y-0.5"
               >
                 Sarmoya modeli bilan tanishish
-              </Link>
-              <Link
+              </ButtonLink>
+              <ButtonLink
                 href="/contact?type=sarmoya"
-                className="inline-flex h-[52px] items-center justify-center rounded-xl border border-line-strong bg-surface px-7 text-[0.9375rem] font-semibold text-ink-900 transition-all duration-200 ease-smooth hover:-translate-y-0.5 hover:border-ink-300 hover:bg-surface-muted"
+                variant="secondary"
+                size="lg"
+                className="hover-only:-translate-y-0.5"
               >
                 Mutaxassis bilan bog‘lanish
-              </Link>
+              </ButtonLink>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
-            <div className="flex items-center justify-between gap-4">
+          <div className="rounded-panel border border-line bg-surface p-7 shadow-panel sm:p-8">
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-50 ring-1 ring-inset ring-brand-100">
+                <MarkabStar size={16} tone="brand" />
+              </span>
               <h3 className="text-base font-semibold text-ink-900">Asosiy shartlar</h3>
-              <Badge tone="pending">Rasmiy ma’lumot bilan to‘ldiriladi</Badge>
+              <Badge tone="pending" className="ml-auto">
+                Rasmiy ma’lumot bilan to‘ldiriladi
+              </Badge>
             </div>
 
-            <dl className="mt-5 divide-y divide-line">
+            <dl className="mt-6 divide-y divide-line">
               {publishedFacts.map((item) => (
-                <div key={item.label} className="flex items-center justify-between gap-4 py-3.5">
-                  <dt className="text-sm text-ink-500">
+                <div key={item.label} className="flex items-center justify-between gap-4 py-4">
+                  <dt className="flex items-center gap-2 text-sm text-ink-500">
+                    <svg
+                      className="h-3.5 w-3.5 text-brand-600"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.8"
+                      aria-hidden="true"
+                    >
+                      <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                     {item.label}
-                    <span className="ml-2 text-[11px] uppercase tracking-[0.12em] text-brand-600">
-                      e’lon qilingan
-                    </span>
                   </dt>
-                  <dd className="text-sm font-semibold text-ink-900">{item.value}</dd>
+                  <dd className="text-sm font-semibold num text-ink-900">{item.value}</dd>
                 </div>
               ))}
               {pendingTerms.map((label) => (
-                <div key={label} className="flex items-center justify-between gap-4 py-3.5">
+                <div key={label} className="flex items-center justify-between gap-4 py-4">
                   <dt className="text-sm text-ink-500">{label}</dt>
                   <dd className="max-w-[60%] text-right">
                     <PendingValue label={PENDING_LABEL} />
@@ -160,10 +163,10 @@ export async function InvestSection() {
               ))}
             </dl>
 
-            <p className="mt-6 text-xs leading-relaxed text-ink-400">
-              Ushbu bo‘limda hech qanday daromad, foiz, foyda miqdori, muddat, kafolat, xavf
-              darajasi yoki investitsiya tavsiyasi ko‘rsatilmagan. Barcha moliyaviy
-              ko‘rsatkichlar rasmiy hujjatlar asosida to‘ldiriladi.
+            <p className="mt-6 text-caption leading-relaxed text-ink-400">
+              Ushbu bo‘limda hech qanday daromad, foiz, foyda miqdori, muddat, kafolat yoki
+              investitsiya tavsiyasi ko‘rsatilmagan. Barcha shartlar rasmiy hujjatlar asosida
+              taqdim etiladi.
             </p>
           </div>
         </div>

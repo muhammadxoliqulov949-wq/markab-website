@@ -35,7 +35,10 @@ export function AddToCartButton({
   const [justAdded, setJustAdded] = useState(false);
 
   const inCart = has(product.id);
-  const heights = size === 'lg' ? 'h-12 text-base' : 'h-10 text-sm';
+  const heights =
+    size === 'lg'
+      ? 'h-12 text-base'
+      : 'h-9 text-[13px] sm:h-10 sm:text-sm';
 
   // Sold out — nothing to offer.
   if (product.stockStatus === 'out_of_stock') {

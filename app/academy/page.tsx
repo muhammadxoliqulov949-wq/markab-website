@@ -10,6 +10,12 @@ import { repository } from '@/lib/data';
 import { buildMetadata } from '@/lib/seo';
 import { reportServerError } from '@/lib/errors';
 
+// Catalogue pages are rendered per request:
+//  (1) nonce-based CSP stamps scripts at render time (see docs/PHASE-12-DEPLOYMENT-SECURITY.md);
+//  (2) prices / stock / availability can change at any time in HTTP mode;
+//  (3) searchParams must be resolved server-side.
+export const dynamic = 'force-dynamic';
+
 /**
  * The clean /academy hub is the indexable URL. Search and category views are
  * near-duplicates of it, so they carry noindex and a canonical back here —

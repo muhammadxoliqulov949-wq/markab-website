@@ -33,7 +33,9 @@ export function VehicleCard({
   const monthly = vehicle.financing.monthlyPaymentUzs;
 
   return (
-    <article className="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-card transition-all duration-300 ease-smooth hover:-translate-y-0.5 hover:border-line-strong hover:shadow-card-hover">
+    <article className="group flex h-full w-full flex-col overflow-hidden rounded-[16px] border border-line-hairline bg-surface shadow-[0_2px_10px_-4px_rgba(11,18,32,0.08)] transition-card active:scale-[0.98]
+                        sm:rounded-card sm:border-line sm:shadow-none
+                        hover-only:-translate-y-0.5 hover-only:border-brand-200/70 hover-only:shadow-card-hover">
       <Link href={href} className="flex flex-1 flex-col">
         {/* Fixed 4:3 frame — the same geometry the electronics cards use. */}
         <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
@@ -41,18 +43,18 @@ export function VehicleCard({
             src={image ?? null}
             alt={`${vehicle.brand} ${vehicle.model}`}
             priority={priority}
-            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 30vw"
+            sizes="(max-width: 640px) 78vw, (max-width: 1280px) 50vw, 30vw"
             className="object-cover transition-transform duration-700 ease-smooth group-hover:scale-[1.04]"
           />
 
-          <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+          <div className="absolute left-2 top-2 flex flex-wrap gap-1.5 sm:gap-2">
             {highlight ? (
-              <Badge tone="brand" className="bg-white/95">
+              <Badge tone="brand" className="bg-white/95 text-[10px] shadow-sm sm:text-xs">
                 Tanlangan
               </Badge>
             ) : null}
             {vehicle.isNew ? (
-              <Badge tone="brand" className="bg-white/95">
+              <Badge tone="brand" className="bg-white/95 text-[10px] shadow-sm sm:text-xs">
                 Yangi
               </Badge>
             ) : null}
@@ -75,11 +77,11 @@ export function VehicleCard({
           />
         </div>
 
-        <div className="flex flex-1 flex-col p-5">
-          <h3 className="truncate text-base font-semibold leading-snug text-ink-900">
+        <div className="flex flex-1 flex-col p-3.5 sm:p-5">
+          <h3 className="truncate text-[15px] font-semibold leading-snug text-ink-900 sm:text-base">
             {vehicle.brand} {vehicle.model}
           </h3>
-          <p className="mt-1 truncate text-sm text-ink-500">
+          <p className="mt-1 line-clamp-1 text-[12px] text-ink-500 sm:text-sm">
             {vehicle.year} · {formatKm(vehicle.mileageKm)} · {fuelLabel(vehicle.fuelType)} ·{' '}
             {transmissionLabel(vehicle.transmission)}
           </p>
@@ -89,15 +91,15 @@ export function VehicleCard({
             plus either the published value or a pending marker — so every card
             in the grid is the same height whichever state it lands in.
           */}
-          <div className="mt-4 flex flex-1 flex-col justify-end">
-            <p className="text-xl font-semibold leading-tight tracking-[-0.01em] text-ink-900">
+          <div className="mt-3 flex flex-1 flex-col justify-end sm:mt-4">
+            <p className="text-[17px] font-semibold leading-tight tracking-[-0.01em] text-ink-900 sm:text-xl">
               {formatUzs(vehicle.priceUzs)}
             </p>
-            <div className="mt-2">
-              <p className="text-xs text-ink-500">Oylik to‘lov</p>
+            <div className="mt-1.5 sm:mt-2">
+              <p className="text-[11px] text-ink-500 sm:text-xs">Oylik to‘lov</p>
               {/* Fixed height: the pending marker carries an icon and would
-                  otherwise make those cards 2px taller than the rest. */}
-              <p className="mt-0.5 flex h-5 items-center text-sm">
+                  otherwise make those cards taller than the rest. */}
+              <p className="mt-0.5 flex h-5 items-center text-[13px] sm:text-sm">
                 {monthly ? (
                   <span className="font-medium text-brand-700">{formatUzs(monthly)}</span>
                 ) : (
@@ -110,18 +112,19 @@ export function VehicleCard({
 
         {/*
           The whole card is one link; this is the visible CTA affordance, not a
-          second interactive element.
+          second interactive element. On mobile we hide the footer text and
+          arrow to make the card shorter — the card itself is the tap target.
         */}
-        <div className="flex items-center justify-between border-t border-line px-5 py-3">
+        <div className="hidden items-center justify-between border-t border-line px-5 py-3 sm:flex">
           <span className="text-sm font-medium text-ink-800 transition-colors group-hover:text-brand-800">
-            Batafsil
+            Avtomobilni ko‘rish
           </span>
           <svg
             className="h-4 w-4 text-ink-400 transition-transform duration-300 ease-smooth group-hover:translate-x-1 group-hover:text-brand-700"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.8"
+            strokeWidth="1.7"
             aria-hidden="true"
           >
             <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />

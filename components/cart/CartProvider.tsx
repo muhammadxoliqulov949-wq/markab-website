@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import { isAllowedImageUrl, isBoundedText, isSafeInternalHref, isSaneAmount } from '@/lib/security/url';
+import { announce } from '@/components/ui/LiveRegion';
 
 export type CartItem = {
   id: string;
@@ -109,16 +110,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, hydrated]);
 
   const addItem = useCallback((item: CartItem) => {
-    setItems((current) =>
-      current.some((entry) => entry.id === item.id) ? current : [...current, item],
-    );
+    setItems((current) => {
+      if (current.some((entry) => entry.id === item.id)) {
+        announce(`"${item.name}" allaqachon savatchada`, 'polite');
+        return current;
+      }
+      announce(`"${item.name}" savatchaga qo‘shildi. Savatchada ${current.length + 1} ta mahsulot bor.`, 'polite');
+      return [...current, item];
+    });
   }, []);
 
   const removeItem = useCallback((id: string) => {
-    setItems((current) => current.filter((entry) => entry.id !== id));
+    setItems((current) => {
+      const removed = current.find((entry) => entry.id === id);
+      if (removed) {
+        announce(`"${removed.name}" savatchadan olib tashlandi.`, 'polite');
+      }
+      return current.filter((entry) => entry.id !== id);
+    });
   }, []);
 
-  const clear = useCallback(() => setItems([]), []);
+  const clear = useCallback(() => {
+    setItems([]);
+    announce('Savatcha tozalandi.', 'polite');
+  }, []);
 
   const value = useMemo<CartContextValue>(() => {
     const subtotal = items.reduce((sum, item) => sum + item.priceUzs, 0);
