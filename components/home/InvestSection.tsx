@@ -62,7 +62,7 @@ export async function InvestSection() {
   return (
     <section
       aria-labelledby="invest-heading"
-      className="bg-surface-muted section-y dot-pattern"
+      className="bg-surface-sunken section-y dot-pattern"
     >
       <Container>
         <div className="grid gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16">

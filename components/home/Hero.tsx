@@ -26,8 +26,11 @@ export function Hero({ vehicle, product }: { vehicle: Vehicle | null; product: P
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden bg-surface pt-14 sm:pt-24 lg:pt-28"
+      className="relative overflow-hidden bg-gradient-to-b from-brand-100/45 via-brand-50/15 to-surface pt-14 sm:pt-24 lg:pt-28"
     >
+      {/* Subtle brand wash on the hero only: faint green tint at the top that
+          melts into the white canvas below — background only, text/buttons/
+          layout untouched. Uses brand palette tokens, nothing hardcoded. */}
       {/* Two restrained editorial washes — one warm-brand at top-left, one cool-slate bottom-right. */}
       <div
         className="pointer-events-none absolute -left-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand-50/80 blur-3xl sm:-left-40 sm:-top-40 sm:h-[42rem] sm:w-[42rem]"

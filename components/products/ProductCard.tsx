@@ -41,11 +41,11 @@ export function ProductCard({ product, priority = false }: { product: Product; p
 
   return (
     <article className="group flex h-full w-full flex-col overflow-hidden rounded-[16px] border border-line-hairline bg-surface shadow-[0_2px_10px_-4px_rgba(11,18,32,0.08)] transition-card active:scale-[0.98]
-                        sm:rounded-card sm:border-line sm:shadow-none
+                        sm:rounded-card sm:border-line
                         hover-only:-translate-y-0.5 hover-only:border-brand-200/70 hover-only:shadow-card-hover">
       <Link href={href} className="flex flex-1 flex-col">
         {/* Fixed frame — source photo proportions cannot change it. */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
+        <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted ring-1 ring-inset ring-ink-900/[0.05]">
           <CatalogueImage
             src={image ?? null}
             alt={product.name}
